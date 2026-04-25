@@ -103,11 +103,14 @@ fn main() -> ExitCode {
     let mut sources: BTreeMap<String, String> = BTreeMap::new();
     let files_scanned = files.len();
 
+    let mut had_errors = false;
+
     for path in &files {
         let source = match std::fs::read_to_string(path) {
             Ok(s) => s,
             Err(e) => {
                 eprintln!("error: {}: {e}", path.display());
+                had_errors = true;
                 continue;
             }
         };
@@ -208,7 +211,9 @@ fn main() -> ExitCode {
         }
     }
 
-    if effective_threshold.is_some() {
+    if had_errors {
+        ExitCode::from(1)
+    } else if effective_threshold.is_some() {
         if exceeded_threshold { ExitCode::from(1) } else { ExitCode::SUCCESS }
     } else if report.summary.total_diagnostics > 0 {
         ExitCode::from(1)
