@@ -5,7 +5,7 @@ use syn::visit::Visit;
 
 /// Per-function comment density and comment clustering analysis.
 ///
-/// Research (SANER 2025, ACL 2025 CoDet-M4) consistently identifies
+/// Research (CoDet-M4, multilingual code stylometry) consistently identifies
 /// comment-to-code ratio as the single most reliable discriminator
 /// between human and AI code — across every language, model, and
 /// granularity tested. File-level density (checked by `over-documentation`)

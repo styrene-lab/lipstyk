@@ -41,7 +41,7 @@ These catch patterns where AI narrates rather than explains.
 |------|----------------|-----|--------|---------------|
 | `over-documentation` | Step-by-step tutorial comments, >45% comment density | W→S | 2.0→3.0 | AI narrates code like a tutorial: "Step 1: Initialize..." |
 | `restating-comment` | Comments that restate the next line of code | W | 1.5 | AI explains obvious code. Heuristic: >60% of comment words appear in code line below. Exempts comments with intent signals (because, workaround, hack, etc.) |
-| `comment-clustering` | Per-function comment density >50%, or uniformly spaced comments | W→S | 1.5→2.5 | Research-backed: comment-to-code ratio is the universal discriminator (CoDet-M4, SANER 2025). AI distributes comments uniformly; humans cluster around complexity |
+| `comment-clustering` | Per-function comment density >50%, or uniformly spaced comments | W→S | 1.5→2.5 | Comment-to-code ratio is the most reliable surface discriminator across multi-language studies. AI distributes comments uniformly; humans cluster around complexity |
 | `generic-todo` | Vague TODOs: "add error handling", "implement this" | W | 1.5 | AI leaves placeholder TODOs it has no plan to fill. 44 match patterns |
 
 ### Structural Signals
@@ -104,52 +104,61 @@ These catch patterns in how AI organizes code.
 
 ## Research Basis
 
-The rule set is informed by academic research on detecting
-machine-generated code. Key findings that shaped rule design:
+Rule design draws from published work on detecting machine-generated
+code. Key findings:
 
-**Comment-to-code ratio is the universal discriminator.** Every
-multi-language detection study (CoDet-M4 at ACL 2025, SANER 2025
-multilingual stylometry, the function/class granularity study) found
-this as the single most reliable signal. This backs `over-documentation`,
-`restating-comment`, and `comment-clustering`.
+**Comment-to-code ratio is the most reliable surface signal.** The
+CoDet-M4 multi-language study and multilingual code stylometry work
+both found this as the single strongest surface discriminator. This
+backs `over-documentation`, `restating-comment`, and
+`comment-clustering`.
 
-**Granularity matters 8.6x more than model differences.** Function-level
-analysis is dramatically more discriminative than file-level analysis.
-This motivated `comment-clustering`'s per-function density measurement
-rather than relying solely on file-level `over-documentation`.
+**Function-level analysis far outperforms file-level.** Granularity
+studies show function-scope detection outperforms file-scope by a
+wide margin. This motivated `comment-clustering`'s per-function
+density measurement.
 
-**AI distributes comments uniformly; humans cluster.** Research on
-comment placement shows AI produces mechanically regular comment
-spacing. Humans cluster comments near complex or non-obvious code.
-This backs `comment-clustering`'s standard-deviation analysis and
-`whitespace-uniformity`'s gap regularity check.
+**AI distributes comments uniformly; humans cluster.** Comment
+placement research shows AI produces mechanically regular spacing.
+Humans cluster comments near complex or non-obvious code. This backs
+the standard-deviation analysis in `comment-clustering` and
+`whitespace-uniformity`.
 
-**Naming diversity separates human from AI code.** AI models draw
-from a narrow, verbose naming vocabulary consistent with training
-data distributions. Human code has higher naming entropy: abbreviations,
-domain shorthand, single-letter iterators, and mixed conventions.
-This backs `naming-entropy` and `generic-naming`.
+**Structural signals survive obfuscation.** The LLM-generated
+JavaScript attribution study achieved 88-96% accuracy even after
+minification and identifier mangling. AST structure, control flow
+patterns, and dataflow graphs are more robust than surface features.
+This validates `structural-repetition` and is the direction for
+future rule development.
 
-**Structural regularity persists through obfuscation.** The JavaScript
-attribution study found that dataflow and AST patterns survive even
-minification and identifier mangling (90%+ accuracy on mangled code).
-This validates `structural-repetition` and suggests future work on
-control-flow diversity and dataflow regularity analysis.
+**Naming entropy separates human from AI code.** AI draws from a
+narrow naming vocabulary. Humans abbreviate, use domain shorthand,
+and vary style. This backs `naming-entropy` and `generic-naming`.
 
-**Newer models are harder to detect.** Detection accuracy dropped from
-0.96 AUC-ROC (GPT-3.5) to 0.68 (Claude 3 Haiku). Rule-based detection
-has a shelf life — patterns that catch 2024-era models may not catch
-2026-era output. This means the rule set must evolve, and transparency
-(every rule is readable and explainable) is a feature, not a limitation.
+**AI coding agents leave distinct fingerprints.** The MSR 2026 agent
+fingerprinting study (33k PRs from Codex, Copilot, Devin, Cursor,
+Claude Code) achieved 97% F1 on agent identification. Different
+agents have distinctive patterns in conditional statements, commit
+structure, and code organization. This is a signal class lipstyk
+should expand into.
+
+**Detection degrades with each model generation.** Each new model
+family produces output closer to human code. Surface-level rules
+(comment density, naming patterns) degrade faster than structural
+rules (AST shape, control flow). The rule set must evolve, and
+transparency — every rule readable and explainable — is what keeps
+it useful as models improve.
 
 ### Sources
 
-- CoDet-M4: Multi-Lingual, Multi-Generator Detection — ACL 2025
-- Multilingual Code Stylometry — SANER 2025 (84.1% across 10 languages)
-- Structural Patterns in LLM-Generated JavaScript — AST/dataflow study
-- Function vs Class Granularity Detection — comment ratio as universal discriminator
-- DetectCodeGPT — ICSE 2025 (zero-shot detection)
-- LLM Code Stylometry for Authorship Attribution — ACM AISec 2025
+- CoDet-M4: Multi-Lingual, Multi-Generator Detection (ACL Findings)
+- Fingerprinting AI Coding Agents on GitHub (MSR 2026, arxiv 2601.17406)
+- The Hidden DNA of LLM-Generated JavaScript (arxiv 2510.10493)
+- Code Fingerprints: Disentangled Attribution via DCAN (arxiv 2603.04212)
+- LLM Code Stylometry for Authorship Attribution (ACM AISec)
+- AICD Bench: 2M-sample benchmark, 77 generators, 9 languages (arxiv 2602.02079)
+- Multilingual Code Stylometry (SANER — 84.1% across 10 languages)
+- Function vs Class Granularity Detection
 
 ---
 

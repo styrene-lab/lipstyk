@@ -199,16 +199,16 @@ Verdicts: clean (<5), mild (<15), suspicious (<30), sloppy (>=30).
 
 ## Research
 
-Rule design draws from:
+Rule design draws from published work on detecting machine-generated
+code:
 
-- CoDet-M4 (ACL 2025) and SANER 2025 multilingual stylometry:
-  comment-to-code ratio as universal discriminator
-- Function-level granularity is 8.6x more discriminative than
-  file-level
+- Comment-to-code ratio is the most reliable single discriminator
+  across multi-language studies
+- Function-level analysis outperforms file-level by a wide margin
 - AI distributes comments uniformly; humans cluster near complexity
 - Naming entropy separates human and AI code
-- Detection accuracy drops with newer models (0.96 AUC for GPT-3.5,
-  0.68 for Claude 3 Haiku) — the rules will need to evolve
+- Detection accuracy degrades with each model generation — the rules
+  will need to evolve as models improve
 
 Citations in [RULES.md](RULES.md).
 
