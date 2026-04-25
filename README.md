@@ -28,6 +28,21 @@ Comments that narrate obvious code instead of explaining decisions.
 
 Any single instance is fine. A file full of them is slop.
 
+**If you're writing code with AI** — run it before you commit. Catch
+the patterns your copilot leaves behind.
+
+**If you're reviewing PRs** — `lipstyk --diff main` scores only the
+changed lines. Drop it in CI and stop eyeballing for slop manually.
+
+**If you run infrastructure** — Dockerfiles running as root, K8s
+manifests without resource limits, shell scripts without `set -e`,
+CI workflows with hardcoded secrets. lipstyk catches the DevOps
+patterns that AI gets wrong and humans miss in review.
+
+**If you own a codebase** — track slop density over time with JSON
+reports. Set a threshold gate in CI. Know where the debt is
+accumulating before it compounds.
+
 ## Install
 
 ```bash
