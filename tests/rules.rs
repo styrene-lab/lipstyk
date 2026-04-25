@@ -469,3 +469,41 @@ fn java_step_narration_fires() {
     let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
     assert!(has_rule(src, "t.java", "java-comment-depth"));
 }
+
+// ── Tree-sitter powered rules ───────────────────────────────────
+
+#[test]
+fn ts_redundant_async_fires() {
+    let src = "async function noAwait() {\n  console.log('no await here');\n  return 42;\n}\n";
+    assert!(has_rule(src, "t.ts", "ts-redundant-async"));
+}
+
+#[test]
+fn ts_redundant_async_clean() {
+    let src = "async function withAwait() {\n  const data = await fetch('/api');\n  return data;\n}\n";
+    assert!(no_rule(src, "t.ts", "ts-redundant-async"));
+}
+
+#[test]
+fn py_index_loop_fires() {
+    let src = "for i in range(len(items)):\n    print(items[i])\n";
+    assert!(has_rule(src, "t.py", "py-index-loop"));
+}
+
+#[test]
+fn py_index_loop_clean() {
+    let src = "for item in items:\n    print(item)\n";
+    assert!(no_rule(src, "t.py", "py-index-loop"));
+}
+
+#[test]
+fn py_mutable_default_fires() {
+    let src = "def f(items=[]):\n    items.append(1)\n    return items\n";
+    assert!(has_rule(src, "t.py", "py-mutable-default"));
+}
+
+#[test]
+fn py_mutable_default_clean() {
+    let src = "def f(items=None):\n    items = items or []\n    return items\n";
+    assert!(no_rule(src, "t.py", "py-mutable-default"));
+}

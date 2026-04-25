@@ -90,7 +90,8 @@ pub fn rule_category(rule: &str) -> &'static str {
         "verbose-match" | "index-loop" | "needless-type-annotation" => "idiom",
         "generic-naming" | "generic-todo" => "naming",
         "restating-comment" | "over-documentation" => "documentation",
-        "trivial-wrapper" | "pub-overuse" | "derive-stacking" | "dead-code-markers" => "structure",
+        "trivial-wrapper" | "ts-trivial-wrapper" | "py-trivial-wrapper"
+        | "pub-overuse" | "derive-stacking" | "dead-code-markers" => "structure",
         "whitespace-uniformity" | "structural-repetition"
         | "ts-structural-repetition" | "py-structural-repetition"
         | "naming-entropy" | "ts-naming-entropy" | "py-naming-entropy" => "statistical",
@@ -99,7 +100,8 @@ pub fn rule_category(rule: &str) -> &'static str {
         "accessibility" => "accessibility",
         "any-abuse" | "promise-antipattern" => "ts-quality",
         "console-dump" | "print-debug" => "debug-output",
-        "nested-ternary" => "ts-idiom",
+        "nested-ternary" | "ts-nesting-depth" | "ts-redundant-async" => "ts-idiom",
+        "py-nesting-depth" | "py-index-loop" | "py-mutable-default" => "py-quality",
         "ts-generic-naming" | "py-generic-naming" => "naming",
         "ts-restating-comment" | "py-restating-comment" => "documentation",
         "bare-except" | "java-bare-catch" | "ts-error-handling" | "py-error-handling" => "error-handling",

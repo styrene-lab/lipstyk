@@ -5,5 +5,8 @@ pub mod generic_naming;
 pub mod import_star;
 pub mod print_debug;
 pub mod restating_comments;
+pub mod index_loop;
+pub mod mutable_default;
+pub mod trivial_wrapper;
 pub mod type_hint_gaps;
 pub mod whitespace_uniformity;

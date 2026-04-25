@@ -77,6 +77,10 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::ts::structural_repetition::PyStructuralRepetition));
         linter.add_source_rule(Box::new(crate::ts::naming_entropy::NamingEntropy));
         linter.add_source_rule(Box::new(crate::ts::naming_entropy::PyNamingEntropy));
+        linter.add_source_rule(Box::new(crate::ts::trivial_wrapper::TrivialWrapper));
+        linter.add_source_rule(Box::new(crate::ts::redundant_async::RedundantAsync));
+        linter.add_source_rule(Box::new(crate::ts::nesting_depth::NestingDepth));
+        linter.add_source_rule(Box::new(crate::ts::nesting_depth::PyNestingDepth));
         linter.add_source_rule(Box::new(crate::python::bare_except::BareExcept));
         linter.add_source_rule(Box::new(crate::python::print_debug::PrintDebug));
         linter.add_source_rule(Box::new(crate::python::import_star::ImportStar));
@@ -86,6 +90,9 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::python::whitespace_uniformity::WhitespaceUniformity));
         linter.add_source_rule(Box::new(crate::python::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::python::comment_depth::CommentDepth));
+        linter.add_source_rule(Box::new(crate::python::index_loop::IndexLoop));
+        linter.add_source_rule(Box::new(crate::python::mutable_default::MutableDefault));
+        linter.add_source_rule(Box::new(crate::python::trivial_wrapper::TrivialWrapper));
         linter.add_source_rule(Box::new(crate::java::restating_comments::RestatingComments));
         linter.add_source_rule(Box::new(crate::java::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::java::bare_catch::BareCatch));

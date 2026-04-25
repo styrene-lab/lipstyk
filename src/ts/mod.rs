@@ -7,5 +7,8 @@ pub mod nested_ternary;
 pub mod promise_antipattern;
 pub mod restating_comments;
 pub mod naming_entropy;
+pub mod nesting_depth;
+pub mod redundant_async;
 pub mod structural_repetition;
+pub mod trivial_wrapper;
 pub mod whitespace_uniformity;
