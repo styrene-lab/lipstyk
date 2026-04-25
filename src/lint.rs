@@ -98,6 +98,16 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::java::bare_catch::BareCatch));
         linter.add_source_rule(Box::new(crate::java::comment_depth::CommentDepth));
 
+        // Go rules
+        linter.add_source_rule(Box::new(crate::golang::error_handling::ErrorHandling));
+        linter.add_source_rule(Box::new(crate::golang::antipatterns::Antipatterns));
+        linter.add_source_rule(Box::new(crate::golang::generic_naming::GenericNaming));
+        linter.add_source_rule(Box::new(crate::golang::restating_comments::RestatingComments));
+        linter.add_source_rule(Box::new(crate::golang::comment_depth::CommentDepth));
+        linter.add_source_rule(Box::new(crate::golang::structural_repetition::StructuralRepetition));
+        linter.add_source_rule(Box::new(crate::golang::naming_entropy::NamingEntropy));
+        linter.add_source_rule(Box::new(crate::golang::nesting_depth::NestingDepth));
+
         // Shell rules
         linter.add_source_rule(Box::new(crate::shell::strict_mode::StrictMode));
         linter.add_source_rule(Box::new(crate::shell::quoting::Quoting));
@@ -119,7 +129,7 @@ impl Linter {
     }
 
     pub fn rule_counts(&self) -> RuleCounts {
-        let (mut html, mut css, mut ts, mut js, mut py, mut java) = (0, 0, 0, 0, 0, 0);
+        let (mut html, mut css, mut ts, mut js, mut py, mut java, mut go) = (0, 0, 0, 0, 0, 0, 0);
         let (mut shell, mut docker, mut yaml, mut markdown) = (0, 0, 0, 0);
 
         for rule in &self.source_rules {
@@ -131,6 +141,7 @@ impl Linter {
                     Lang::JavaScript => js += 1,
                     Lang::Python => py += 1,
                     Lang::Java => java += 1,
+                    Lang::Go => go += 1,
                     Lang::Shell => shell += 1,
                     Lang::Dockerfile => docker += 1,
                     Lang::Yaml => yaml += 1,
@@ -141,7 +152,7 @@ impl Linter {
 
         RuleCounts {
             rust: self.rust_rules.len(),
-            html, css, ts, js, py, java, shell, docker, yaml, markdown,
+            html, css, ts, js, py, java, go, shell, docker, yaml, markdown,
         }
     }
 
@@ -310,6 +321,7 @@ pub struct RuleCounts {
     pub js: usize,
     pub py: usize,
     pub java: usize,
+    pub go: usize,
     pub shell: usize,
     pub docker: usize,
     pub yaml: usize,
@@ -322,7 +334,7 @@ impl RuleCounts {
     }
 
     pub fn source_total(&self) -> usize {
-        self.html.max(self.css) + self.ts.max(self.js) + self.py + self.java
+        self.html.max(self.css) + self.ts.max(self.js) + self.py + self.java + self.go
             + self.shell + self.docker + self.yaml + self.markdown
     }
 }

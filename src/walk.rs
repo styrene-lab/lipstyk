@@ -7,6 +7,7 @@ const SUPPORTED_EXTENSIONS: &[&str] = &[
     "ts", "tsx", "js", "jsx",
     "py",
     "java",
+    "go",
     "sh", "bash", "zsh",
     "yml", "yaml",
     "md", "mdx",

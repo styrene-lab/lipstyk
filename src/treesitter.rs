@@ -10,6 +10,7 @@ pub fn parse(source: &str, lang: Lang) -> Option<Tree> {
         Lang::TypeScript => tree_sitter_typescript::LANGUAGE_TYPESCRIPT.into(),
         Lang::JavaScript => tree_sitter_typescript::LANGUAGE_TYPESCRIPT.into(), // TS parser handles JS
         Lang::Python => tree_sitter_python::LANGUAGE.into(),
+        Lang::Go => tree_sitter_go::LANGUAGE.into(),
         _ => return None,
     };
 

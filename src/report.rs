@@ -115,6 +115,11 @@ pub fn rule_category(rule: &str) -> &'static str {
         "docker-best-practices" => "docker",
         "k8s-manifest" => "kubernetes",
         "ci-workflow" => "ci-cd",
+        "go-error-handling" => "error-handling",
+        "go-antipattern" | "go-nesting-depth" => "go-quality",
+        "go-generic-naming" => "naming",
+        "go-restating-comment" | "go-comment-depth" => "documentation",
+        "go-structural-repetition" | "go-naming-entropy" => "statistical",
         _ => "other",
     }
 }

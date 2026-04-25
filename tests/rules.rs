@@ -507,3 +507,41 @@ fn py_mutable_default_clean() {
     let src = "def f(items=None):\n    items = items or []\n    return items\n";
     assert!(no_rule(src, "t.py", "py-mutable-default"));
 }
+
+// ── Go rules ────────────────────────────────────────────────────
+
+#[test]
+fn go_bare_return_err_fires() {
+    let src = "package main\nfunc f() error {\n  _, err := x()\n  if err != nil {\n    return err\n  }\n  _, err = y()\n  if err != nil {\n    return nil, err\n  }\n  _, err = z()\n  if err != nil {\n    return nil, err\n  }\n  return nil\n}\n";
+    assert!(has_rule(src, "t.go", "go-error-handling"));
+}
+
+#[test]
+fn go_interface_abuse_fires() {
+    let src = "package main\nfunc a(x interface{}) interface{} { return x }\nfunc b(y interface{}) interface{} { return y }\n";
+    assert!(has_rule(src, "t.go", "go-antipattern"));
+}
+
+#[test]
+fn go_generic_naming_fires() {
+    let src = "package main\nfunc processData(x int) int { return x }\n";
+    assert!(has_rule(src, "t.go", "go-generic-naming"));
+}
+
+#[test]
+fn go_generic_naming_clean() {
+    let src = "package main\nfunc validatePayment(amount float64) bool { return amount > 0 }\n";
+    assert!(no_rule(src, "t.go", "go-generic-naming"));
+}
+
+#[test]
+fn go_restating_comment_fires() {
+    let src = "package main\n// process the data\nfunc process(data []byte) []byte { return data }\n";
+    assert!(has_rule(src, "t.go", "go-restating-comment"));
+}
+
+#[test]
+fn go_step_narration_fires() {
+    let src = "package main\nfunc f() {\n  // Step 1: Init\n  x()\n  // Step 2: Process\n  y()\n  // Step 3: Finish\n  z()\n}\n";
+    assert!(has_rule(src, "t.go", "go-comment-depth"));
+}

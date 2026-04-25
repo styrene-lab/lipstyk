@@ -4,6 +4,7 @@ pub mod cross_file;
 pub mod devops;
 pub mod diagnostic;
 pub mod docker;
+pub mod golang;
 pub mod diff;
 #[cfg(feature = "agent")]
 pub mod extension;
