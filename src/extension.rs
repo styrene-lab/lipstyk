@@ -183,21 +183,17 @@ impl LipstykExtension {
     }
 
     fn execute_rules(&self) -> omegon_extension::Result<Value> {
+        let linter = Linter::with_defaults();
+        let counts = linter.rule_counts();
         Ok(json!({
             "languages": {
-                "rust": { "rules": 21, "extensions": [".rs"] },
-                "typescript": { "rules": 7, "extensions": [".ts", ".tsx", ".js", ".jsx"] },
-                "python": { "rules": 7, "extensions": [".py"] },
-                "html_css": { "rules": 6, "extensions": [".html", ".htm", ".css", ".vue", ".svelte"] },
+                "rust": { "rules": counts.rust, "extensions": [".rs"] },
+                "typescript": { "rules": counts.ts, "extensions": [".ts", ".tsx", ".js", ".jsx"] },
+                "python": { "rules": counts.py, "extensions": [".py"] },
+                "html_css": { "rules": counts.html, "extensions": [".html", ".htm", ".css", ".vue", ".svelte"] },
+                "java": { "rules": counts.java, "extensions": [".java"] },
             },
-            "categories": [
-                "error-handling", "ownership", "idiom", "naming",
-                "documentation", "structure", "statistical",
-                "html-structure", "css", "accessibility",
-                "ts-quality", "ts-idiom", "debug-output",
-                "py-structure", "py-quality"
-            ],
-            "total_rules": 41,
+            "total_rules": counts.total(),
         }))
     }
 }

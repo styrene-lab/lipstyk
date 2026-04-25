@@ -21,24 +21,22 @@ impl HtmlRule for DivSoup {
             .collect();
 
         let total = opening_tags.len();
-        if total < 10 {
-            return diagnostics;
-        }
-
         let div_count = opening_tags.iter().filter(|t| t.name == "div").count();
 
-        let ratio = div_count as f64 / total as f64;
-        if ratio > 0.5 {
-            diagnostics.push(Diagnostic {
-                rule: "div-soup",
-                message: format!(
-                    "{div_count}/{total} opening tags are <div> ({:.0}%) — use semantic elements",
-                    ratio * 100.0
-                ),
-                line: 1,
-                severity: Severity::Warning,
-                weight: 2.5,
-            });
+        if total >= 10 {
+            let ratio = div_count as f64 / total as f64;
+            if ratio > 0.5 {
+                diagnostics.push(Diagnostic {
+                    rule: "div-soup",
+                    message: format!(
+                        "{div_count}/{total} opening tags are <div> ({:.0}%) — use semantic elements",
+                        ratio * 100.0
+                    ),
+                    line: 1,
+                    severity: Severity::Warning,
+                    weight: 2.5,
+                });
+            }
         }
 
         // Track actual div nesting depth through the tag tree.

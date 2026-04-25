@@ -106,6 +106,17 @@ impl Linter {
         linter
     }
 
+    /// Return rule counts per language backend.
+    pub fn rule_counts(&self) -> RuleCounts {
+        RuleCounts {
+            rust: self.rust_rules.len(),
+            html: self.html_rules.len(),
+            ts: self.ts_rules.len(),
+            py: self.py_rules.len(),
+            java: self.java_rules.len(),
+        }
+    }
+
     pub fn exclude_tests(mut self, yes: bool) -> Self {
         self.exclude_tests = yes;
         self
@@ -273,6 +284,20 @@ fn run_rules<R: ?Sized>(
     }
     diagnostics.sort_by_key(|d| d.line);
     diagnostics
+}
+
+pub struct RuleCounts {
+    pub rust: usize,
+    pub html: usize,
+    pub ts: usize,
+    pub py: usize,
+    pub java: usize,
+}
+
+impl RuleCounts {
+    pub fn total(&self) -> usize {
+        self.rust + self.html + self.ts + self.py + self.java
+    }
 }
 
 impl Default for Linter {
