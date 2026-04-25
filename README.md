@@ -1,9 +1,7 @@
 # lipstyk
 
-Anti-AI-slop code analysis. Detects machine-generated code patterns
-through static analysis — no ML classifiers, no language models.
-Every finding is a deterministic rule you can read, understand, and
-disagree with.
+Static analysis for machine-generated code patterns. No ML, no
+classifiers — deterministic rules you can read and argue with.
 
 ```
 src/handler.rs — slop score: 42.5 (12.3/100 lines)
@@ -23,20 +21,12 @@ elapsed: 8ms
 
 ## Why
 
-AI code generation produces recognizable patterns. Not because the
-code is wrong — it usually compiles and runs — but because it's
-*generated without intent*. The same `.unwrap()` everywhere instead
-of error propagation. The same `process_data` naming from the
-training distribution. Comments that restate the code instead of
-explaining why.
+AI-generated code compiles and runs but it reads like it was written
+by someone who's never going to maintain it. `.unwrap()` everywhere.
+`process_data` because that's what the training distribution picked.
+Comments that narrate obvious code instead of explaining decisions.
 
-Lipstyk catches these patterns so you can fix them before they
-compound. It's designed for agentic development workflows where AI
-writes most of the code and you need a quality gate that's faster
-than manual review.
-
-**The core principle:** any single finding is inconclusive. Density
-is the signal.
+Any single instance is fine. A file full of them is slop.
 
 ## Install
 
@@ -44,7 +34,7 @@ is the signal.
 cargo install --git https://github.com/styrene-lab/lipstyk
 ```
 
-Or build from source:
+Or from source:
 
 ```bash
 git clone https://github.com/styrene-lab/lipstyk
@@ -56,27 +46,19 @@ cp target/release/lipstyk ~/.local/bin/
 ## Usage
 
 ```bash
-# Analyze files or directories (auto-detects language)
-lipstyk src/
-lipstyk src/handler.rs src/lib.rs
-
-# Exclude test code (recommended for Rust)
-lipstyk --exclude-tests src/
-
-# Only score lines changed since main
-lipstyk --diff main --exclude-tests src/
-
-# CI gate — exit 0 unless any file exceeds score 20
-lipstyk --exclude-tests --threshold 20 src/
+lipstyk src/                                          # analyze everything
+lipstyk --exclude-tests src/                          # skip #[test] / #[cfg(test)]
+lipstyk --diff main --exclude-tests src/              # only changed lines
+lipstyk --exclude-tests --threshold 20 src/           # CI gate
 ```
 
-### Output Formats
+### Output formats
 
 ```bash
-lipstyk src/                          # human-readable (default)
+lipstyk src/                          # terminal (default)
 lipstyk --json src/                   # full JSON report
-lipstyk --sarif src/                  # SARIF 2.1.0 (GitHub code scanning)
-lipstyk --report src/                 # Markdown (PR comments, docs)
+lipstyk --sarif src/                  # SARIF 2.1.0 for GitHub code scanning
+lipstyk --report src/                 # Markdown for PR comments
 lipstyk --summary src/                # one line per file
 ```
 
@@ -84,47 +66,45 @@ lipstyk --summary src/                # one line per file
 
 | Language | Extensions | Rules | Analysis |
 |----------|-----------|-------|----------|
-| Rust | `.rs` | 21 | AST-level via `syn` |
-| TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 7 | Text-based |
-| Python | `.py` | 7 | Text-based |
-| HTML / CSS | `.html` `.htm` `.css` `.vue` `.svelte` | 6 | Tag-aware parser |
+| Rust | `.rs` | 21 | AST via `syn` |
+| TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 7 | text |
+| Python | `.py` | 7 | text |
+| HTML / CSS | `.html` `.htm` `.css` `.vue` `.svelte` | 6 | tag parser |
 
-41 rules total. See [RULES.md](RULES.md) for the full reference with
-descriptions, severity levels, and research basis.
+41 rules. Full reference in [RULES.md](RULES.md).
 
-## Rules at a Glance
+## What it catches
 
-**Error handling** — `.unwrap()` overuse, silently swallowed errors,
-`Box<dyn Error>` catch-all, bare `except:` in Python
+Rust: `.unwrap()` chains, gratuitous `.clone()`, `Box<dyn Error>`
+catch-alls, verbose match arms, C-style index loops, needless type
+annotations and lifetimes, `String` params where `&str` works
 
-**Ownership** (Rust) — gratuitous `.clone()`, owned `String` params
-where `&str` works, needless lifetime annotations
+Naming: `process_data`, `handle_request`, `fetchData`, vague TODOs,
+low naming entropy across a file
 
-**Documentation** — comments that restate code ("// increment counter"
-above `counter += 1`), step-by-step tutorial narration, mechanically
-uniform comment spacing
+Comments: restating what the code says, step-by-step tutorial
+narration, mechanically uniform comment spacing, high per-function
+comment density
 
-**Naming** — `process_data`, `handle_request`, `fetchData`, generic
-TODOs ("TODO: add error handling")
+Structure: trivial wrapper clusters, everything `pub`, derive
+stacking, `#[allow(dead_code)]` papering over unused code, functions
+with identical AST shapes
 
-**Structure** — trivial wrapper functions, everything `pub`, 6+ derives
-stacked on one type, `#[allow(dead_code)]` instead of deleting code
+Statistical: blank line regularity, line length uniformity
 
-**Statistical** — blank line regularity, line length uniformity,
-function shape repetition, naming entropy
+HTML/CSS: div soup, missing semantic elements, inline styles, generic
+class names, accessibility gaps, `!important` abuse, magic pixel
+values
 
-**HTML/CSS** — div soup, missing semantic elements, inline styles,
-generic class names, accessibility gaps, `!important` overuse
+TS/JS: `any` everywhere, `console.log` left in, nested ternaries,
+`.then().catch(() => {})` chains
 
-**TS/JS** — `any` abuse, `console.log` dumps, nested ternaries,
-Promise anti-patterns
-
-**Python** — bare `except:`, `print()` debugging, `from X import *`,
+Python: bare `except:`, `print()` debugging, `from X import *`,
 inconsistent type hints
 
 ## Configuration
 
-Create `.lipstyk.toml` in your project root:
+`.lipstyk.toml` in the project root:
 
 ```toml
 [settings]
@@ -135,63 +115,43 @@ threshold = 20
 weight = 0.25         # downweight for Axum/actix projects
 
 [rules.structural-repetition]
-enabled = false       # disable entirely
+enabled = false
 ```
 
-Rules not listed use defaults. Config is auto-discovered by walking
-parent directories.
+Auto-discovered by walking parent directories.
 
-## CI / GitHub Actions
-
-### Quality gate
+## CI
 
 ```yaml
-- name: Slop check
-  run: lipstyk --exclude-tests --threshold 20 src/
-```
+# gate
+- run: lipstyk --exclude-tests --threshold 20 src/
 
-### Diff-only PR check
+# diff-only PR check
+- run: lipstyk --diff origin/${{ github.base_ref }} --exclude-tests --threshold 15 src/
 
-```yaml
-- name: Slop check (changed lines only)
-  run: lipstyk --diff origin/${{ github.base_ref }} --exclude-tests --threshold 15 src/
-```
-
-### SARIF upload (inline PR annotations)
-
-```yaml
-- name: Lipstyk analysis
-  run: lipstyk --sarif --exclude-tests src/ > lipstyk.sarif
+# SARIF for inline annotations
+- run: lipstyk --sarif --exclude-tests src/ > lipstyk.sarif
   continue-on-error: true
-
-- name: Upload SARIF
+- uses: github/codeql-action/upload-sarif@v3
   if: always()
-  uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: lipstyk.sarif
   continue-on-error: true
-```
 
-### Markdown report in job summary
-
-```yaml
-- name: Lipstyk report
-  run: lipstyk --report --exclude-tests src/ >> $GITHUB_STEP_SUMMARY
+# markdown in job summary
+- run: lipstyk --report --exclude-tests src/ >> $GITHUB_STEP_SUMMARY
   continue-on-error: true
 ```
 
-## Agent Integration
+## Agent integration
 
-Lipstyk includes an agent binary (`lipstyk-agent`) that speaks both
-the Omegon extension protocol and MCP. One binary, two protocols.
+The `lipstyk-agent` binary speaks Omegon RPC and MCP (`--mcp` flag).
 
 ```bash
 cargo build --release --features agent
 ```
 
-### Claude Code / Cursor / VS Code / Zed
-
-Add to `.mcp.json` in your project root:
+Register as an MCP server (Claude Code, Cursor, VS Code, Zed):
 
 ```json
 {
@@ -204,74 +164,59 @@ Add to `.mcp.json` in your project root:
 }
 ```
 
-### Agent tools
+Tools: `lipstyk_check` (self-review with fix suggestions),
+`lipstyk_diff` (changed lines only), `lipstyk_report` (markdown),
+`lipstyk_rules` (list all rules).
 
-| Tool | Purpose |
-|------|---------|
-| `lipstyk_check` | Self-review with pass/fail verdict and fix suggestions |
-| `lipstyk_diff` | Score only changed lines since a git ref |
-| `lipstyk_report` | Generate Markdown report for PR comments or docs |
-| `lipstyk_rules` | List all rules with categories and weights |
-
-### CLAUDE.md snippet
+CLAUDE.md snippet for automatic self-review:
 
 ```markdown
-After modifying code, call lipstyk_check with `path` set to the file
-you changed. If verdict is "suspicious" or "sloppy", fix the
-highest-severity findings and re-check. Do not commit until
-lipstyk_check returns pass: true.
+After modifying code, call lipstyk_check on the changed file. If
+verdict is "suspicious" or "sloppy", fix the top findings and
+re-check. Don't commit until pass: true.
 ```
 
-See [INTEGRATION.md](INTEGRATION.md) for detailed setup for Omegon,
-Cursor, Windsurf, Cline, Aider, and CI pipelines.
+Full integration guide for Omegon, Cursor, Windsurf, Cline, Aider,
+and CI in [INTEGRATION.md](INTEGRATION.md).
 
 ## Dogfooding
 
-Lipstyk analyzes itself. Reports are in
-[`dogfood-reports/`](dogfood-reports/) — anyone can see what the
-tool flags on its own code.
+Lipstyk analyzes itself. Reports in
+[`dogfood-reports/`](dogfood-reports/).
 
-Current self-scan: **score 20.3, 0.4/100 lines, verdict mild.**
+Current self-scan: score 20.3, 0.4 per 100 lines, mild.
 
 ## Scoring
 
-Each diagnostic has a weight (0.1–3.0). A file's slop score is the
-sum of all weights. The `score_per_100_lines` metric normalizes for
-file size.
+Diagnostics carry weights (0.1-3.0). File score = sum of weights.
+`score_per_100_lines` normalizes for size.
 
-Many rules escalate severity by count: one `.clone()` is a hint
-(0.5); ten in one file is slop (2.0). This reflects the core
-principle — any single pattern is inconclusive; density is the
-signal.
+Rules escalate by count: one `.clone()` is a 0.5 hint; ten in the
+same file is a 2.0 slop. Single findings don't mean much. Density
+does.
 
-**Verdicts:** clean (<5), mild (<15), suspicious (<30), sloppy (≥30).
+Verdicts: clean (<5), mild (<15), suspicious (<30), sloppy (>=30).
 
-## Research Basis
+## Research
 
-The rule set is informed by academic research on detecting
-machine-generated code:
+Rule design draws from:
 
-- Comment-to-code ratio is the universal discriminator across every
-  multi-language study (CoDet-M4, SANER 2025 multilingual stylometry)
-- Function-level analysis is 8.6x more discriminative than file-level
-- AI distributes comments uniformly; humans cluster around complexity
-- Naming diversity separates human from AI code
-- Newer models are harder to detect — rule-based detection has a
-  shelf life, and transparency is a feature
+- CoDet-M4 (ACL 2025) and SANER 2025 multilingual stylometry:
+  comment-to-code ratio as universal discriminator
+- Function-level granularity is 8.6x more discriminative than
+  file-level
+- AI distributes comments uniformly; humans cluster near complexity
+- Naming entropy separates human and AI code
+- Detection accuracy drops with newer models (0.96 AUC for GPT-3.5,
+  0.68 for Claude 3 Haiku) — the rules will need to evolve
 
-See the Research Basis section in [RULES.md](RULES.md) for citations.
+Citations in [RULES.md](RULES.md).
 
 ## Limitations
 
-This tool detects patterns, not intent. It will produce:
-
-- **False positives** on human code that happens to be verbose,
-  uniformly formatted, or heavily commented
-- **False negatives** on AI code that has been manually edited or
-  generated by models trained to avoid these patterns
-
-It is not a substitute for code review. It is a signal that something
-warrants closer inspection.
+Detects patterns, not intent. False positives on verbose human code.
+False negatives on edited AI output. Not a replacement for reading
+the code.
 
 ## License
 
