@@ -91,7 +91,9 @@ pub fn rule_category(rule: &str) -> &'static str {
         "generic-naming" | "generic-todo" => "naming",
         "restating-comment" | "over-documentation" => "documentation",
         "trivial-wrapper" | "pub-overuse" | "derive-stacking" | "dead-code-markers" => "structure",
-        "whitespace-uniformity" | "structural-repetition" => "statistical",
+        "whitespace-uniformity" | "structural-repetition"
+        | "ts-structural-repetition" | "py-structural-repetition"
+        | "naming-entropy" | "ts-naming-entropy" | "py-naming-entropy" => "statistical",
         "div-soup" | "missing-semantics" | "generic-classes" => "html-structure",
         "inline-styles" | "css-smells" => "css",
         "accessibility" => "accessibility",

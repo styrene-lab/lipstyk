@@ -6,4 +6,6 @@ pub mod generic_naming;
 pub mod nested_ternary;
 pub mod promise_antipattern;
 pub mod restating_comments;
+pub mod naming_entropy;
+pub mod structural_repetition;
 pub mod whitespace_uniformity;

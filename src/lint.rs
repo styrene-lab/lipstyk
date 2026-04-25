@@ -73,6 +73,10 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::ts::whitespace_uniformity::WhitespaceUniformity));
         linter.add_source_rule(Box::new(crate::ts::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::ts::comment_depth::CommentDepth));
+        linter.add_source_rule(Box::new(crate::ts::structural_repetition::StructuralRepetition));
+        linter.add_source_rule(Box::new(crate::ts::structural_repetition::PyStructuralRepetition));
+        linter.add_source_rule(Box::new(crate::ts::naming_entropy::NamingEntropy));
+        linter.add_source_rule(Box::new(crate::ts::naming_entropy::PyNamingEntropy));
         linter.add_source_rule(Box::new(crate::python::bare_except::BareExcept));
         linter.add_source_rule(Box::new(crate::python::print_debug::PrintDebug));
         linter.add_source_rule(Box::new(crate::python::import_star::ImportStar));

@@ -26,6 +26,11 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 toml = "0.8"
 
+# Tree-sitter for non-Rust AST analysis
+tree-sitter = "0.24"
+tree-sitter-typescript = "0.23"
+tree-sitter-python = "0.23"
+
 # Optional runtime deps
 omegon-extension = { path = "../omegon/core/crates/omegon-extension", optional = true }
 async-trait = { version = "0.1", optional = true }
