@@ -1,12 +1,10 @@
 use crate::diagnostic::{Diagnostic, Severity};
 use crate::source_rule::{Lang, SourceContext, SourceRule};
-use crate::treesitter;
 
 /// AST-based trivial wrapper detection for TS/JS.
 ///
-/// Same concept as the Rust rule: flags functions whose body is a single
-/// return/expression statement. Uses tree-sitter to count actual AST
-/// statements rather than guessing from text.
+/// Flags functions whose body is a single statement.
+/// Uses oxc for function shape extraction.
 pub struct TrivialWrapper;
 
 const THRESHOLD: usize = 5;
@@ -21,28 +19,27 @@ impl SourceRule for TrivialWrapper {
     }
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
-        let tree = match treesitter::parse(ctx.source, ctx.lang) {
-            Some(t) => t,
+        let oxc = match ctx.oxc.as_ref() {
+            Some(o) => o,
             None => return Vec::new(),
         };
 
-        let shapes = treesitter::extract_fn_shapes(&tree, ctx.source);
-        let wrappers: Vec<&treesitter::FnShape> = shapes.iter()
-            .filter(|s| s.stmt_count == 1 && !s.name.is_empty())
+        let wrappers: Vec<_> = oxc.functions.iter()
+            .filter(|f| f.stmt_count == 1 && !f.name.is_empty())
             .collect();
 
         if wrappers.len() < THRESHOLD {
             return Vec::new();
         }
 
-        wrappers.iter().map(|s| {
+        wrappers.iter().map(|f| {
             Diagnostic {
                 rule: "ts-trivial-wrapper",
                 message: format!(
                     "`{}` is a single-statement wrapper — does it add value?",
-                    s.name
+                    f.name
                 ),
-                line: s.line,
+                line: f.line,
                 severity: Severity::Hint,
                 weight: 0.75,
             }

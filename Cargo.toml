@@ -26,6 +26,12 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 toml = "0.8"
 
+# AST parsers
+oxc_allocator = "0.127"
+oxc_parser = "0.127"
+oxc_ast = "0.127"
+oxc_span = "0.127"
+
 # Tree-sitter for non-Rust AST analysis
 tree-sitter = "0.24"
 tree-sitter-typescript = "0.23"

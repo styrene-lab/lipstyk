@@ -12,6 +12,7 @@ pub mod html;
 pub mod java;
 pub mod lint;
 pub mod markdown;
+pub mod oxc;
 pub mod python;
 pub mod render;
 pub mod report;

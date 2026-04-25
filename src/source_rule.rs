@@ -1,5 +1,6 @@
 use crate::diagnostic::Diagnostic;
 use crate::html::parse::ParsedHtml;
+use crate::oxc::OxcParsed;
 
 /// Language/file-type identifier for dispatch.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -18,7 +19,6 @@ pub enum Lang {
 }
 
 impl Lang {
-    /// Detect language from file extension.
     pub fn from_ext(ext: &str) -> Option<Self> {
         match ext {
             "ts" | "tsx" => Some(Self::TypeScript),
@@ -35,34 +35,36 @@ impl Lang {
         }
     }
 
-    /// Detect from filename (not just extension) for extensionless files.
     pub fn from_filename(filename: &str) -> Option<Self> {
         let name = std::path::Path::new(filename)
             .file_name()
             .and_then(|n| n.to_str())
             .unwrap_or(filename);
 
-        // Try extension first.
         if let Some(ext) = std::path::Path::new(filename).extension().and_then(|e| e.to_str())
             && let Some(lang) = Self::from_ext(ext) {
                 return Some(lang);
             }
 
-        // Extensionless filename detection.
         match name {
             "Dockerfile" | "Containerfile" => Some(Self::Dockerfile),
-            "Makefile" | "makefile" => Some(Self::Shell), // close enough
+            "Makefile" | "makefile" => Some(Self::Shell),
             _ => None,
         }
     }
 }
 
-/// Context for all non-Rust (text-based) rules.
+/// Context for all non-Rust rules.
+///
+/// Carries source text, language, and optional pre-parsed data:
+/// - `html`: tag-parsed HTML (for HTML/CSS files)
+/// - `oxc`: typed AST (for TS/JS files, via oxc_parser)
 pub struct SourceContext<'a> {
     pub filename: &'a str,
     pub source: &'a str,
     pub lang: Lang,
     pub html: Option<ParsedHtml>,
+    pub oxc: Option<OxcParsed>,
 }
 
 impl<'a> SourceContext<'a> {
@@ -71,7 +73,11 @@ impl<'a> SourceContext<'a> {
             Lang::Html | Lang::Css => Some(crate::html::parse::extract_tags(source)),
             _ => None,
         };
-        Self { filename, source, lang, html }
+        let oxc = match lang {
+            Lang::TypeScript | Lang::JavaScript => crate::oxc::parse_ts(source, filename),
+            _ => None,
+        };
+        Self { filename, source, lang, html, oxc }
     }
 
     pub fn is_ts_or_js(&self) -> bool {

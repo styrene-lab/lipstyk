@@ -8,7 +8,7 @@ use crate::treesitter;
 ///
 /// Same concept as the Rust rule: measure the ratio of unique name stems
 /// to total identifiers. Low ratio = repetitive AI naming vocabulary.
-/// Uses tree-sitter for real identifier extraction.
+/// Uses oxc for TS/JS, tree-sitter for Python.
 pub struct NamingEntropy;
 
 const MIN_IDENTIFIERS: usize = 15;
@@ -25,12 +25,10 @@ impl SourceRule for NamingEntropy {
     }
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
-        let tree = match treesitter::parse(ctx.source, ctx.lang) {
-            Some(t) => t,
+        let names = match ctx.oxc.as_ref() {
+            Some(oxc) => oxc.identifiers.clone(),
             None => return Vec::new(),
         };
-
-        let names = treesitter::extract_identifiers(&tree, ctx.source);
         analyze_entropy(&names, "ts-naming-entropy")
     }
 }

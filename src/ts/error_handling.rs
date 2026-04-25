@@ -3,10 +3,9 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags error handling anti-patterns in TS/JS beyond Promise chains.
 ///
-/// - Empty catch blocks: `catch (e) {}` or `catch (e) { /* ignore */ }`
-/// - Catch-and-log-only: `catch (e) { console.error(e) }` with no rethrow
-/// - Untyped catch with broad handling
-/// - `catch (_)` that discards the error variable
+/// Primary detection via oxc AST (empty catch, catch-log-only).
+/// Falls back to text-based heuristics for patterns oxc doesn't cover
+/// (underscore params, single-line catch blocks).
 pub struct ErrorHandling;
 
 impl SourceRule for ErrorHandling {
@@ -20,6 +19,43 @@ impl SourceRule for ErrorHandling {
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
+
+        // Primary: oxc-powered catch analysis.
+        if let Some(oxc) = ctx.oxc.as_ref() {
+            for c in &oxc.catches {
+                if c.body_is_empty {
+                    diagnostics.push(Diagnostic {
+                        rule: "ts-error-handling",
+                        message: "empty catch block swallows errors silently".to_string(),
+                        line: c.line,
+                        severity: Severity::Slop,
+                        weight: 2.5,
+                    });
+                } else if c.body_is_log_only {
+                    diagnostics.push(Diagnostic {
+                        rule: "ts-error-handling",
+                        message: "catch block only logs — consider rethrowing or returning an error".to_string(),
+                        line: c.line,
+                        severity: Severity::Warning,
+                        weight: 1.5,
+                    });
+                }
+
+                if c.param_is_unused {
+                    diagnostics.push(Diagnostic {
+                        rule: "ts-error-handling",
+                        message: "catch discards the error — handle it or let it propagate".to_string(),
+                        line: c.line,
+                        severity: Severity::Warning,
+                        weight: 1.5,
+                    });
+                }
+            }
+
+            return diagnostics;
+        }
+
+        // Fallback: text-based heuristics when oxc isn't available.
         let lines: Vec<&str> = ctx.source.lines().collect();
 
         for (i, line) in lines.iter().enumerate() {
