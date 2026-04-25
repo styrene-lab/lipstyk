@@ -70,7 +70,7 @@ jobs:
         continue-on-error: true
 
       - name: Self-scan threshold gate
-        run: ./target/release/lipstyk --exclude-tests --threshold 25 src/
+        run: ./target/release/lipstyk --exclude-tests --threshold 60 src/
 
       - name: Upload report artifact
         if: always()

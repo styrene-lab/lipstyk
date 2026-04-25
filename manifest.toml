@@ -1,7 +1,7 @@
 [extension]
 name = "lipstyk"
 version = "0.1.0"
-sdk_version = "0.16"
+sdk_version = "0.15"
 description = "Anti-AI-slop code analysis — detects machine-generated code patterns in Rust"
 
 [runtime]
