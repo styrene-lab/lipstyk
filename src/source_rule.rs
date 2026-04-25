@@ -1,5 +1,6 @@
 use crate::diagnostic::Diagnostic;
 use crate::html::parse::ParsedHtml;
+use crate::golang::ast::GoParsed;
 use crate::oxc::OxcParsed;
 
 /// Language/file-type identifier for dispatch.
@@ -65,6 +66,7 @@ pub struct SourceContext<'a> {
     pub lang: Lang,
     pub html: Option<ParsedHtml>,
     pub oxc: Option<OxcParsed>,
+    pub go: Option<GoParsed>,
 }
 
 impl<'a> SourceContext<'a> {
@@ -77,7 +79,11 @@ impl<'a> SourceContext<'a> {
             Lang::TypeScript | Lang::JavaScript => crate::oxc::parse_ts(source, filename),
             _ => None,
         };
-        Self { filename, source, lang, html, oxc }
+        let go = match lang {
+            Lang::Go => crate::golang::ast::parse_go(source),
+            _ => None,
+        };
+        Self { filename, source, lang, html, oxc, go }
     }
 
     pub fn is_ts_or_js(&self) -> bool {

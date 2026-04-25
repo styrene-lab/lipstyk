@@ -2,9 +2,8 @@ use std::collections::HashMap;
 
 use crate::diagnostic::{Diagnostic, Severity};
 use crate::source_rule::{Lang, SourceContext, SourceRule};
-use crate::treesitter;
 
-/// AST-based structural repetition for Go.
+/// Go structural repetition — powered by Go AST collector.
 pub struct StructuralRepetition;
 
 impl SourceRule for StructuralRepetition {
@@ -17,20 +16,19 @@ impl SourceRule for StructuralRepetition {
     }
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
-        let tree = match treesitter::parse(ctx.source, ctx.lang) {
-            Some(t) => t,
+        let go = match &ctx.go {
+            Some(g) => g,
             None => return Vec::new(),
         };
 
-        let shapes = treesitter::extract_fn_shapes(&tree, ctx.source);
-        if shapes.len() < 4 {
+        if go.functions.len() < 4 {
             return Vec::new();
         }
 
-        let mut groups: HashMap<(usize, usize, bool, bool, bool), Vec<&treesitter::FnShape>> = HashMap::new();
-        for shape in &shapes {
-            let key = (shape.param_count, shape.stmt_count, shape.has_if, shape.has_for, shape.has_return);
-            groups.entry(key).or_default().push(shape);
+        let mut groups: HashMap<(usize, usize, bool, bool, bool), Vec<&crate::golang::ast::GoFnInfo>> = HashMap::new();
+        for f in &go.functions {
+            let key = (f.param_count, f.stmt_count, f.has_if, f.has_for, f.has_return);
+            groups.entry(key).or_default().push(f);
         }
 
         let mut diagnostics = Vec::new();

@@ -1,3 +1,4 @@
+pub mod ast;
 pub mod error_handling;
 pub mod generic_naming;
 pub mod restating_comments;

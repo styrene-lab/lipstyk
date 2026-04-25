@@ -518,7 +518,7 @@ fn go_bare_return_err_fires() {
 
 #[test]
 fn go_interface_abuse_fires() {
-    let src = "package main\nfunc a(x interface{}) interface{} { return x }\nfunc b(y interface{}) interface{} { return y }\n";
+    let src = "package main\nfunc a(x interface{}) interface{} { return x }\nfunc b(y interface{}) interface{} { return y }\nfunc c(z interface{}) interface{} { return z }\n";
     assert!(has_rule(src, "t.go", "go-antipattern"));
 }
 
