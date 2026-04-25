@@ -124,6 +124,9 @@ fn main() -> ExitCode {
         }
     }
 
+    // Phase 2: cross-file analysis.
+    linter.lint_codebase(&mut scores, &sources);
+
     let duration = start.elapsed();
     let git = detect_git_info();
     let report = lipstyk::Report::build(scores, files_scanned, &sources, duration, git);

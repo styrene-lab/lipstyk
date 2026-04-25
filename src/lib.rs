@@ -1,5 +1,6 @@
 pub mod common;
 pub mod config;
+pub mod cross_file;
 pub mod diagnostic;
 pub mod diff;
 #[cfg(feature = "agent")]

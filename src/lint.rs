@@ -157,6 +157,31 @@ impl Linter {
         self.source_rules.push(rule);
     }
 
+    /// Run cross-file analysis after all per-file linting is complete.
+    ///
+    /// Takes the per-file scores and source texts, detects codebase-level
+    /// patterns (duplicated blocks, identical imports, cloned error handling),
+    /// and merges additional diagnostics into the affected file scores.
+    pub fn lint_codebase(
+        &self,
+        scores: &mut [SlopScore],
+        sources: &std::collections::BTreeMap<String, String>,
+    ) {
+        let extra = crate::cross_file::analyze(scores, sources);
+
+        for (filename, diagnostics) in extra {
+            // Find or create the score entry for this file.
+            if let Some(score) = scores.iter_mut().find(|s| s.file == filename) {
+                for d in diagnostics {
+                    if self.config.is_rule_enabled(d.rule) {
+                        score.total += d.weight;
+                        score.diagnostics.push(d);
+                    }
+                }
+            }
+        }
+    }
+
     #[instrument(skip(self, source), fields(diagnostics, score))]
     pub fn lint_source(&self, filename: &str, source: &str) -> Result<SlopScore, crate::LintError> {
         let ext = std::path::Path::new(filename)

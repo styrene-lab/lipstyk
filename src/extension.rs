@@ -105,7 +105,7 @@ impl LipstykExtension {
 
         let start = std::time::Instant::now();
 
-        let (scores, sources, files_scanned) = if let Some(path) = path {
+        let (mut scores, sources, files_scanned) = if let Some(path) = path {
             analyze_path_with(&linter, path)?
         } else if let Some(code) = code {
             let fname = filename_hint.unwrap_or("<input>.rs");
@@ -120,6 +120,8 @@ impl LipstykExtension {
                 "provide either 'code' + 'filename' or 'path'"
             ));
         };
+
+        linter.lint_codebase(&mut scores, &sources);
 
         let duration = start.elapsed();
         let report = Report::build(scores, files_scanned, &sources, duration, None);

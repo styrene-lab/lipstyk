@@ -110,6 +110,7 @@ pub fn rule_category(rule: &str) -> &'static str {
         "java-restating-comment" => "documentation",
         "import-star" => "py-structure",
         "type-hint-gaps" => "py-quality",
+        "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" => "cross-file",
         _ => "other",
     }
 }
