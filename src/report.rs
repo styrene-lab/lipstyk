@@ -120,6 +120,7 @@ pub fn rule_category(rule: &str) -> &'static str {
         "go-generic-naming" => "naming",
         "go-restating-comment" | "go-comment-depth" => "documentation",
         "go-structural-repetition" | "go-naming-entropy" => "statistical",
+        "md-slop-phrases" | "md-structure" | "md-placeholder" => "documentation",
         _ => "other",
     }
 }

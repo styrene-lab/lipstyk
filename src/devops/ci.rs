@@ -27,6 +27,10 @@ impl SourceRule for CiRules {
 
         check_hardcoded_secrets(ctx.source, &mut diagnostics);
         check_wildcard_trigger(ctx.source, &mut diagnostics);
+        if is_gha {
+            check_missing_permissions(ctx.source, &mut diagnostics);
+            check_unpinned_actions(ctx.source, &mut diagnostics);
+        }
         check_auto_approve(ctx.source, &mut diagnostics);
 
         diagnostics
@@ -82,7 +86,7 @@ fn check_wildcard_trigger(source: &str, diagnostics: &mut Vec<Diagnostic>) {
 fn check_auto_approve(source: &str, diagnostics: &mut Vec<Diagnostic>) {
     for (i, line) in source.lines().enumerate() {
         let trimmed = line.trim();
-        if trimmed.contains("-auto-approve") || trimmed.contains("--force") && trimmed.contains("apply") {
+        if trimmed.contains("-auto-approve") || (trimmed.contains("--force") && trimmed.contains("apply")) {
             diagnostics.push(Diagnostic {
                 rule: "ci-workflow",
                 message: "auto-approve/force in CI — require manual confirmation for destructive ops".to_string(),
@@ -91,5 +95,49 @@ fn check_auto_approve(source: &str, diagnostics: &mut Vec<Diagnostic>) {
                 weight: 2.5,
             });
         }
+    }
+}
+
+fn check_missing_permissions(source: &str, diagnostics: &mut Vec<Diagnostic>) {
+    if !source.contains("permissions:") {
+        diagnostics.push(Diagnostic {
+            rule: "ci-workflow",
+            message: "no `permissions:` block — workflows run with broad default permissions".to_string(),
+            line: 1,
+            severity: Severity::Warning,
+            weight: 2.0,
+        });
+    }
+}
+
+fn check_unpinned_actions(source: &str, diagnostics: &mut Vec<Diagnostic>) {
+    let mut unpinned = 0;
+    let mut first_line = 0;
+
+    for (i, line) in source.lines().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.starts_with("uses:") || trimmed.starts_with("- uses:") {
+            let action = trimmed.split("uses:").nth(1).unwrap_or("").trim();
+            // Pinned: uses: actions/checkout@<sha>  (40+ hex chars)
+            // Unpinned: uses: actions/checkout@v4
+            if action.contains('@') && !action.contains("@sha256:") {
+                let after_at = action.split('@').nth(1).unwrap_or("");
+                let is_sha = after_at.len() >= 40 && after_at.chars().all(|c| c.is_ascii_hexdigit());
+                if !is_sha {
+                    unpinned += 1;
+                    if first_line == 0 { first_line = i + 1; }
+                }
+            }
+        }
+    }
+
+    if unpinned >= 3 {
+        diagnostics.push(Diagnostic {
+            rule: "ci-workflow",
+            message: format!("{unpinned} actions pinned to tags not SHAs — pin to commit SHA for supply chain safety"),
+            line: first_line,
+            severity: Severity::Hint,
+            weight: 1.0,
+        });
     }
 }

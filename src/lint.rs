@@ -116,6 +116,11 @@ impl Linter {
         // Dockerfile rules
         linter.add_source_rule(Box::new(crate::docker::best_practices::BestPractices));
 
+        // Markdown rules
+        linter.add_source_rule(Box::new(crate::markdown::slop_phrases::SlopPhrases));
+        linter.add_source_rule(Box::new(crate::markdown::structure::Structure));
+        linter.add_source_rule(Box::new(crate::markdown::placeholders::Placeholders));
+
         // DevOps YAML rules (content-sniffed)
         linter.add_source_rule(Box::new(crate::devops::kubernetes::KubernetesRules));
         linter.add_source_rule(Box::new(crate::devops::ci::CiRules));

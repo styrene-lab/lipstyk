@@ -25,12 +25,32 @@ impl SourceRule for KubernetesRules {
         let mut diagnostics = Vec::new();
 
         check_resource_limits(ctx.source, &mut diagnostics);
+        check_probes(ctx.source, &mut diagnostics);
         check_latest_image(ctx.source, &mut diagnostics);
         check_naked_pod(ctx.source, &mut diagnostics);
         check_default_namespace(ctx.source, &mut diagnostics);
         check_wildcard_rbac(ctx.source, &mut diagnostics);
 
         diagnostics
+    }
+}
+
+fn check_probes(source: &str, diagnostics: &mut Vec<Diagnostic>) {
+    // Deployments/StatefulSets should have liveness or readiness probes.
+    let is_workload = source.contains("kind: Deployment")
+        || source.contains("kind: StatefulSet")
+        || source.contains("kind: DaemonSet");
+
+    if is_workload && source.contains("containers:")
+        && !source.contains("livenessProbe:") && !source.contains("readinessProbe:")
+    {
+        diagnostics.push(Diagnostic {
+            rule: "k8s-manifest",
+            message: "workload without health probes — add livenessProbe and/or readinessProbe".to_string(),
+            line: 1,
+            severity: Severity::Warning,
+            weight: 2.0,
+        });
     }
 }
 

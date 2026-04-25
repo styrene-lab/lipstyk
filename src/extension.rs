@@ -198,6 +198,7 @@ impl LipstykExtension {
                 "shell": { "rules": counts.shell, "extensions": [".sh", ".bash", ".zsh"] },
                 "dockerfile": { "rules": counts.docker, "extensions": ["Dockerfile", "Containerfile"] },
                 "yaml": { "rules": counts.yaml, "extensions": [".yml", ".yaml"] },
+                "markdown": { "rules": counts.markdown, "extensions": [".md", ".mdx"] },
             },
             "total_rules": counts.total(),
         }))

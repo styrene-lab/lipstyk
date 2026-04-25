@@ -545,3 +545,43 @@ fn go_step_narration_fires() {
     let src = "package main\nfunc f() {\n  // Step 1: Init\n  x()\n  // Step 2: Process\n  y()\n  // Step 3: Finish\n  z()\n}\n";
     assert!(has_rule(src, "t.go", "go-comment-depth"));
 }
+
+// ── Markdown rules ──────────────────────────────────────────────
+
+#[test]
+fn md_slop_phrases_fires() {
+    let src = "# My Project\n\nThis comprehensive tool leverages cutting-edge\ntechnology to streamline your workflow.\n\nIt provides a robust and seamless experience\nthat harnesses the power of modern development.\n\nFurthermore, this pivotal solution delves into\nthe underpinnings of your codebase.\n";
+    assert!(has_rule(src, "t.md", "md-slop-phrases"));
+}
+
+#[test]
+fn md_slop_phrases_clean() {
+    let src = "# lipstyk\n\nStatic analysis for machine-generated code patterns.\nNo ML, no classifiers.\n";
+    assert!(no_rule(src, "t.md", "md-slop-phrases"));
+}
+
+#[test]
+fn md_placeholder_fires() {
+    let src = "# your-project\n\nReplace with your description here.\n\nInsert your API key below.\n";
+    assert!(has_rule(src, "t.md", "md-placeholder"));
+}
+
+#[test]
+fn md_generic_opener_fires() {
+    let src = "# Tool\n\nThis project is a comprehensive solution for modern development.\n";
+    assert!(has_rule(src, "t.md", "md-placeholder"));
+}
+
+// ── DevOps rule extensions ──────────────────────────────────────
+
+#[test]
+fn ci_missing_permissions_fires() {
+    let src = "name: CI\non:\n  push:\n    branches: [main]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n";
+    assert!(has_rule(src, "t.yml", "ci-workflow"));
+}
+
+#[test]
+fn k8s_no_probes_fires() {
+    let src = "apiVersion: apps/v1\nkind: Deployment\nspec:\n  template:\n    spec:\n      containers:\n        - name: app\n          image: myapp:v1\n          resources:\n            limits:\n              memory: 128Mi\n";
+    assert!(has_rule(src, "t.yml", "k8s-manifest"));
+}
