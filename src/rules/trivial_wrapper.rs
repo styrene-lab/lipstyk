@@ -4,25 +4,22 @@ use syn::visit::Visit;
 
 /// Flags functions whose body is just a single expression delegating to another call.
 ///
-/// AI loves generating wrappers like:
-/// ```ignore
-/// fn get_name(&self) -> String {
-///     self.name.clone()
-/// }
-/// fn process(data: &[u8]) -> Result<(), Error> {
-///     internal_process(data)
-/// }
-/// ```
-///
 /// One or two of these is fine (newtype patterns, trait impls), but a file
 /// full of trivial delegators is a slop signal. Files whose names suggest
-/// API surface (runtime.rs, types.rs, etc.) get a higher threshold.
+/// API surface or orchestration get higher thresholds.
 pub struct TrivialWrapper;
 
-/// Files where thin wrappers are expected API design, not slop.
+/// Files where thin wrappers are expected API design.
 const API_SURFACE_FILES: &[&str] = &[
     "runtime", "types", "config", "constants", "consts",
     "paths", "defaults", "prelude", "helpers", "api",
+];
+
+/// Files with orchestration/collector patterns where many small helpers
+/// that each extract one check are the correct architecture.
+const ORCHESTRATION_PATTERNS: &[&str] = &[
+    "ast", "collect", "check", "parse", "extract", "analyze",
+    "kubernetes", "ci", "best_practices",
 ];
 
 impl Rule for TrivialWrapper {
@@ -34,7 +31,11 @@ impl Rule for TrivialWrapper {
         let mut visitor = WrapperVisitor { hits: Vec::new() };
         visitor.visit_file(file);
 
-        let threshold = if is_api_surface_file(ctx.filename) { 10 } else { 5 };
+        let threshold = if is_api_surface_file(ctx.filename) || is_orchestration_file(ctx.filename) {
+            15
+        } else {
+            6
+        };
 
         if visitor.hits.len() < threshold {
             visitor.hits.clear();
@@ -50,6 +51,14 @@ fn is_api_surface_file(filename: &str) -> bool {
         .and_then(|s| s.to_str())
         .unwrap_or("");
     API_SURFACE_FILES.contains(&stem)
+}
+
+fn is_orchestration_file(filename: &str) -> bool {
+    let stem = std::path::Path::new(filename)
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("");
+    ORCHESTRATION_PATTERNS.iter().any(|p| stem.contains(p))
 }
 
 struct WrapperVisitor {
@@ -76,6 +85,5 @@ impl<'ast> Visit<'ast> for WrapperVisitor {
         syn::visit::visit_item_fn(self, node);
     }
 
-    // Deliberately skip impl methods — single-expression bodies are normal
-    // for trait impls (Default::default, Display::fmt, etc.).
+    // Skip impl methods — single-expression bodies are normal for trait impls.
 }

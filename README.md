@@ -67,12 +67,18 @@ lipstyk --summary src/                # one line per file
 | Language | Extensions | Rules | Analysis |
 |----------|-----------|-------|----------|
 | Rust | `.rs` | 21 | AST via `syn` |
-| TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 7 | text |
-| Python | `.py` | 7 | text |
+| TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 14 | AST via `oxc` + text |
+| Python | `.py` | 15 | AST via `tree-sitter` + text |
+| Go | `.go` | 8 | AST via `tree-sitter` + text |
 | HTML / CSS | `.html` `.htm` `.css` `.vue` `.svelte` | 6 | tag parser |
-| Java | `.java` | 3 | text (legacy support) |
+| Java | `.java` | 4 | text (legacy) |
+| Shell | `.sh` `.bash` `.zsh` | 3 | text |
+| Dockerfile | `Dockerfile` `Containerfile` | 1 | text (5 checks) |
+| Kubernetes YAML | `.yml` `.yaml` | 1 | content-sniffed (6 checks) |
+| CI/CD YAML | `.yml` `.yaml` | 1 | content-sniffed (5 checks) |
+| Markdown | `.md` `.mdx` | 3 | text |
 
-44 rules. Full reference in [RULES.md](RULES.md).
+77 rules. Full reference in [RULES.md](RULES.md).
 
 ## What it catches
 
@@ -80,28 +86,29 @@ Rust: `.unwrap()` chains, gratuitous `.clone()`, `Box<dyn Error>`
 catch-alls, verbose match arms, C-style index loops, needless type
 annotations and lifetimes, `String` params where `&str` works
 
-Naming: `process_data`, `handle_request`, `fetchData`, vague TODOs,
-low naming entropy across a file
+TS/JS (oxc AST): `any` abuse, empty/log-only catch blocks,
+`async` without `await`, `console.log` dumps, nested ternaries,
+Promise anti-patterns, structural repetition, deep nesting
 
-Comments: restating what the code says, step-by-step tutorial
-narration, mechanically uniform comment spacing, high per-function
-comment density
-
-Structure: trivial wrapper clusters, everything `pub`, derive
-stacking, `#[allow(dead_code)]` papering over unused code, functions
-with identical AST shapes
-
-Statistical: blank line regularity, line length uniformity
-
-HTML/CSS: div soup, missing semantic elements, inline styles, generic
-class names, accessibility gaps, `!important` abuse, magic pixel
-values
-
-TS/JS: `any` everywhere, `console.log` left in, nested ternaries,
-`.then().catch(() => {})` chains
+Go: bare `return err`, `interface{}` overuse, `panic()` in library
+code, `fmt.Println` debugging, `time.Sleep` sync, structural
+repetition via tree-sitter AST
 
 Python: bare `except:`, `print()` debugging, `from X import *`,
-inconsistent type hints
+mutable default arguments, `range(len(x))` loops, type hint gaps
+
+Comments (all languages): restating code, step-by-step narration,
+per-function density, uniform spacing
+
+Naming: `process_data`, `handle_request`, `fetchData`, vague TODOs,
+naming entropy
+
+DevOps: Dockerfiles running as root, K8s without resource limits,
+wildcard RBAC, hardcoded CI secrets, shell scripts without `set -e`
+
+Markdown: AI buzzword density, placeholder content, template structure
+
+Cross-file: duplicate blocks, identical imports, cloned error handling
 
 ## Configuration
 
@@ -207,7 +214,7 @@ and CI in [INTEGRATION.md](INTEGRATION.md).
 Lipstyk analyzes itself. Reports in
 [`dogfood-reports/`](dogfood-reports/).
 
-Current self-scan: score 20.3, 0.4 per 100 lines, mild.
+Current self-scan: score 49.5, 32/108 files with findings, mostly hints.
 
 ## Scoring
 

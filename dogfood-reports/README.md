@@ -6,9 +6,9 @@ tool flags on its own code and what it misses.
 
 ## Current Scorecard
 
-| Date | Score | Files | /100L | Verdict | Top Category |
-|------|-------|-------|-------|---------|-------------|
-| 2026-04-25 | [20.3](self-2026-04-25.md) | 17/62 | 0.4% | Mild | naming |
+| Date | Score | Files | /100L | Verdict | Notes |
+|------|-------|-------|-------|---------|-------|
+| 2026-04-25 | [49.5](self-2026-04-25.md) | 32/108 | 0.5% | Suspicious | 77 rules, oxc+tree-sitter AST, 10 file types |
 
 ## How to Read These
 

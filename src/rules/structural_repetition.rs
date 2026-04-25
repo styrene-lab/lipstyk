@@ -44,6 +44,13 @@ impl Rule for StructuralRepetition {
         for (shape, fns) in &shape_counts {
             if fns.len() >= 3 && shape.stmt_count > 0 {
                 let names: Vec<&str> = fns.iter().map(|(n, _)| n.as_str()).collect();
+
+                // Exempt checklist patterns: functions sharing a common prefix
+                // (check_*, collect_*, validate_*) are intentional decomposition.
+                if has_common_prefix(&names) {
+                    continue;
+                }
+
                 let line = fns[0].1;
                 diagnostics.push(Diagnostic {
                     rule: "structural-repetition",
@@ -121,6 +128,29 @@ fn check_expr_flow(expr: &syn::Expr, has_if: &mut bool, has_match: &mut bool, ha
         syn::Expr::ForLoop(_) | syn::Expr::While(_) | syn::Expr::Loop(_) => *has_loop = true,
         _ => {}
     }
+}
+
+/// Check if all function names share a common prefix (e.g. check_*, collect_*).
+/// This indicates intentional decomposition, not slop repetition.
+fn has_common_prefix(names: &[&str]) -> bool {
+    if names.len() < 2 {
+        return false;
+    }
+
+    // Find common prefix of all names.
+    let first = names[0];
+    for prefix_len in (3..first.len()).rev() {
+        let prefix = &first[..prefix_len];
+        // Must end at an underscore boundary to be a meaningful prefix.
+        if !prefix.ends_with('_') {
+            continue;
+        }
+        if names.iter().all(|n| n.starts_with(prefix)) {
+            return true;
+        }
+    }
+
+    false
 }
 
 impl<'ast> Visit<'ast> for ShapeVisitor {

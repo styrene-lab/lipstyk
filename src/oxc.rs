@@ -35,6 +35,7 @@ pub struct FnInfo {
     pub has_return: bool,
     pub is_async: bool,
     pub has_await: bool,
+    pub nesting_depth: usize,
 }
 
 pub struct CatchInfo {
@@ -114,6 +115,12 @@ fn collect_function(func: &Function, source: &str, result: &mut OxcParsed) {
         (0, false, false, false, false)
     };
 
+    let nesting_depth = if let Some(body) = &func.body {
+        measure_nesting_stmts(&body.statements, 0)
+    } else {
+        0
+    };
+
     result.functions.push(FnInfo {
         name: name.clone(),
         line,
@@ -124,6 +131,7 @@ fn collect_function(func: &Function, source: &str, result: &mut OxcParsed) {
         has_return,
         is_async,
         has_await,
+        nesting_depth,
     });
 
     if !name.is_empty() {
@@ -158,6 +166,8 @@ fn collect_var_decl(decl: &VariableDeclaration, source: &str, result: &mut OxcPa
             let (stmt_count, has_if, has_for, has_return, has_await) =
                 analyze_stmts(&arrow.body.statements);
 
+            let nesting_depth = measure_nesting_stmts(&arrow.body.statements, 0);
+
             result.functions.push(FnInfo {
                 name,
                 line,
@@ -168,6 +178,7 @@ fn collect_var_decl(decl: &VariableDeclaration, source: &str, result: &mut OxcPa
                 has_return,
                 is_async,
                 has_await,
+                nesting_depth,
             });
         }
     }
@@ -256,6 +267,62 @@ fn is_console_stmt(stmt: &Statement) -> bool {
                     return obj.name == "console";
                 }
     false
+}
+
+fn measure_nesting_stmts(stmts: &[Statement], depth: usize) -> usize {
+    let mut max = depth;
+
+    for stmt in stmts {
+        let child_max = match stmt {
+            Statement::IfStatement(s) => {
+                let if_depth = depth + 1;
+                let mut m = if_depth;
+                if let Statement::BlockStatement(block) = &s.consequent {
+                    m = m.max(measure_nesting_stmts(&block.body, if_depth));
+                }
+                m
+            }
+            Statement::ForStatement(s) => {
+                let d = depth + 1;
+                if let Statement::BlockStatement(block) = &s.body {
+                    measure_nesting_stmts(&block.body, d)
+                } else { d }
+            }
+            Statement::ForInStatement(s) => {
+                let d = depth + 1;
+                if let Statement::BlockStatement(block) = &s.body {
+                    measure_nesting_stmts(&block.body, d)
+                } else { d }
+            }
+            Statement::ForOfStatement(s) => {
+                let d = depth + 1;
+                if let Statement::BlockStatement(block) = &s.body {
+                    measure_nesting_stmts(&block.body, d)
+                } else { d }
+            }
+            Statement::WhileStatement(s) => {
+                let d = depth + 1;
+                if let Statement::BlockStatement(block) = &s.body {
+                    measure_nesting_stmts(&block.body, d)
+                } else { d }
+            }
+            Statement::TryStatement(s) => {
+                let d = depth + 1;
+                let mut m = measure_nesting_stmts(&s.block.body, d);
+                if let Some(catch) = &s.handler {
+                    m = m.max(measure_nesting_stmts(&catch.body.body, d));
+                }
+                m
+            }
+            Statement::BlockStatement(s) => {
+                measure_nesting_stmts(&s.body, depth)
+            }
+            _ => depth,
+        };
+        if child_max > max { max = child_max; }
+    }
+
+    max
 }
 
 fn line_of(offset: u32, source: &str) -> usize {

@@ -1,76 +1,109 @@
 {
   "version": "0.1.0",
-  "timestamp": "2026-04-25T11:47:06.061889+00:00",
-  "duration_ms": 12,
+  "timestamp": "2026-04-25T20:25:54.429682+00:00",
+  "duration_ms": 24,
   "git": {
     "branch": "main",
-    "commit": "607dea3",
+    "commit": "7877c30",
     "dirty": true
   },
   "summary": {
-    "files_scanned": 62,
-    "files_with_findings": 17,
-    "total_score": 20.3,
-    "total_diagnostics": 27,
+    "files_scanned": 108,
+    "files_with_findings": 42,
+    "total_score": 69.5,
+    "total_diagnostics": 71,
     "by_severity": {
-      "hint": 12,
-      "warning": 15,
+      "hint": 34,
+      "warning": 37,
       "slop": 0
     },
     "by_rule": {
+      "cross-file-duplicate": {
+        "count": 13,
+        "total_weight": 26.0
+      },
       "derive-stacking": {
         "count": 1,
         "total_weight": 0.75
       },
       "error-swallowing": {
-        "count": 4,
-        "total_weight": 3.0
+        "count": 6,
+        "total_weight": 4.5
       },
       "generic-naming": {
         "count": 3,
         "total_weight": 4.5
+      },
+      "needless-lifetimes": {
+        "count": 1,
+        "total_weight": 0.75
+      },
+      "needless-type-annotation": {
+        "count": 1,
+        "total_weight": 0.5
       },
       "pub-overuse": {
         "count": 2,
         "total_weight": 1.0
       },
       "redundant-clone": {
-        "count": 7,
-        "total_weight": 3.5
+        "count": 18,
+        "total_weight": 9.0
       },
       "restating-comment": {
-        "count": 2,
-        "total_weight": 3.0
+        "count": 4,
+        "total_weight": 6.0
       },
       "structural-repetition": {
-        "count": 7,
-        "total_weight": 3.5
+        "count": 8,
+        "total_weight": 4.0
+      },
+      "trivial-wrapper": {
+        "count": 6,
+        "total_weight": 4.5
+      },
+      "unwrap-overuse": {
+        "count": 6,
+        "total_weight": 6.0
       },
       "verbose-match": {
+        "count": 1,
+        "total_weight": 1.0
+      },
+      "whitespace-uniformity": {
         "count": 1,
         "total_weight": 1.0
       }
     },
     "by_category": {
+      "cross-file": {
+        "count": 13,
+        "total_weight": 26.0,
+        "rules": [
+          "cross-file-duplicate"
+        ]
+      },
       "documentation": {
-        "count": 2,
-        "total_weight": 3.0,
+        "count": 4,
+        "total_weight": 6.0,
         "rules": [
           "restating-comment"
         ]
       },
       "error-handling": {
-        "count": 4,
-        "total_weight": 3.0,
+        "count": 12,
+        "total_weight": 10.5,
         "rules": [
-          "error-swallowing"
+          "error-swallowing",
+          "unwrap-overuse"
         ]
       },
       "idiom": {
-        "count": 1,
-        "total_weight": 1.0,
+        "count": 2,
+        "total_weight": 1.5,
         "rules": [
-          "verbose-match"
+          "verbose-match",
+          "needless-type-annotation"
         ]
       },
       "naming": {
@@ -81,35 +114,254 @@
         ]
       },
       "ownership": {
-        "count": 7,
-        "total_weight": 3.5,
+        "count": 19,
+        "total_weight": 9.75,
         "rules": [
-          "redundant-clone"
+          "redundant-clone",
+          "needless-lifetimes"
         ]
       },
       "statistical": {
-        "count": 7,
-        "total_weight": 3.5,
+        "count": 9,
+        "total_weight": 5.0,
         "rules": [
-          "structural-repetition"
+          "structural-repetition",
+          "whitespace-uniformity"
         ]
       },
       "structure": {
-        "count": 3,
-        "total_weight": 1.75,
+        "count": 9,
+        "total_weight": 6.25,
         "rules": [
           "pub-overuse",
-          "derive-stacking"
+          "derive-stacking",
+          "trivial-wrapper"
         ]
       }
     }
   },
   "files": [
     {
-      "file": "src/extension.rs",
+      "file": "src/oxc.rs",
+      "score": 7.25,
+      "lines": 330,
+      "score_per_100_lines": 2.2,
+      "diagnostics": [
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn collect_from_program` is a single-expression wrapper — does it add value?",
+          "line": 48,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn collect_from_statement` is a single-expression wrapper — does it add value?",
+          "line": 54,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 107,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 125,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn collect_var_decl` is a single-expression wrapper — does it add value?",
+          "line": 154,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "restating-comment",
+          "category": "documentation",
+          "message": "comment restates the code: `Check if the init is an arrow function.`",
+          "line": 158,
+          "severity": "Warning",
+          "weight": 1.5
+        },
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn check_stmts_recursive` is a single-expression wrapper — does it add value?",
+          "line": 198,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn collect_binding_names` is a single-expression wrapper — does it add value?",
+          "line": 238,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "trivial-wrapper",
+          "category": "structure",
+          "message": "`fn line_of` is a single-expression wrapper — does it add value?",
+          "line": 328,
+          "severity": "Hint",
+          "weight": 0.75
+        }
+      ]
+    },
+    {
+      "file": "src/ts/naming_entropy.rs",
+      "score": 3.5,
+      "lines": 123,
+      "score_per_100_lines": 2.8,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "4 functions share the same shape (1 params, 1 stmts): name, langs, name, langs",
+          "line": 19,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 29,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 93,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 23,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/cross_file.rs",
       "score": 2.5,
-      "lines": 445,
-      "score_per_100_lines": 0.6,
+      "lines": 233,
+      "score_per_100_lines": 1.1,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 65,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 127,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 138,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 192,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "needless-type-annotation",
+          "category": "idiom",
+          "message": "type annotation is redundant — the initializer makes it obvious",
+          "line": 227,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/ts/nesting_depth.rs",
+      "score": 2.5,
+      "lines": 93,
+      "score_per_100_lines": 2.7,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "4 functions share the same shape (1 params, 1 stmts): name, langs, name, langs",
+          "line": 10,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 14,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/structural_repetition.rs",
+      "score": 2.5,
+      "lines": 105,
+      "score_per_100_lines": 2.4,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "4 functions share the same shape (1 params, 1 stmts): name, langs, name, langs",
+          "line": 10,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 14,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/extension.rs",
+      "score": 2.0,
+      "lines": 448,
+      "score_per_100_lines": 0.4,
       "diagnostics": [
         {
           "rule": "structural-repetition",
@@ -128,52 +380,36 @@
           "weight": 0.75
         },
         {
-          "rule": "structural-repetition",
-          "category": "statistical",
-          "message": "3 functions share the same shape (1 params, 1 stmts): execute_rules, name, version",
-          "line": 185,
-          "severity": "Warning",
-          "weight": 0.5
-        },
-        {
           "rule": "error-swallowing",
           "category": "error-handling",
           "message": "`.unwrap_or_default()` may silently hide errors",
-          "line": 349,
+          "line": 352,
           "severity": "Hint",
           "weight": 0.75
         }
       ]
     },
     {
-      "file": "src/lint.rs",
-      "score": 2.5,
-      "lines": 264,
-      "score_per_100_lines": 0.9,
+      "file": "src/html/missing_semantics.rs",
+      "score": 2.0,
+      "lines": 54,
+      "score_per_100_lines": 3.7,
       "diagnostics": [
         {
-          "rule": "restating-comment",
-          "category": "documentation",
-          "message": "comment restates the code: `Rust rules (21)`",
-          "line": 42,
-          "severity": "Warning",
-          "weight": 1.5
+          "rule": "whitespace-uniformity",
+          "category": "statistical",
+          "message": "blank lines are suspiciously regular (gap stddev 1.2) — human code groups lines by logical sections",
+          "line": 1,
+          "severity": "Hint",
+          "weight": 1.0
         },
         {
-          "rule": "structural-repetition",
-          "category": "statistical",
-          "message": "4 functions share the same shape (2 params, 1 stmts): add_rust_rule, add_html_rule, add_ts_rule, add_py_rule",
-          "line": 119,
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 26,
           "severity": "Warning",
-          "weight": 0.5
-        },
-        {
-          "rule": "structural-repetition",
-          "category": "statistical",
-          "message": "3 functions share the same shape (3 params, 2 stmts): lint_html, lint_ts, lint_py",
-          "line": 223,
-          "severity": "Warning",
-          "weight": 0.5
+          "weight": 1.0
         }
       ]
     },
@@ -226,10 +462,210 @@
       ]
     },
     {
+      "file": "src/rules/redundant_clone.rs",
+      "score": 2.0,
+      "lines": 119,
+      "score_per_100_lines": 1.7,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "4 functions share the same shape (1 params, 1 stmts): name, is_field_access_clone, is_method_return_clone, is_variable_clone",
+          "line": 19,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "restating-comment",
+          "category": "documentation",
+          "message": "comment restates the code: `Closure field access: |r| r.field.clone()`",
+          "line": 87,
+          "severity": "Warning",
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "file": "src/ts/comment_depth.rs",
+      "score": 2.0,
+      "lines": 34,
+      "score_per_100_lines": 5.9,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 18,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/console_dump.rs",
+      "score": 2.0,
+      "lines": 52,
+      "score_per_100_lines": 3.8,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 16,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/error_handling.rs",
+      "score": 2.0,
+      "lines": 115,
+      "score_per_100_lines": 1.7,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 16,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/generic_naming.rs",
+      "score": 2.0,
+      "lines": 43,
+      "score_per_100_lines": 4.7,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 13,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/nested_ternary.rs",
+      "score": 2.0,
+      "lines": 85,
+      "score_per_100_lines": 2.4,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 17,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/promise_antipattern.rs",
+      "score": 2.0,
+      "lines": 76,
+      "score_per_100_lines": 2.6,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 17,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/redundant_async.rs",
+      "score": 2.0,
+      "lines": 43,
+      "score_per_100_lines": 4.7,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 19,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/restating_comments.rs",
+      "score": 2.0,
+      "lines": 33,
+      "score_per_100_lines": 6.1,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 13,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/trivial_wrapper.rs",
+      "score": 2.0,
+      "lines": 48,
+      "score_per_100_lines": 4.2,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 17,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/ts/whitespace_uniformity.rs",
+      "score": 2.0,
+      "lines": 19,
+      "score_per_100_lines": 10.5,
+      "diagnostics": [
+        {
+          "rule": "cross-file-duplicate",
+          "category": "cross-file",
+          "message": "code block duplicated across 13 files — extract to a shared function",
+          "line": 12,
+          "severity": "Warning",
+          "weight": 2.0
+        }
+      ]
+    },
+    {
+      "file": "src/golang/antipatterns.rs",
+      "score": 1.5,
+      "lines": 87,
+      "score_per_100_lines": 1.7,
+      "diagnostics": [
+        {
+          "rule": "restating-comment",
+          "category": "documentation",
+          "message": "comment restates the code: `fmt.Print debugging.`",
+          "line": 39,
+          "severity": "Warning",
+          "weight": 1.5
+        }
+      ]
+    },
+    {
       "file": "src/lib.rs",
       "score": 1.5,
-      "lines": 29,
-      "score_per_100_lines": 5.2,
+      "lines": 39,
+      "score_per_100_lines": 3.8,
       "diagnostics": [
         {
           "rule": "generic-naming",
@@ -242,16 +678,72 @@
       ]
     },
     {
+      "file": "src/lsp.rs",
+      "score": 1.5,
+      "lines": 132,
+      "score_per_100_lines": 1.1,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 79,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 80,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 87,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/treesitter.rs",
+      "score": 1.5,
+      "lines": 166,
+      "score_per_100_lines": 0.9,
+      "diagnostics": [
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 64,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "needless-lifetimes",
+          "category": "ownership",
+          "message": "`fn node_text` — lifetime 'a can be elided",
+          "line": 164,
+          "severity": "Hint",
+          "weight": 0.75
+        }
+      ]
+    },
+    {
       "file": "src/ts/any_abuse.rs",
       "score": 1.5,
-      "lines": 94,
-      "score_per_100_lines": 1.6,
+      "lines": 98,
+      "score_per_100_lines": 1.5,
       "diagnostics": [
         {
           "rule": "restating-comment",
           "category": "documentation",
           "message": "comment restates the code: ``: any`, `as any`, `: object`, `<any>`, `any[]`, `any>``",
-          "line": 89,
+          "line": 93,
           "severity": "Warning",
           "weight": 1.5
         }
@@ -298,16 +790,96 @@
       ]
     },
     {
+      "file": "src/html/accessibility.rs",
+      "score": 1.0,
+      "lines": 90,
+      "score_per_100_lines": 1.1,
+      "diagnostics": [
+        {
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 19,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "file": "src/html/css_smells.rs",
+      "score": 1.0,
+      "lines": 128,
+      "score_per_100_lines": 0.8,
+      "diagnostics": [
+        {
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 20,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "file": "src/html/div_soup.rs",
+      "score": 1.0,
+      "lines": 80,
+      "score_per_100_lines": 1.3,
+      "diagnostics": [
+        {
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 21,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "file": "src/html/generic_classes.rs",
+      "score": 1.0,
+      "lines": 79,
+      "score_per_100_lines": 1.3,
+      "diagnostics": [
+        {
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 29,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "file": "src/html/inline_styles.rs",
+      "score": 1.0,
+      "lines": 48,
+      "score_per_100_lines": 2.1,
+      "diagnostics": [
+        {
+          "rule": "unwrap-overuse",
+          "category": "error-handling",
+          "message": "`.unwrap()` — consider propagating with `?` or handling the error",
+          "line": 21,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
       "file": "src/report.rs",
       "score": 1.0,
-      "lines": 212,
-      "score_per_100_lines": 0.5,
+      "lines": 230,
+      "score_per_100_lines": 0.4,
       "diagnostics": [
         {
           "rule": "redundant-clone",
           "category": "ownership",
           "message": "`.clone()` — can this borrow instead?",
-          "line": 176,
+          "line": 194,
           "severity": "Hint",
           "weight": 0.5
         },
@@ -315,7 +887,7 @@
           "rule": "redundant-clone",
           "category": "ownership",
           "message": "`.clone()` — can this borrow instead?",
-          "line": 184,
+          "line": 202,
           "severity": "Hint",
           "weight": 0.5
         }
@@ -324,8 +896,8 @@
     {
       "file": "src/rules/structural_repetition.rs",
       "score": 1.0,
-      "lines": 146,
-      "score_per_100_lines": 0.7,
+      "lines": 176,
+      "score_per_100_lines": 0.6,
       "diagnostics": [
         {
           "rule": "redundant-clone",
@@ -364,14 +936,14 @@
     {
       "file": "src/main.rs",
       "score": 0.75,
-      "lines": 272,
+      "lines": 275,
       "score_per_100_lines": 0.3,
       "diagnostics": [
         {
           "rule": "error-swallowing",
           "category": "error-handling",
           "message": "`.unwrap_or_default()` may silently hide errors",
-          "line": 263,
+          "line": 266,
           "severity": "Hint",
           "weight": 0.75
         }
@@ -389,6 +961,22 @@
           "message": "5/5 items are `pub` (100%) — consider tighter visibility",
           "line": 5,
           "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/golang/ast.rs",
+      "score": 0.5,
+      "lines": 250,
+      "score_per_100_lines": 0.2,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 180,
+          "severity": "Hint",
           "weight": 0.5
         }
       ]
@@ -465,9 +1053,16 @@
       "diagnostics": []
     },
     {
+      "file": "src/common/comment_density.rs",
+      "score": -0.0,
+      "lines": 157,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
       "file": "src/common/mod.rs",
       "score": -0.0,
-      "lines": 10,
+      "lines": 11,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
@@ -486,107 +1081,261 @@
       "diagnostics": []
     },
     {
-      "file": "src/html/accessibility.rs",
+      "file": "src/devops/ci.rs",
       "score": -0.0,
-      "lines": 85,
+      "lines": 143,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/html/css_smells.rs",
+      "file": "src/devops/kubernetes.rs",
       "score": -0.0,
-      "lines": 123,
+      "lines": 132,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/html/div_soup.rs",
+      "file": "src/devops/mod.rs",
       "score": -0.0,
-      "lines": 77,
+      "lines": 2,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/html/generic_classes.rs",
+      "file": "src/docker/best_practices.rs",
       "score": -0.0,
-      "lines": 74,
+      "lines": 142,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/html/inline_styles.rs",
+      "file": "src/docker/mod.rs",
+      "score": -0.0,
+      "lines": 1,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/comment_depth.rs",
+      "score": -0.0,
+      "lines": 28,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/error_handling.rs",
+      "score": -0.0,
+      "lines": 68,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/generic_naming.rs",
+      "score": -0.0,
+      "lines": 47,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/mod.rs",
+      "score": -0.0,
+      "lines": 9,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/naming_entropy.rs",
+      "score": -0.0,
+      "lines": 60,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/nesting_depth.rs",
       "score": -0.0,
       "lines": 43,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/html/missing_semantics.rs",
+      "file": "src/golang/restating_comments.rs",
       "score": -0.0,
-      "lines": 49,
+      "lines": 32,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/golang/structural_repetition.rs",
+      "score": -0.0,
+      "lines": 54,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
       "file": "src/html/mod.rs",
       "score": -0.0,
-      "lines": 29,
+      "lines": 7,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/python/bare_except.rs",
-      "score": -0.0,
-      "lines": 50,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/python/generic_naming.rs",
-      "score": -0.0,
-      "lines": 37,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/python/import_star.rs",
-      "score": -0.0,
-      "lines": 52,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/python/mod.rs",
-      "score": -0.0,
-      "lines": 21,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/python/print_debug.rs",
+      "file": "src/java/bare_catch.rs",
       "score": -0.0,
       "lines": 49,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/python/restating_comments.rs",
+      "file": "src/java/comment_depth.rs",
       "score": -0.0,
-      "lines": 30,
+      "lines": 34,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/python/type_hint_gaps.rs",
+      "file": "src/java/generic_naming.rs",
+      "score": -0.0,
+      "lines": 53,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/java/mod.rs",
+      "score": -0.0,
+      "lines": 4,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/java/restating_comments.rs",
+      "score": -0.0,
+      "lines": 28,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/lint.rs",
+      "score": -0.0,
+      "lines": 351,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/markdown/mod.rs",
+      "score": -0.0,
+      "lines": 3,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/markdown/placeholders.rs",
+      "score": -0.0,
+      "lines": 93,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/markdown/slop_phrases.rs",
+      "score": -0.0,
+      "lines": 85,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/markdown/structure.rs",
+      "score": -0.0,
+      "lines": 97,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/bare_except.rs",
+      "score": -0.0,
+      "lines": 54,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/comment_depth.rs",
+      "score": -0.0,
+      "lines": 31,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/error_handling.rs",
+      "score": -0.0,
+      "lines": 82,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/generic_naming.rs",
+      "score": -0.0,
+      "lines": 41,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/import_star.rs",
       "score": -0.0,
       "lines": 56,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
+      "file": "src/python/index_loop.rs",
+      "score": -0.0,
+      "lines": 39,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/mod.rs",
+      "score": -0.0,
+      "lines": 12,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/mutable_default.rs",
+      "score": -0.0,
+      "lines": 53,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/print_debug.rs",
+      "score": -0.0,
+      "lines": 53,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/restating_comments.rs",
+      "score": -0.0,
+      "lines": 34,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/trivial_wrapper.rs",
+      "score": -0.0,
+      "lines": 47,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/type_hint_gaps.rs",
+      "score": -0.0,
+      "lines": 60,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
       "file": "src/python/whitespace_uniformity.rs",
       "score": -0.0,
-      "lines": 15,
+      "lines": 19,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
@@ -661,13 +1410,6 @@
       "diagnostics": []
     },
     {
-      "file": "src/rules/redundant_clone.rs",
-      "score": -0.0,
-      "lines": 82,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
       "file": "src/rules/restating_comments.rs",
       "score": -0.0,
       "lines": 31,
@@ -684,7 +1426,7 @@
     {
       "file": "src/rules/trivial_wrapper.rs",
       "score": -0.0,
-      "lines": 81,
+      "lines": 89,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
@@ -717,58 +1459,51 @@
       "diagnostics": []
     },
     {
-      "file": "src/ts/console_dump.rs",
+      "file": "src/shell/antipatterns.rs",
       "score": -0.0,
-      "lines": 48,
+      "lines": 101,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
-      "file": "src/ts/generic_naming.rs",
+      "file": "src/shell/mod.rs",
       "score": -0.0,
-      "lines": 39,
+      "lines": 3,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/shell/quoting.rs",
+      "score": -0.0,
+      "lines": 88,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/shell/strict_mode.rs",
+      "score": -0.0,
+      "lines": 60,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/source_rule.rs",
+      "score": -0.0,
+      "lines": 103,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
       "file": "src/ts/mod.rs",
       "score": -0.0,
-      "lines": 24,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/ts/nested_ternary.rs",
-      "score": -0.0,
-      "lines": 81,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/ts/promise_antipattern.rs",
-      "score": -0.0,
-      "lines": 72,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/ts/restating_comments.rs",
-      "score": -0.0,
-      "lines": 29,
-      "score_per_100_lines": -0.0,
-      "diagnostics": []
-    },
-    {
-      "file": "src/ts/whitespace_uniformity.rs",
-      "score": -0.0,
-      "lines": 15,
+      "lines": 14,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     },
     {
       "file": "src/walk.rs",
       "score": -0.0,
-      "lines": 66,
+      "lines": 83,
       "score_per_100_lines": -0.0,
       "diagnostics": []
     }

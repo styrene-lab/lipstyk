@@ -585,3 +585,53 @@ fn k8s_no_probes_fires() {
     let src = "apiVersion: apps/v1\nkind: Deployment\nspec:\n  template:\n    spec:\n      containers:\n        - name: app\n          image: myapp:v1\n          resources:\n            limits:\n              memory: 128Mi\n";
     assert!(has_rule(src, "t.yml", "k8s-manifest"));
 }
+
+#[test]
+fn k8s_clean_not_flagged() {
+    // Not a K8s manifest — shouldn't fire.
+    let src = "name: config\ndata:\n  key: value\n";
+    assert!(no_rule(src, "t.yml", "k8s-manifest"));
+}
+
+#[test]
+fn ci_clean_not_flagged() {
+    // Not a CI workflow — shouldn't fire.
+    let src = "apiVersion: v1\nkind: Service\nmetadata:\n  name: test\n";
+    assert!(no_rule(src, "t.yml", "ci-workflow"));
+}
+
+#[test]
+fn docker_root_user_fires() {
+    let src = "FROM ubuntu:22.04\nRUN apt-get update\nRUN apt-get install -y curl\nCMD [\"bash\"]\n";
+    assert!(has_rule(src, "Dockerfile", "docker-best-practices"));
+}
+
+#[test]
+fn docker_clean() {
+    let src = "FROM ubuntu:22.04\nRUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*\nUSER app\nCMD [\"bash\"]\n";
+    assert!(no_rule(src, "Dockerfile", "docker-best-practices"));
+}
+
+#[test]
+fn shell_no_strict_mode_fires() {
+    let src = "#!/bin/bash\necho hello\ncd /tmp\nrm -rf *\necho done\nmore stuff\n";
+    assert!(has_rule(src, "t.sh", "sh-strict-mode"));
+}
+
+#[test]
+fn shell_strict_mode_clean() {
+    let src = "#!/bin/bash\nset -euo pipefail\necho hello\n";
+    assert!(no_rule(src, "t.sh", "sh-strict-mode"));
+}
+
+#[test]
+fn md_structure_clean() {
+    let src = "# Project\n\n## Install\n\nRun cargo install.\n\n## Usage\n\nRun the binary.\n";
+    assert!(no_rule(src, "t.md", "md-structure"));
+}
+
+#[test]
+fn md_placeholder_clean() {
+    let src = "# lipstyk\n\nStatic analysis for machine-generated code.\n";
+    assert!(no_rule(src, "t.md", "md-placeholder"));
+}
