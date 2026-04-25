@@ -5,6 +5,7 @@ pub mod diff;
 #[cfg(feature = "agent")]
 pub mod extension;
 pub mod html;
+pub mod java;
 pub mod lint;
 pub mod python;
 pub mod render;

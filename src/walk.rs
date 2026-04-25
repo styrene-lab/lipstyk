@@ -8,6 +8,7 @@ const SUPPORTED_EXTENSIONS: &[&str] = &[
     "vue", "svelte",
     "ts", "tsx", "js", "jsx",
     "py",
+    "java",
 ];
 
 const SKIP_DIRS: &[&str] = &[

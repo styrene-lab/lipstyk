@@ -70,8 +70,9 @@ lipstyk --summary src/                # one line per file
 | TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 7 | text |
 | Python | `.py` | 7 | text |
 | HTML / CSS | `.html` `.htm` `.css` `.vue` `.svelte` | 6 | tag parser |
+| Java | `.java` | 3 | text (legacy support) |
 
-41 rules. Full reference in [RULES.md](RULES.md).
+44 rules. Full reference in [RULES.md](RULES.md).
 
 ## What it catches
 

@@ -4,6 +4,7 @@ use crate::config::Config;
 use crate::diagnostic::SlopScore;
 use crate::diff;
 use crate::html::{HtmlContext, HtmlRule};
+use crate::java::{JavaContext, JavaRule};
 use crate::python::{PyContext, PyRule};
 use crate::rules::{LintContext, Rule};
 use crate::ts::{TsContext, TsRule};
@@ -16,6 +17,7 @@ pub struct Linter {
     html_rules: Vec<Box<dyn HtmlRule>>,
     ts_rules: Vec<Box<dyn TsRule>>,
     py_rules: Vec<Box<dyn PyRule>>,
+    java_rules: Vec<Box<dyn JavaRule>>,
     exclude_tests: bool,
     config: Config,
     /// If set, only report diagnostics on these lines (diff mode).
@@ -29,6 +31,7 @@ impl Linter {
             html_rules: Vec::new(),
             ts_rules: Vec::new(),
             py_rules: Vec::new(),
+            java_rules: Vec::new(),
             exclude_tests: false,
             config: Config::default(),
             changed_lines: None,
@@ -88,6 +91,11 @@ impl Linter {
         linter.add_py_rule(Box::new(crate::python::restating_comments::RestatingComments));
         linter.add_py_rule(Box::new(crate::python::whitespace_uniformity::WhitespaceUniformity));
 
+        // Java rules (3) — legacy language, minimal coverage
+        linter.add_java_rule(Box::new(crate::java::restating_comments::RestatingComments));
+        linter.add_java_rule(Box::new(crate::java::generic_naming::GenericNaming));
+        linter.add_java_rule(Box::new(crate::java::bare_catch::BareCatch));
+
         info!(
             rust = linter.rust_rules.len(),
             html = linter.html_rules.len(),
@@ -132,6 +140,10 @@ impl Linter {
         self.py_rules.push(rule);
     }
 
+    pub fn add_java_rule(&mut self, rule: Box<dyn JavaRule>) {
+        self.java_rules.push(rule);
+    }
+
     #[instrument(skip(self, source), fields(diagnostics, score))]
     pub fn lint_source(&self, filename: &str, source: &str) -> Result<SlopScore, crate::LintError> {
         let ext = std::path::Path::new(filename)
@@ -144,6 +156,7 @@ impl Linter {
             "html" | "htm" | "vue" | "svelte" | "css" => self.lint_html(filename, source),
             "ts" | "tsx" | "js" | "jsx" => self.lint_ts(filename, source),
             "py" => self.lint_py(filename, source),
+            "java" => self.lint_java(filename, source),
             _ => Vec::new(),
         };
 
@@ -233,6 +246,11 @@ impl Linter {
     fn lint_py(&self, filename: &str, source: &str) -> Vec<crate::Diagnostic> {
         let ctx = PyContext { filename, source };
         run_rules(&self.py_rules, &self.config, |rule| rule.check(&ctx), |rule| rule.name())
+    }
+
+    fn lint_java(&self, filename: &str, source: &str) -> Vec<crate::Diagnostic> {
+        let ctx = JavaContext { filename, source };
+        run_rules(&self.java_rules, &self.config, |rule| rule.check(&ctx), |rule| rule.name())
     }
 }
 
