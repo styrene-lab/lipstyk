@@ -428,7 +428,7 @@ vim.lsp.start({
   name = 'lipstyk',
   cmd = { 'lipstyk-lsp' },
   root_dir = vim.fs.dirname(vim.fs.find('.lipstyk.toml', { upward = true })[1]),
-  filetypes = { 'rust', 'python', 'typescript', 'javascript', 'html', 'css', 'java' },
+  filetypes = { 'rust', 'python', 'typescript', 'javascript', 'go', 'html', 'css', 'java', 'sh', 'yaml', 'markdown' },
 })
 ```
 
@@ -470,10 +470,15 @@ Requires `lipstyk` on `$PATH`.
 
 ## Supported Languages
 
-| Language | Extensions | Rules |
-|----------|-----------|-------|
-| Rust | `.rs` | 21 (AST-level via `syn`) |
-| TypeScript/JavaScript | `.ts`, `.tsx`, `.js`, `.jsx` | 7 |
-| Python | `.py` | 7 |
-| HTML/CSS | `.html`, `.htm`, `.css`, `.vue`, `.svelte` | 6 |
-| Java | `.java` | 3 (legacy support) |
+| Language | Extensions | Rules | Analysis |
+|----------|-----------|-------|----------|
+| Rust | `.rs` | 21 | AST via `syn` |
+| TypeScript/JavaScript | `.ts`, `.tsx`, `.js`, `.jsx` | 14 | AST via `oxc` |
+| Python | `.py` | 15 | AST via `tree-sitter` |
+| Go | `.go` | 8 | AST via `tree-sitter` |
+| HTML/CSS | `.html`, `.htm`, `.css`, `.vue`, `.svelte` | 6 | tag parser |
+| Java | `.java` | 4 | text (legacy) |
+| Shell | `.sh`, `.bash`, `.zsh` | 3 | text |
+| Dockerfile | `Dockerfile`, `Containerfile` | 1 | text |
+| K8s/CI YAML | `.yml`, `.yaml` | 2 | content-sniffed |
+| Markdown | `.md`, `.mdx` | 3 | text |

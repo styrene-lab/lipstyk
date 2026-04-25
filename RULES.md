@@ -1,153 +1,226 @@
 # Lipstyk Rule Reference
 
-Lipstyk detects machine-generated code patterns through static analysis.
-It does not use ML classifiers or language models — every finding is a
-deterministic rule you can read, understand, and disagree with.
+77 rules across 10 file types. Every finding is deterministic — no ML,
+no classifiers.
 
-The rules are organized by language. Each rule fires at one of three
-severity levels:
+Severity levels:
+- **Hint** (0.5–1.0) — Could be human, suspicious in aggregate
+- **Warning** (1.0–2.0) — Likely slop pattern
+- **Slop** (2.0–3.0) — Strong indicator of machine-generated code
 
-- **Hint** (0.5–1.0 weight) — Could be human, but suspicious in aggregate
-- **Warning** (1.0–2.0 weight) — Likely slop pattern
-- **Slop** (2.0–3.0 weight) — Strong indicator of machine-generated code
-
-Any single finding is inconclusive. The aggregate density is the signal.
+Any single finding is inconclusive. Density is the signal.
 
 ---
 
-## Rust (21 rules)
+## Rust (21 rules, AST via `syn`)
 
-### Code Quality Signals
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `unwrap-overuse` | Dense `.unwrap()` / `.expect()` | H→S | 0.1→3.0 |
+| `error-swallowing` | `Err(_) => {}`, `.unwrap_or_default()` on Results | H→S | 0.75→2.5 |
+| `boxed-error` | 2+ functions returning `Box<dyn Error>` | W | 1.5 |
+| `redundant-clone` | `.clone()` that could borrow | H→S | 0.5→1.5 |
+| `string-params` | `fn foo(s: String)` instead of `&str` | W | 1.5 |
+| `needless-lifetimes` | Lifetimes the elision rules handle | H | 0.75 |
+| `needless-type-annotation` | `let x: Vec<String> = Vec::new()` | H | 0.5 |
+| `verbose-match` | 2-arm match replaceable with `if let` / `.map()` | W | 1.0 |
+| `index-loop` | `for i in 0..vec.len()` | W | 1.5 |
+| `restating-comment` | Comments restating the next line of code | W | 1.5 |
+| `over-documentation` | Step-by-step tutorial narration, >45% density | W→S | 2.0→3.0 |
+| `comment-clustering` | Per-function comment density >50%, uniform spacing | W→S | 1.5→2.5 |
+| `generic-todo` | Vague TODOs: "add error handling" | W | 1.5 |
+| `generic-naming` | `process_data`, `handle_event` | W | 1.5 |
+| `naming-entropy` | Low unique-stem ratio (<35%) | H→W | 0.75→1.5 |
+| `structural-repetition` | 3+ functions with identical AST shape | W | 1.5 |
+| `whitespace-uniformity` | Regular blank line spacing, uniform line lengths | H | 1.0 |
+| `trivial-wrapper` | Single-expression delegators (6+/file, 15+ for orchestration) | H | 0.75 |
+| `pub-overuse` | >70% of items `pub` (exempts types.rs, data models) | W | 1.5 |
+| `dead-code-markers` | 3+ `#[allow(dead_code)]` | W | 1.5 |
+| `derive-stacking` | 6+ derives on one type | H | 0.75 |
 
-These catch patterns where AI takes shortcuts a human wouldn't.
-
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `redundant-clone` | `.clone()` calls that could borrow | H→S | 0.5→2.0 | AI defaults to cloning rather than reasoning about lifetimes. Escalates: >5=W, >10=S |
-| `error-swallowing` | `Err(_) => {}`, `.unwrap_or_default()` on Results | H→S | 0.75→2.5 | AI drops errors silently. Empty catch blocks are the strongest signal |
-| `unwrap-overuse` | Dense `.unwrap()` / `.expect()` | H→S | 0.1→3.0 | AI sprinkles unwrap rather than propagating. Multiple on one line = S |
-| `boxed-error` | 2+ functions returning `Box<dyn Error>` | W | 1.5 | AI uses the laziest error type instead of defining domain errors |
-| `string-params` | `fn foo(s: String)` instead of `&str` | W | 1.5 | AI takes owned Strings everywhere rather than borrowing |
-| `index-loop` | `for i in 0..vec.len()` | W | 1.5 | AI writes C-style loops instead of idiomatic iterators |
-| `verbose-match` | 2-arm match replaceable with `if let` / `.map()` | W | 1.0 | AI writes match on Option/Result when a combinator is cleaner |
-| `needless-lifetimes` | Lifetime annotations the elision rules handle | H | 0.75 | AI writes lifetimes it saw in training data rather than letting the compiler elide |
-| `needless-type-annotation` | `let x: Vec<String> = Vec::new()` | H | 0.5 | AI over-annotates types the compiler infers |
-
-### Documentation Signals
-
-These catch patterns where AI narrates rather than explains.
-
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `over-documentation` | Step-by-step tutorial comments, >45% comment density | W→S | 2.0→3.0 | AI narrates code like a tutorial: "Step 1: Initialize..." |
-| `restating-comment` | Comments that restate the next line of code | W | 1.5 | AI explains obvious code. Heuristic: >60% of comment words appear in code line below. Exempts comments with intent signals (because, workaround, hack, etc.) |
-| `comment-clustering` | Per-function comment density >50%, or uniformly spaced comments | W→S | 1.5→2.5 | Comment-to-code ratio is the most reliable surface discriminator across multi-language studies. AI distributes comments uniformly; humans cluster around complexity |
-| `generic-todo` | Vague TODOs: "add error handling", "implement this" | W | 1.5 | AI leaves placeholder TODOs it has no plan to fill. 44 match patterns |
-
-### Structural Signals
-
-These catch patterns in how AI organizes code.
-
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `structural-repetition` | 3+ functions with identical AST shape | W | 1.5 | AI generates copy-paste variants. Hashes: param count, stmt count, control flow |
-| `whitespace-uniformity` | Suspiciously regular blank line spacing or line lengths | H | 1.0 | AI produces mechanically uniform formatting. Human code: stddev >3.0 for gaps, CV >0.6 for line lengths |
-| `naming-entropy` | Low unique-stem ratio (<35%), uniformly verbose naming | H→W | 0.75→1.5 | AI reuses the same vocabulary (process_, handle_, user_). Humans abbreviate, use domain shorthand, and vary style |
-| `trivial-wrapper` | Single-expression functions that just delegate | H | 0.75 | AI generates indirection layers. Threshold: 5/file (10 for API surface files) |
-| `generic-naming` | Vague names: `process_data`, `handle_event` | W | 1.5 | AI picks names from training distribution. 44 prefix/suffix/exact patterns |
-| `pub-overuse` | >70% of items are `pub` | W | 1.5 | AI makes everything public rather than designing visibility |
-| `dead-code-markers` | 3+ `#[allow(dead_code)]` suppressions | W | 1.5 | AI generates unused code and silences the compiler |
-| `derive-stacking` | 6+ derives on one type | H | 0.75 | AI stacks every derive it knows |
+Escalation: `redundant-clone` at >15 = Warning, >30 = Slop.
+`unwrap-overuse` downweighted to 0.1 in test code, suppressed with `--exclude-tests`.
 
 ---
 
-## HTML / CSS (6 rules)
+## TypeScript / JavaScript (14 rules, AST via `oxc`)
 
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `div-soup` | Excessive `<div>` nesting (>50% of tags or 5+ levels) | W→S | 2.5→3.0 | AI wraps everything in divs instead of using semantic elements |
-| `missing-semantics` | Files with many tags but zero semantic HTML | W | 2.0 | AI doesn't think about document structure |
-| `inline-styles` | 3+ inline `style=""` attributes | W→S | 1.5→3.0 | AI puts styles inline rather than using classes |
-| `generic-classes` | Generic CSS class names (container, wrapper, content) | W | 1.5 | AI picks names from training frequency, not domain |
-| `accessibility` | Missing alt, lang, aria-label | W→S | 1.0→3.0 | AI skips accessibility because training data often omits it |
-| `css-smells` | Excessive !important, magic numbers, no custom properties | H→S | 1.0→3.0 | AI writes CSS that works but doesn't compose |
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `any-abuse` | 3+ `any` types or `@ts-ignore` suppressions | W→S | 1.5→3.0 |
+| `ts-error-handling` | Empty catch blocks, catch-and-log-only, catch(_) | W→S | 1.5→2.5 |
+| `promise-antipattern` | `new Promise`, `.then()` chains, silent `.catch()` | H→S | 0.75→2.5 |
+| `console-dump` | 3+ debug `console.*` calls | W→S | 1.5→3.0 |
+| `ts-redundant-async` | `async` functions that never `await` | W | 1.0 |
+| `nested-ternary` | 2+ ternary operators on one line | W | 1.5 |
+| `ts-nesting-depth` | 4+ levels of nested control flow | W | 1.5 |
+| `ts-trivial-wrapper` | 5+ single-statement functions in one file | H | 0.75 |
+| `ts-structural-repetition` | 3+ functions with identical shape | W | 1.5 |
+| `ts-naming-entropy` | Low identifier uniqueness ratio | W | 1.5 |
+| `ts-generic-naming` | `processData`, `handleRequest`, `fetchData` | W | 1.5 |
+| `ts-restating-comment` | Comments restating code | W | 1.5 |
+| `ts-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
+| `ts-whitespace-uniformity` | Uniform blank lines and line lengths | H | 1.0 |
 
----
-
-## TypeScript / JavaScript (7 rules)
-
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `any-abuse` | 3+ `any` types or `@ts-ignore` suppressions | W→S | 1.5→3.0 | AI uses `any` to make TypeScript shut up |
-| `console-dump` | 3+ debug `console.*` calls left in code | W→S | 1.5→3.0 | AI leaves debug instrumentation in place |
-| `nested-ternary` | 2+ ternary operators on one line | W | 1.5 | AI nests ternaries where a function or match would be clearer |
-| `promise-antipattern` | `new Promise`, `.then()` chains, silent `.catch()` | H→S | 0.75→2.5 | AI writes Promise patterns from pre-async/await training data |
-| `generic-naming` | Generic function/variable names | W | 1.5 | Same as Rust: training distribution names, not domain names |
-| `restating-comment` | Comments that restate code without intent | W | 1.5 | Same as Rust: "what" comments instead of "why" comments |
-| `whitespace-uniformity` | Suspiciously regular blank line spacing or line lengths | H | 1.0 | Same as Rust: mechanically uniform formatting |
+`ts-error-handling` uses oxc's typed `CatchClause` to detect empty bodies
+and log-only patterns. `ts-redundant-async` recurses into try/if blocks
+to find await expressions.
 
 ---
 
-## Python (7 rules)
+## Python (15 rules, AST via `tree-sitter`)
 
-| Rule | What It Catches | Sev | Weight | Why It's Slop |
-|------|----------------|-----|--------|---------------|
-| `bare-except` | Bare `except:` or broad exception handling | H→S | 0.75→2.5 | AI catches everything and does nothing with it |
-| `print-debug` | 3+ `print()` calls as debugging | W→S | 1.5→3.0 | AI uses print where logging or debugger belongs |
-| `import-star` | `from X import *` or 20+ imports | H→W | 0.75→1.5 | AI imports everything rather than being specific |
-| `type-hint-gaps` | Inconsistent type hints (20–80% coverage) | H | 1.0 | AI partially annotates rather than being consistent |
-| `generic-naming` | Generic function names | W | 1.5 | Same training-distribution naming issue |
-| `restating-comment` | Comments restating code | W | 1.5 | Same "what not why" pattern |
-| `whitespace-uniformity` | Suspiciously regular blank line spacing or line lengths | H | 1.0 | Same as Rust: mechanically uniform formatting |
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `bare-except` | `except:` or `except Exception:` | H→S | 0.75→2.5 |
+| `py-error-handling` | Broad except + pass, except + log-only | W→S | 1.5→2.5 |
+| `print-debug` | 3+ `print()` in non-CLI code | W→S | 1.5→3.0 |
+| `import-star` | `from X import *`, 20+ imports | H→W | 0.75→1.5 |
+| `type-hint-gaps` | 20-80% type hint coverage | H | 1.0 |
+| `py-index-loop` | `for i in range(len(x))` | W | 1.5 |
+| `py-mutable-default` | `def f(x=[])` | W | 1.5 |
+| `py-nesting-depth` | 4+ levels of nested control flow | W | 1.5 |
+| `py-trivial-wrapper` | 5+ single-statement functions | H | 0.75 |
+| `py-structural-repetition` | 3+ functions with identical shape | W | 1.5 |
+| `py-naming-entropy` | Low identifier uniqueness | W | 1.5 |
+| `py-generic-naming` | `process_data`, `handle_request` | W | 1.5 |
+| `py-restating-comment` | Comments restating code | W | 1.5 |
+| `py-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
+| `py-whitespace-uniformity` | Uniform blank lines and line lengths | H | 1.0 |
+
+---
+
+## Go (8 rules, AST via `tree-sitter` + custom collector)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `go-error-handling` | Bare `return err`, `panic()` in library code, ignored errors | W→S | 1.5→2.5 |
+| `go-antipattern` | `interface{}` overuse, `fmt.Print` debugging, `time.Sleep` | W→S | 1.5→2.5 |
+| `go-nesting-depth` | 4+ levels of nested control flow | W | 1.5 |
+| `go-structural-repetition` | 3+ functions with identical shape | W | 1.5 |
+| `go-naming-entropy` | Low identifier uniqueness | W | 1.5 |
+| `go-generic-naming` | `processData`, `handleRequest` | W | 1.5 |
+| `go-restating-comment` | Comments restating code | W | 1.5 |
+| `go-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
+
+Go AST collector understands error return types, method receivers,
+`interface{}` nodes, and function nesting depth.
+
+---
+
+## HTML / CSS (6 rules, tag parser)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `div-soup` | >50% div tags or 5+ nesting levels | W→S | 2.5→3.0 |
+| `missing-semantics` | Zero semantic elements in 15+ tag file | W | 2.0 |
+| `inline-styles` | 3+ inline `style=""` attributes | W→S | 1.5→3.0 |
+| `generic-classes` | `container`, `wrapper`, `content` | W | 1.5 |
+| `accessibility` | Missing alt, lang, aria-label | W→S | 1.0→3.0 |
+| `css-smells` | `!important`, magic numbers, no custom properties | H→S | 1.0→3.0 |
+
+---
+
+## Java (4 rules, text, legacy)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `java-bare-catch` | `catch (Exception e)` with empty/log-only body | W | 1.5 |
+| `java-generic-naming` | Generic method names | W | 1.5 |
+| `java-restating-comment` | Comments restating code | W | 1.5 |
+| `java-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
+
+---
+
+## Shell (3 rules, text)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `sh-strict-mode` | Missing `set -euo pipefail`, missing/wrong shebang | W | 1.5→2.0 |
+| `sh-unquoted-var` | Unquoted `$VAR` expansions | W→S | 1.5→2.5 |
+| `sh-antipattern` | `cat \| grep`, parsing `ls`, unchecked `cd`, `eval`, hardcoded `/tmp` | H→W | 0.75→1.5 |
+
+---
+
+## Dockerfile (1 rule, 5 checks)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `docker-best-practices` | No USER (root), :latest tag, split RUN layers, apt without cleanup, ADD vs COPY | H→S | 0.75→2.5 |
+
+---
+
+## Kubernetes YAML (1 rule, 6 checks, content-sniffed)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `k8s-manifest` | No resource limits, no probes, naked pods, default namespace, :latest image, wildcard RBAC | H→S | 1.0→2.5 |
+
+Only fires on YAML containing `apiVersion:` and `kind:`.
+
+---
+
+## CI/CD YAML (1 rule, 5 checks, content-sniffed)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `ci-workflow` | Hardcoded secrets, wildcard triggers, auto-approve, missing permissions, unpinned actions | H→S | 1.0→3.0 |
+
+Only fires on YAML containing `jobs:` + `steps:` (GHA) or `stages:` (GitLab).
+
+---
+
+## Markdown (3 rules, text)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `md-slop-phrases` | AI buzzword density (comprehensive, leverage, delve, etc.) | W→S | 1.5→2.5 |
+| `md-structure` | H5+ heading depth, uniform sub-heading structure | H→W | 0.75→1.5 |
+| `md-placeholder` | Template filler, generic opening paragraphs | H→W | 1.0→1.5 |
+
+---
+
+## Cross-file (3 rules)
+
+| Rule | What It Catches | Sev | Weight |
+|------|----------------|-----|--------|
+| `cross-file-duplicate` | 5-line blocks duplicated across 3+ files | W | 2.0 |
+| `cross-file-imports` | Identical import headers across 3+ files | H | 1.0 |
+| `cross-file-error-pattern` | Same error handling in 3+ files | W | 1.5 |
+
+These run after per-file analysis completes.
 
 ---
 
 ## Research Basis
 
-Rule design draws from published work on detecting machine-generated
-code. Key findings:
+Rule design draws from published work on detecting machine-generated code.
 
 **Comment-to-code ratio is the most reliable surface signal.** The
 CoDet-M4 multi-language study and multilingual code stylometry work
-both found this as the single strongest surface discriminator. This
-backs `over-documentation`, `restating-comment`, and
-`comment-clustering`.
+both found this as the single strongest surface discriminator.
 
-**Function-level analysis far outperforms file-level.** Granularity
-studies show function-scope detection outperforms file-scope by a
-wide margin. This motivated `comment-clustering`'s per-function
-density measurement.
+**Function-level analysis far outperforms file-level.** This motivated
+per-function density measurement in `comment-clustering` and the
+language-specific `*-comment-depth` rules.
 
-**AI distributes comments uniformly; humans cluster.** Comment
-placement research shows AI produces mechanically regular spacing.
-Humans cluster comments near complex or non-obvious code. This backs
+**AI distributes comments uniformly; humans cluster.** This backs
 the standard-deviation analysis in `comment-clustering` and
 `whitespace-uniformity`.
 
-**Structural signals survive obfuscation.** The LLM-generated
-JavaScript attribution study achieved 88-96% accuracy even after
-minification and identifier mangling. AST structure, control flow
+**Structural signals survive obfuscation.** AST structure, control flow
 patterns, and dataflow graphs are more robust than surface features.
-This validates `structural-repetition` and is the direction for
-future rule development.
+This validates `structural-repetition` and the tree-sitter/oxc AST
+analysis approach.
 
 **Naming entropy separates human from AI code.** AI draws from a
-narrow naming vocabulary. Humans abbreviate, use domain shorthand,
-and vary style. This backs `naming-entropy` and `generic-naming`.
+narrow naming vocabulary.
 
 **AI coding agents leave distinct fingerprints.** The MSR 2026 agent
-fingerprinting study (33k PRs from Codex, Copilot, Devin, Cursor,
-Claude Code) achieved 97% F1 on agent identification. Different
-agents have distinctive patterns in conditional statements, commit
-structure, and code organization. This is a signal class lipstyk
-should expand into.
+fingerprinting study (33k PRs) achieved 97% F1 on agent identification.
 
-**Detection degrades with each model generation.** Each new model
-family produces output closer to human code. Surface-level rules
-(comment density, naming patterns) degrade faster than structural
-rules (AST shape, control flow). The rule set must evolve, and
-transparency — every rule readable and explainable — is what keeps
-it useful as models improve.
+**Detection degrades with each model generation.** Surface rules
+degrade faster than structural rules. The rule set must evolve.
 
 ### Sources
 
@@ -155,36 +228,25 @@ it useful as models improve.
 - Fingerprinting AI Coding Agents on GitHub (MSR 2026, arxiv 2601.17406)
 - The Hidden DNA of LLM-Generated JavaScript (arxiv 2510.10493)
 - Code Fingerprints: Disentangled Attribution via DCAN (arxiv 2603.04212)
-- LLM Code Stylometry for Authorship Attribution (ACM AISec)
 - AICD Bench: 2M-sample benchmark, 77 generators, 9 languages (arxiv 2602.02079)
 - Multilingual Code Stylometry (SANER — 84.1% across 10 languages)
-- Function vs Class Granularity Detection
 
 ---
 
 ## Scoring
 
-Each diagnostic has a weight. A file's slop score is the sum of all
-diagnostic weights. The `score_per_100_lines` metric normalizes for
-file size.
+Each diagnostic has a weight. File score = sum of weights.
+`score_per_100_lines` normalizes for size.
 
-Severity escalation: many rules escalate severity based on count
-within a file. One `.clone()` is a Hint (0.5); ten is Slop (2.0).
-One `any` type is fine; three is a Warning; six is Slop. This reflects
-the core principle: any single pattern is inconclusive; density is
-the signal.
+Rules escalate by count: one `.clone()` is a 0.5 hint; fifteen+
+escalates to 1.0 warning; thirty+ escalates to 1.5 slop.
+
+Verdicts: clean (<5), mild (<15), suspicious (<30), sloppy (>=30).
 
 ---
 
 ## Limitations
 
-This tool detects patterns, not intent. It will produce:
-
-- **False positives** on human code that happens to be verbose,
-  uniformly formatted, or heavily commented (legitimate in some
-  contexts)
-- **False negatives** on AI code that has been manually edited,
-  refactored, or generated by models trained to avoid these patterns
-
-It is not a substitute for code review. It is a signal that something
-warrants closer inspection.
+Detects patterns, not intent. False positives on verbose human code.
+False negatives on edited AI output. Not a replacement for reading
+the code.

@@ -61,6 +61,13 @@ but are secondary.
 - T1 samples are too small and structurally uniform for lipstyk's
   density-based approach. This is expected, not a deficiency.
 
+## Note
+
+This evaluation was run with an early version of lipstyk (pre-oxc,
+pre-Go, pre-DevOps). The rule set and parser infrastructure have
+changed significantly since. Results should be treated as a baseline,
+not current accuracy.
+
 ## Benchmark details
 
 - Dataset: `AICD-bench/AICD-Bench` on HuggingFace

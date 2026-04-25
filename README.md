@@ -221,9 +221,8 @@ Current self-scan: score 49.5, 32/108 files with findings, mostly hints.
 Diagnostics carry weights (0.1-3.0). File score = sum of weights.
 `score_per_100_lines` normalizes for size.
 
-Rules escalate by count: one `.clone()` is a 0.5 hint; ten in the
-same file is a 2.0 slop. Single findings don't mean much. Density
-does.
+Rules escalate by count: one `.clone()` is a 0.5 hint; fifteen+
+escalates to warning. Single findings don't mean much. Density does.
 
 Verdicts: clean (<5), mild (<15), suspicious (<30), sloppy (>=30).
 

@@ -322,6 +322,43 @@ fn suggest_fix(rule: &str, _message: &str) -> &'static str {
         "print-debug" => "Replace print() with the logging module. Use logging.debug/info/error.",
         "import-star" => "Import specific names: from module import ClassA, function_b",
         "type-hint-gaps" => "Be consistent — either annotate all functions or none. Prefer annotating all.",
+        // Go
+        "go-error-handling" => "Wrap errors with fmt.Errorf(\"...: %w\", err). Don't panic in library code.",
+        "go-antipattern" => "Replace interface{} with specific interfaces or generics. Use a structured logger.",
+        "go-generic-naming" => "Rename to describe what the function does in your domain.",
+        "go-restating-comment" | "go-comment-depth" => "Delete the comment or explain why, not what.",
+        "go-structural-repetition" | "go-naming-entropy" | "go-nesting-depth" =>
+            "Extract repeated patterns. Vary naming. Reduce nesting with early returns.",
+        // Shell
+        "sh-strict-mode" => "Add `set -euo pipefail` after the shebang.",
+        "sh-unquoted-var" => "Quote variable expansions: \"$VAR\" instead of $VAR.",
+        "sh-antipattern" => "Use globs instead of ls, grep file instead of cat|grep, mktemp for temp files.",
+        // Docker
+        "docker-best-practices" => "Add USER directive, pin image tags, combine RUN layers, clean apt cache.",
+        // K8s
+        "k8s-manifest" => "Add resource limits, health probes, pin image tags, use specific RBAC.",
+        // CI
+        "ci-workflow" => "Add permissions block, pin actions to SHA, use branch filters.",
+        // Markdown
+        "md-slop-phrases" => "Remove AI buzzwords. Write like a human: specific, direct, no filler.",
+        "md-structure" => "Flatten heading depth. Vary section structure.",
+        "md-placeholder" => "Fill in placeholder content or remove template scaffolding.",
+        // Cross-file
+        "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" =>
+            "Extract the duplicated pattern into a shared module.",
+        // New TS/Python rules
+        "ts-error-handling" | "py-error-handling" => "Handle errors explicitly. Don't catch and ignore.",
+        "ts-redundant-async" => "Remove async keyword — this function never awaits.",
+        "ts-nesting-depth" | "py-nesting-depth" => "Extract inner logic into a separate function.",
+        "ts-trivial-wrapper" | "py-trivial-wrapper" => "Inline the delegation if it adds no value.",
+        "ts-structural-repetition" | "py-structural-repetition" => "Extract the repeated pattern.",
+        "ts-naming-entropy" | "py-naming-entropy" => "Vary naming vocabulary.",
+        "ts-comment-depth" | "py-comment-depth" | "java-comment-depth" =>
+            "Remove step narration. Document intent, not mechanics.",
+        "java-bare-catch" => "Catch specific exceptions. Don't catch Exception.",
+        "java-generic-naming" | "java-restating-comment" => "Rename or rewrite to be specific.",
+        "py-index-loop" => "Use `for item in x` or `for i, item in enumerate(x)`.",
+        "py-mutable-default" => "Use None as default, initialize inside the function.",
         _ => "Review and address the finding",
     }
 }
