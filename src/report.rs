@@ -111,6 +111,10 @@ pub fn rule_category(rule: &str) -> &'static str {
         "import-star" => "py-structure",
         "type-hint-gaps" => "py-quality",
         "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" => "cross-file",
+        "sh-strict-mode" | "sh-unquoted-var" | "sh-antipattern" => "shell",
+        "docker-best-practices" => "docker",
+        "k8s-manifest" => "kubernetes",
+        "ci-workflow" => "ci-cd",
         _ => "other",
     }
 }

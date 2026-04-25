@@ -98,6 +98,18 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::java::bare_catch::BareCatch));
         linter.add_source_rule(Box::new(crate::java::comment_depth::CommentDepth));
 
+        // Shell rules
+        linter.add_source_rule(Box::new(crate::shell::strict_mode::StrictMode));
+        linter.add_source_rule(Box::new(crate::shell::quoting::Quoting));
+        linter.add_source_rule(Box::new(crate::shell::antipatterns::Antipatterns));
+
+        // Dockerfile rules
+        linter.add_source_rule(Box::new(crate::docker::best_practices::BestPractices));
+
+        // DevOps YAML rules (content-sniffed)
+        linter.add_source_rule(Box::new(crate::devops::kubernetes::KubernetesRules));
+        linter.add_source_rule(Box::new(crate::devops::ci::CiRules));
+
         info!(
             rust = linter.rust_rules.len(),
             source = linter.source_rules.len(),
@@ -107,12 +119,8 @@ impl Linter {
     }
 
     pub fn rule_counts(&self) -> RuleCounts {
-        let mut html = 0;
-        let mut css = 0;
-        let mut ts = 0;
-        let mut js = 0;
-        let mut py = 0;
-        let mut java = 0;
+        let (mut html, mut css, mut ts, mut js, mut py, mut java) = (0, 0, 0, 0, 0, 0);
+        let (mut shell, mut docker, mut yaml, mut markdown) = (0, 0, 0, 0);
 
         for rule in &self.source_rules {
             for lang in rule.langs() {
@@ -123,13 +131,17 @@ impl Linter {
                     Lang::JavaScript => js += 1,
                     Lang::Python => py += 1,
                     Lang::Java => java += 1,
+                    Lang::Shell => shell += 1,
+                    Lang::Dockerfile => docker += 1,
+                    Lang::Yaml => yaml += 1,
+                    Lang::Markdown => markdown += 1,
                 }
             }
         }
 
         RuleCounts {
             rust: self.rust_rules.len(),
-            html, css, ts, js, py, java,
+            html, css, ts, js, py, java, shell, docker, yaml, markdown,
         }
     }
 
@@ -191,7 +203,7 @@ impl Linter {
 
         let mut diagnostics = if ext == "rs" {
             self.lint_rust(filename, source)?
-        } else if let Some(lang) = Lang::from_ext(ext) {
+        } else if let Some(lang) = Lang::from_filename(filename) {
             self.lint_source_rules(filename, source, lang)
         } else {
             Vec::new()
@@ -298,6 +310,10 @@ pub struct RuleCounts {
     pub js: usize,
     pub py: usize,
     pub java: usize,
+    pub shell: usize,
+    pub docker: usize,
+    pub yaml: usize,
+    pub markdown: usize,
 }
 
 impl RuleCounts {
@@ -305,11 +321,9 @@ impl RuleCounts {
         self.rust + self.source_total()
     }
 
-    /// Deduplicated count of source rules (TS+JS counted once).
     pub fn source_total(&self) -> usize {
-        // Rules targeting both TS and JS are the same rule, count once.
-        // Use the max of ts/js since they overlap.
         self.html.max(self.css) + self.ts.max(self.js) + self.py + self.java
+            + self.shell + self.docker + self.yaml + self.markdown
     }
 }
 

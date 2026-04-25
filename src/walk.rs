@@ -1,14 +1,20 @@
 use std::path::{Path, PathBuf};
 
-/// File extensions lipstyk knows how to analyze.
+
 const SUPPORTED_EXTENSIONS: &[&str] = &[
     "rs",
-    "html", "htm",
-    "css",
-    "vue", "svelte",
+    "html", "htm", "css", "vue", "svelte",
     "ts", "tsx", "js", "jsx",
     "py",
     "java",
+    "sh", "bash", "zsh",
+    "yml", "yaml",
+    "md", "mdx",
+];
+
+/// Filenames without extensions that lipstyk recognizes.
+const SUPPORTED_FILENAMES: &[&str] = &[
+    "Dockerfile", "Containerfile",
 ];
 
 const SKIP_DIRS: &[&str] = &[
@@ -40,9 +46,18 @@ pub fn collect_rust_files(paths: &[&str]) -> Vec<PathBuf> {
 }
 
 fn is_supported(path: &Path) -> bool {
-    path.extension()
+    // Check extension.
+    if path.extension()
         .and_then(|ext| ext.to_str())
         .is_some_and(|ext| SUPPORTED_EXTENSIONS.contains(&ext))
+    {
+        return true;
+    }
+
+    // Check filename (for extensionless files like Dockerfile).
+    path.file_name()
+        .and_then(|n| n.to_str())
+        .is_some_and(|name| SUPPORTED_FILENAMES.contains(&name))
 }
 
 fn walk_dir(dir: &Path, files: &mut Vec<PathBuf>) {

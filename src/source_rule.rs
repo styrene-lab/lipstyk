@@ -1,7 +1,7 @@
 use crate::diagnostic::Diagnostic;
 use crate::html::parse::ParsedHtml;
 
-/// Language identifier for dispatch.
+/// Language/file-type identifier for dispatch.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Lang {
     TypeScript,
@@ -10,9 +10,14 @@ pub enum Lang {
     Html,
     Css,
     Java,
+    Shell,
+    Dockerfile,
+    Yaml,
+    Markdown,
 }
 
 impl Lang {
+    /// Detect language from file extension.
     pub fn from_ext(ext: &str) -> Option<Self> {
         match ext {
             "ts" | "tsx" => Some(Self::TypeScript),
@@ -21,15 +26,36 @@ impl Lang {
             "html" | "htm" | "vue" | "svelte" => Some(Self::Html),
             "css" => Some(Self::Css),
             "java" => Some(Self::Java),
+            "sh" | "bash" | "zsh" => Some(Self::Shell),
+            "yml" | "yaml" => Some(Self::Yaml),
+            "md" | "mdx" => Some(Self::Markdown),
+            _ => None,
+        }
+    }
+
+    /// Detect from filename (not just extension) for extensionless files.
+    pub fn from_filename(filename: &str) -> Option<Self> {
+        let name = std::path::Path::new(filename)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or(filename);
+
+        // Try extension first.
+        if let Some(ext) = std::path::Path::new(filename).extension().and_then(|e| e.to_str())
+            && let Some(lang) = Self::from_ext(ext) {
+                return Some(lang);
+            }
+
+        // Extensionless filename detection.
+        match name {
+            "Dockerfile" | "Containerfile" => Some(Self::Dockerfile),
+            "Makefile" | "makefile" => Some(Self::Shell), // close enough
             _ => None,
         }
     }
 }
 
 /// Context for all non-Rust (text-based) rules.
-///
-/// Carries the source text, filename, detected language, and
-/// pre-parsed HTML tags (populated only for HTML/CSS files).
 pub struct SourceContext<'a> {
     pub filename: &'a str,
     pub source: &'a str,
@@ -56,14 +82,8 @@ impl<'a> SourceContext<'a> {
 }
 
 /// Unified trait for all non-Rust lint rules.
-///
-/// Each rule declares which languages it applies to. The linter skips
-/// rules whose language doesn't match the file being analyzed.
 pub trait SourceRule: Send + Sync {
     fn name(&self) -> &'static str;
-
-    /// Which languages this rule applies to.
     fn langs(&self) -> &[Lang];
-
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic>;
 }

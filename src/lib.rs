@@ -1,7 +1,9 @@
 pub mod common;
 pub mod config;
 pub mod cross_file;
+pub mod devops;
 pub mod diagnostic;
+pub mod docker;
 pub mod diff;
 #[cfg(feature = "agent")]
 pub mod extension;
@@ -12,6 +14,7 @@ pub mod python;
 pub mod render;
 pub mod report;
 pub mod rules;
+pub mod shell;
 pub mod sarif;
 pub mod source_rule;
 pub mod treesitter;

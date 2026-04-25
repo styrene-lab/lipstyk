@@ -194,6 +194,9 @@ impl LipstykExtension {
                 "python": { "rules": counts.py, "extensions": [".py"] },
                 "html_css": { "rules": counts.html, "extensions": [".html", ".htm", ".css", ".vue", ".svelte"] },
                 "java": { "rules": counts.java, "extensions": [".java"] },
+                "shell": { "rules": counts.shell, "extensions": [".sh", ".bash", ".zsh"] },
+                "dockerfile": { "rules": counts.docker, "extensions": ["Dockerfile", "Containerfile"] },
+                "yaml": { "rules": counts.yaml, "extensions": [".yml", ".yaml"] },
             },
             "total_rules": counts.total(),
         }))
