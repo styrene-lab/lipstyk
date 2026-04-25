@@ -1,0 +1,15 @@
+- id: lipstyk
+  name: lipstyk
+  description: Check for AI-generated code patterns
+  entry: lipstyk --exclude-tests --threshold 20
+  language: system
+  types_or: [rust, python, javascript, ts, html, css, java]
+  pass_filenames: false
+
+- id: lipstyk-diff
+  name: lipstyk (diff only)
+  description: Check changed lines for AI-generated code patterns
+  entry: lipstyk --diff HEAD --exclude-tests --threshold 15
+  language: system
+  types_or: [rust, python, javascript, ts, html, css, java]
+  pass_filenames: false

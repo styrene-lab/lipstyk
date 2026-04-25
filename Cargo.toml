@@ -12,6 +12,7 @@ default-run = "lipstyk"
 [features]
 default = []
 agent = ["dep:omegon-extension", "dep:async-trait", "dep:tokio"]
+lsp = ["dep:tower-lsp", "dep:tokio"]
 
 [dependencies]
 syn = { version = "2", features = ["full", "visit"] }
@@ -25,10 +26,11 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 toml = "0.8"
 
-# Agent-only deps (omegon extension runtime)
+# Optional runtime deps
 omegon-extension = { path = "../omegon/core/crates/omegon-extension", optional = true }
 async-trait = { version = "0.1", optional = true }
-tokio = { version = "1", features = ["rt-multi-thread", "macros"], optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "io-std"], optional = true }
+tower-lsp = { version = "0.20", optional = true }
 
 [dev-dependencies]
 tempfile = "3"
@@ -41,3 +43,8 @@ path = "src/main.rs"
 name = "lipstyk-agent"
 path = "src/agent.rs"
 required-features = ["agent"]
+
+[[bin]]
+name = "lipstyk-lsp"
+path = "src/lsp.rs"
+required-features = ["lsp"]

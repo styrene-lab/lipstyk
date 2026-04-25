@@ -400,6 +400,74 @@ Both the CLI and the agent extension respect it.
 
 ---
 
+## LSP Server (inline editor diagnostics)
+
+Build the LSP binary:
+
+```bash
+cargo build --release --features lsp
+```
+
+### VS Code
+
+Add to `.vscode/settings.json`:
+
+```json
+{
+  "lsp.lipstyk.command": "lipstyk-lsp",
+  "lsp.lipstyk.filetypes": ["rust", "python", "typescript", "javascript", "html", "css", "java"]
+}
+```
+
+Or use a generic LSP client extension and point it at `lipstyk-lsp`.
+
+### Neovim (nvim-lspconfig)
+
+```lua
+vim.lsp.start({
+  name = 'lipstyk',
+  cmd = { 'lipstyk-lsp' },
+  root_dir = vim.fs.dirname(vim.fs.find('.lipstyk.toml', { upward = true })[1]),
+  filetypes = { 'rust', 'python', 'typescript', 'javascript', 'html', 'css', 'java' },
+})
+```
+
+### Helix
+
+Add to `languages.toml`:
+
+```toml
+[language-server.lipstyk]
+command = "lipstyk-lsp"
+
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer", "lipstyk"]
+```
+
+The LSP server publishes diagnostics on open/change/save. Findings
+appear inline as hints, warnings, or errors with the rule name as
+the diagnostic code.
+
+---
+
+## pre-commit
+
+Add to `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/styrene-lab/lipstyk
+    rev: main
+    hooks:
+      - id: lipstyk           # full scan, threshold 20
+      - id: lipstyk-diff      # changed lines only, threshold 15
+```
+
+Requires `lipstyk` on `$PATH`.
+
+---
+
 ## Supported Languages
 
 | Language | Extensions | Rules |
@@ -408,3 +476,4 @@ Both the CLI and the agent extension respect it.
 | TypeScript/JavaScript | `.ts`, `.tsx`, `.js`, `.jsx` | 7 |
 | Python | `.py` | 7 |
 | HTML/CSS | `.html`, `.htm`, `.css`, `.vue`, `.svelte` | 6 |
+| Java | `.java` | 3 (legacy support) |

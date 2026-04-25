@@ -144,6 +144,28 @@ Auto-discovered by walking parent directories.
   continue-on-error: true
 ```
 
+## LSP server
+
+Inline diagnostics in any editor that speaks LSP.
+
+```bash
+cargo build --release --features lsp
+```
+
+Configure your editor to use `lipstyk-lsp` as a language server.
+See [INTEGRATION.md](INTEGRATION.md) for VS Code, Neovim, and
+Helix setup.
+
+## pre-commit
+
+```yaml
+repos:
+  - repo: https://github.com/styrene-lab/lipstyk
+    rev: main
+    hooks:
+      - id: lipstyk
+```
+
 ## Agent integration
 
 The `lipstyk-agent` binary speaks Omegon RPC and MCP (`--mcp` flag).
