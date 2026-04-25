@@ -1,0 +1,776 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2026-04-25T11:47:06.061889+00:00",
+  "duration_ms": 12,
+  "git": {
+    "branch": "main",
+    "commit": "607dea3",
+    "dirty": true
+  },
+  "summary": {
+    "files_scanned": 62,
+    "files_with_findings": 17,
+    "total_score": 20.3,
+    "total_diagnostics": 27,
+    "by_severity": {
+      "hint": 12,
+      "warning": 15,
+      "slop": 0
+    },
+    "by_rule": {
+      "derive-stacking": {
+        "count": 1,
+        "total_weight": 0.75
+      },
+      "error-swallowing": {
+        "count": 4,
+        "total_weight": 3.0
+      },
+      "generic-naming": {
+        "count": 3,
+        "total_weight": 4.5
+      },
+      "pub-overuse": {
+        "count": 2,
+        "total_weight": 1.0
+      },
+      "redundant-clone": {
+        "count": 7,
+        "total_weight": 3.5
+      },
+      "restating-comment": {
+        "count": 2,
+        "total_weight": 3.0
+      },
+      "structural-repetition": {
+        "count": 7,
+        "total_weight": 3.5
+      },
+      "verbose-match": {
+        "count": 1,
+        "total_weight": 1.0
+      }
+    },
+    "by_category": {
+      "documentation": {
+        "count": 2,
+        "total_weight": 3.0,
+        "rules": [
+          "restating-comment"
+        ]
+      },
+      "error-handling": {
+        "count": 4,
+        "total_weight": 3.0,
+        "rules": [
+          "error-swallowing"
+        ]
+      },
+      "idiom": {
+        "count": 1,
+        "total_weight": 1.0,
+        "rules": [
+          "verbose-match"
+        ]
+      },
+      "naming": {
+        "count": 3,
+        "total_weight": 4.5,
+        "rules": [
+          "generic-naming"
+        ]
+      },
+      "ownership": {
+        "count": 7,
+        "total_weight": 3.5,
+        "rules": [
+          "redundant-clone"
+        ]
+      },
+      "statistical": {
+        "count": 7,
+        "total_weight": 3.5,
+        "rules": [
+          "structural-repetition"
+        ]
+      },
+      "structure": {
+        "count": 3,
+        "total_weight": 1.75,
+        "rules": [
+          "pub-overuse",
+          "derive-stacking"
+        ]
+      }
+    }
+  },
+  "files": [
+    {
+      "file": "src/extension.rs",
+      "score": 2.5,
+      "lines": 445,
+      "score_per_100_lines": 0.6,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (0 params, 1 stmts): default, new, tool_definitions",
+          "line": 12,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 100,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (1 params, 1 stmts): execute_rules, name, version",
+          "line": 185,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 349,
+          "severity": "Hint",
+          "weight": 0.75
+        }
+      ]
+    },
+    {
+      "file": "src/lint.rs",
+      "score": 2.5,
+      "lines": 264,
+      "score_per_100_lines": 0.9,
+      "diagnostics": [
+        {
+          "rule": "restating-comment",
+          "category": "documentation",
+          "message": "comment restates the code: `Rust rules (21)`",
+          "line": 42,
+          "severity": "Warning",
+          "weight": 1.5
+        },
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "4 functions share the same shape (2 params, 1 stmts): add_rust_rule, add_html_rule, add_ts_rule, add_py_rule",
+          "line": 119,
+          "severity": "Warning",
+          "weight": 0.5
+        },
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (3 params, 2 stmts): lint_html, lint_ts, lint_py",
+          "line": 223,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/rules/comment_clustering.rs",
+      "score": 2.0,
+      "lines": 233,
+      "score_per_100_lines": 0.9,
+      "diagnostics": [
+        {
+          "rule": "generic-naming",
+          "category": "naming",
+          "message": "`fn run` — name is too vague to convey intent",
+          "line": 162,
+          "severity": "Warning",
+          "weight": 1.5
+        },
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (0 params, 3 stmts): high_density_function_flagged, normal_function_not_flagged, short_function_skipped",
+          "line": 173,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/rules/naming_entropy.rs",
+      "score": 2.0,
+      "lines": 241,
+      "score_per_100_lines": 0.8,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 81,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "generic-naming",
+          "category": "naming",
+          "message": "`fn run` — name is too vague to convey intent",
+          "line": 187,
+          "severity": "Warning",
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "file": "src/lib.rs",
+      "score": 1.5,
+      "lines": 29,
+      "score_per_100_lines": 5.2,
+      "diagnostics": [
+        {
+          "rule": "generic-naming",
+          "category": "naming",
+          "message": "`mod common` — module name is too vague",
+          "line": 1,
+          "severity": "Warning",
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "file": "src/ts/any_abuse.rs",
+      "score": 1.5,
+      "lines": 94,
+      "score_per_100_lines": 1.6,
+      "diagnostics": [
+        {
+          "rule": "restating-comment",
+          "category": "documentation",
+          "message": "comment restates the code: ``: any`, `as any`, `: object`, `<any>`, `any[]`, `any>``",
+          "line": 89,
+          "severity": "Warning",
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "file": "src/diff.rs",
+      "score": 1.25,
+      "lines": 120,
+      "score_per_100_lines": 1.0,
+      "diagnostics": [
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 30,
+          "severity": "Hint",
+          "weight": 0.75
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 48,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/config.rs",
+      "score": 1.0,
+      "lines": 90,
+      "score_per_100_lines": 1.1,
+      "diagnostics": [
+        {
+          "rule": "verbose-match",
+          "category": "idiom",
+          "message": "two-arm match could be simpler — consider `if let Ok(v)`, `.map()`, or `?`",
+          "line": 58,
+          "severity": "Warning",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "file": "src/report.rs",
+      "score": 1.0,
+      "lines": 212,
+      "score_per_100_lines": 0.5,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 176,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 184,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/rules/structural_repetition.rs",
+      "score": 1.0,
+      "lines": 146,
+      "score_per_100_lines": 0.7,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 37,
+          "severity": "Hint",
+          "weight": 0.5
+        },
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 39,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/diagnostic.rs",
+      "score": 0.75,
+      "lines": 46,
+      "score_per_100_lines": 1.6,
+      "diagnostics": [
+        {
+          "rule": "derive-stacking",
+          "category": "structure",
+          "message": "`Severity` derives 8 traits (Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize) — are all of these needed?",
+          "line": 5,
+          "severity": "Hint",
+          "weight": 0.75
+        }
+      ]
+    },
+    {
+      "file": "src/main.rs",
+      "score": 0.75,
+      "lines": 272,
+      "score_per_100_lines": 0.3,
+      "diagnostics": [
+        {
+          "rule": "error-swallowing",
+          "category": "error-handling",
+          "message": "`.unwrap_or_default()` may silently hide errors",
+          "line": 263,
+          "severity": "Hint",
+          "weight": 0.75
+        }
+      ]
+    },
+    {
+      "file": "src/common/comment_analysis.rs",
+      "score": 0.5,
+      "lines": 105,
+      "score_per_100_lines": 0.5,
+      "diagnostics": [
+        {
+          "rule": "pub-overuse",
+          "category": "structure",
+          "message": "5/5 items are `pub` (100%) — consider tighter visibility",
+          "line": 5,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/html/parse.rs",
+      "score": 0.5,
+      "lines": 124,
+      "score_per_100_lines": 0.4,
+      "diagnostics": [
+        {
+          "rule": "redundant-clone",
+          "category": "ownership",
+          "message": "`.clone()` — can this borrow instead?",
+          "line": 102,
+          "severity": "Hint",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/render.rs",
+      "score": 0.5,
+      "lines": 140,
+      "score_per_100_lines": 0.4,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (1 params, 1 stmts): verdict_label, verdict_emoji, severity_badge",
+          "line": 112,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/rules/mod.rs",
+      "score": 0.5,
+      "lines": 58,
+      "score_per_100_lines": 0.9,
+      "diagnostics": [
+        {
+          "rule": "pub-overuse",
+          "category": "structure",
+          "message": "4/4 items are `pub` (100%) — consider tighter visibility",
+          "line": 26,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/rules/needless_type_annotation.rs",
+      "score": 0.5,
+      "lines": 96,
+      "score_per_100_lines": 0.5,
+      "diagnostics": [
+        {
+          "rule": "structural-repetition",
+          "category": "statistical",
+          "message": "3 functions share the same shape (1 params, 1 stmts): name, path_without_last_segment, normalize",
+          "line": 17,
+          "severity": "Warning",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "file": "src/agent.rs",
+      "score": -0.0,
+      "lines": 18,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/common/mod.rs",
+      "score": -0.0,
+      "lines": 10,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/common/naming.rs",
+      "score": -0.0,
+      "lines": 52,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/common/whitespace.rs",
+      "score": -0.0,
+      "lines": 83,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/accessibility.rs",
+      "score": -0.0,
+      "lines": 85,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/css_smells.rs",
+      "score": -0.0,
+      "lines": 123,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/div_soup.rs",
+      "score": -0.0,
+      "lines": 77,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/generic_classes.rs",
+      "score": -0.0,
+      "lines": 74,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/inline_styles.rs",
+      "score": -0.0,
+      "lines": 43,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/missing_semantics.rs",
+      "score": -0.0,
+      "lines": 49,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/html/mod.rs",
+      "score": -0.0,
+      "lines": 29,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/bare_except.rs",
+      "score": -0.0,
+      "lines": 50,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/generic_naming.rs",
+      "score": -0.0,
+      "lines": 37,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/import_star.rs",
+      "score": -0.0,
+      "lines": 52,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/mod.rs",
+      "score": -0.0,
+      "lines": 21,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/print_debug.rs",
+      "score": -0.0,
+      "lines": 49,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/restating_comments.rs",
+      "score": -0.0,
+      "lines": 30,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/type_hint_gaps.rs",
+      "score": -0.0,
+      "lines": 56,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/python/whitespace_uniformity.rs",
+      "score": -0.0,
+      "lines": 15,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/boxed_error.rs",
+      "score": -0.0,
+      "lines": 99,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/dead_code_markers.rs",
+      "score": -0.0,
+      "lines": 54,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/derive_stacking.rs",
+      "score": -0.0,
+      "lines": 90,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/error_swallowing.rs",
+      "score": -0.0,
+      "lines": 114,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/generic_naming.rs",
+      "score": -0.0,
+      "lines": 135,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/generic_todo.rs",
+      "score": -0.0,
+      "lines": 88,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/index_loop.rs",
+      "score": -0.0,
+      "lines": 66,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/needless_lifetimes.rs",
+      "score": -0.0,
+      "lines": 117,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/over_documentation.rs",
+      "score": -0.0,
+      "lines": 95,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/pub_overuse.rs",
+      "score": -0.0,
+      "lines": 131,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/redundant_clone.rs",
+      "score": -0.0,
+      "lines": 82,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/restating_comments.rs",
+      "score": -0.0,
+      "lines": 31,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/string_params.rs",
+      "score": -0.0,
+      "lines": 72,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/trivial_wrapper.rs",
+      "score": -0.0,
+      "lines": 81,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/unwrap_overuse.rs",
+      "score": -0.0,
+      "lines": 91,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/verbose_match.rs",
+      "score": -0.0,
+      "lines": 106,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/rules/whitespace_uniformity.rs",
+      "score": -0.0,
+      "lines": 16,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/sarif.rs",
+      "score": -0.0,
+      "lines": 188,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/console_dump.rs",
+      "score": -0.0,
+      "lines": 48,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/generic_naming.rs",
+      "score": -0.0,
+      "lines": 39,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/mod.rs",
+      "score": -0.0,
+      "lines": 24,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/nested_ternary.rs",
+      "score": -0.0,
+      "lines": 81,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/promise_antipattern.rs",
+      "score": -0.0,
+      "lines": 72,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/restating_comments.rs",
+      "score": -0.0,
+      "lines": 29,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/ts/whitespace_uniformity.rs",
+      "score": -0.0,
+      "lines": 15,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    },
+    {
+      "file": "src/walk.rs",
+      "score": -0.0,
+      "lines": 66,
+      "score_per_100_lines": -0.0,
+      "diagnostics": []
+    }
+  ]
+}

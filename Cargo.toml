@@ -1,0 +1,37 @@
+[package]
+name = "lipstyk"
+version = "0.1.0"
+edition = "2024"
+description = "Anti-AI-slop code analysis — detects machine-generated code patterns"
+license = "MIT"
+default-run = "lipstyk"
+
+[features]
+default = []
+agent = ["dep:omegon-extension", "dep:async-trait", "dep:tokio"]
+
+[dependencies]
+syn = { version = "2", features = ["full", "visit"] }
+proc-macro2 = { version = "1", features = ["span-locations"] }
+quote = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+toml = "0.8"
+
+# Agent-only deps (omegon extension runtime)
+omegon-extension = { path = "../omegon/core/crates/omegon-extension", optional = true }
+async-trait = { version = "0.1", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"], optional = true }
+
+[[bin]]
+name = "lipstyk"
+path = "src/main.rs"
+
+[[bin]]
+name = "lipstyk-agent"
+path = "src/agent.rs"
+required-features = ["agent"]

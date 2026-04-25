@@ -1,0 +1,17 @@
+[extension]
+name = "lipstyk"
+version = "0.1.0"
+sdk_version = "0.16"
+description = "Anti-AI-slop code analysis — detects machine-generated code patterns in Rust"
+
+[runtime]
+type = "native"
+binary = "target/release/lipstyk-agent"
+
+[startup]
+ping_method = "get_tools"
+timeout_ms = 5000
+
+[secrets]
+required = []
+optional = []

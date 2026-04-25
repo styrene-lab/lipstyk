@@ -1,0 +1,15 @@
+# Lipstyk configuration — project-level rule tuning.
+#
+# Rules not listed here use their defaults (enabled, default weight).
+# Set `enabled = false` to disable a rule, or `weight = N` to override.
+
+[settings]
+exclude_tests = true
+
+[rules.structural-repetition]
+# Visitor impls inherently repeat — this fires on our own codebase.
+weight = 0.5
+
+[rules.pub-overuse]
+# Our rules/mod.rs is intentionally all-pub.
+weight = 0.5
