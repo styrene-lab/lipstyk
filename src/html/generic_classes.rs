@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags generic CSS class names that convey no meaning.
 ///
@@ -16,15 +16,20 @@ const GENERIC_CLASS_NAMES: &[&str] = &[
     "inner-wrapper", "content-container", "main-container",
 ];
 
-impl HtmlRule for GenericClasses {
+impl SourceRule for GenericClasses {
     fn name(&self) -> &'static str {
         "generic-classes"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
         let mut hits: Vec<(usize, String)> = Vec::new();
 
-        for tag in &ctx.parsed.tags {
+        for tag in &parsed.tags {
             if tag.is_closing {
                 continue;
             }

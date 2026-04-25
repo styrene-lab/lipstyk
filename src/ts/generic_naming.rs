@@ -1,16 +1,20 @@
 use crate::common::naming;
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags generic function names in TS/JS — uses shared name vocabulary.
 pub struct GenericNaming;
 
-impl TsRule for GenericNaming {
+impl SourceRule for GenericNaming {
     fn name(&self) -> &'static str {
         "ts-generic-naming"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript, Lang::JavaScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

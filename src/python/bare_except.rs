@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags bare `except:` and `except Exception:` that swallow errors.
 ///
@@ -7,12 +7,16 @@ use crate::python::{PyContext, PyRule};
 /// crashes, hiding real bugs. Also catches `pass` in except blocks.
 pub struct BareExcept;
 
-impl PyRule for BareExcept {
+impl SourceRule for BareExcept {
     fn name(&self) -> &'static str {
         "bare-except"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags HTML files that lack semantic elements entirely.
 ///
@@ -13,13 +13,18 @@ const SEMANTIC_ELEMENTS: &[&str] = &[
     "dialog", "address", "time", "mark",
 ];
 
-impl HtmlRule for MissingSemantics {
+impl SourceRule for MissingSemantics {
     fn name(&self) -> &'static str {
         "missing-semantics"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
-        let opening_tags: Vec<_> = ctx.parsed.tags.iter()
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
+        let opening_tags: Vec<_> = parsed.tags.iter()
             .filter(|t| !t.is_closing)
             .collect();
 

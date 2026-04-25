@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags inline `style=""` attributes on HTML elements.
 ///
@@ -8,13 +8,18 @@ use crate::html::{HtmlContext, HtmlRule};
 /// to avoid false-matching `style` inside `<script>` blocks.
 pub struct InlineStyles;
 
-impl HtmlRule for InlineStyles {
+impl SourceRule for InlineStyles {
     fn name(&self) -> &'static str {
         "inline-styles"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
-        let hits: Vec<usize> = ctx.parsed.tags.iter()
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
+        let hits: Vec<usize> = parsed.tags.iter()
             .filter(|t| !t.is_closing && t.attrs.contains("style="))
             .map(|t| t.line)
             .collect();

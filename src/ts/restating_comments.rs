@@ -1,16 +1,20 @@
 use crate::common::comment_analysis;
 use crate::diagnostic::Diagnostic;
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags restating comments in JS/TS — delegates to shared analysis.
 pub struct RestatingComments;
 
-impl TsRule for RestatingComments {
+impl SourceRule for RestatingComments {
     fn name(&self) -> &'static str {
         "ts-restating-comment"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript, Lang::JavaScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         comment_analysis::find_restating_comments(
             ctx.source,
             "//",

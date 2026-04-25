@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags `console.log` / `console.error` left in production code.
 ///
@@ -8,12 +8,16 @@ use crate::ts::{TsContext, TsRule};
 /// code suggests the AI was debugging its own output and didn't clean up.
 pub struct ConsoleDump;
 
-impl TsRule for ConsoleDump {
+impl SourceRule for ConsoleDump {
     fn name(&self) -> &'static str {
         "console-dump"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript, Lang::JavaScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut hits = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

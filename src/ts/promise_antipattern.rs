@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags Promise anti-patterns common in AI-generated JS/TS.
 ///
@@ -9,12 +9,16 @@ use crate::ts::{TsContext, TsRule};
 /// - Bare `.catch(() => {})` that swallows errors silently
 pub struct PromiseAntipattern;
 
-impl TsRule for PromiseAntipattern {
+impl SourceRule for PromiseAntipattern {
     fn name(&self) -> &'static str {
         "promise-antipattern"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript, Lang::JavaScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
         let mut then_catch_count = 0;
         let mut first_then_catch = 0;

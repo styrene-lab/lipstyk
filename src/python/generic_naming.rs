@@ -1,16 +1,20 @@
 use crate::common::naming;
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags generic function names in Python — uses shared name vocabulary.
 pub struct GenericNaming;
 
-impl PyRule for GenericNaming {
+impl SourceRule for GenericNaming {
     fn name(&self) -> &'static str {
         "py-generic-naming"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

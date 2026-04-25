@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags `print()` debugging left in production code.
 ///
@@ -8,12 +8,16 @@ use crate::python::{PyContext, PyRule};
 /// (have `if __name__` or `argparse`).
 pub struct PrintDebug;
 
-impl PyRule for PrintDebug {
+impl SourceRule for PrintDebug {
     fn name(&self) -> &'static str {
         "print-debug"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         // Exempt CLI scripts.
         if ctx.source.contains("if __name__") || ctx.source.contains("argparse") {
             return Vec::new();

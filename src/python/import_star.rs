@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags `from X import *` — AI doesn't reason about namespaces.
 ///
@@ -8,12 +8,16 @@ use crate::python::{PyContext, PyRule};
 /// (20+ imports suggests the AI pulled in everything it might need).
 pub struct ImportStar;
 
-impl PyRule for ImportStar {
+impl SourceRule for ImportStar {
     fn name(&self) -> &'static str {
         "import-star"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
         let mut import_count = 0;
 

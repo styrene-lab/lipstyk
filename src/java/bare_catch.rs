@@ -1,17 +1,21 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::java::{JavaContext, JavaRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags bare `catch (Exception e)` blocks — Java's equivalent of
 /// Python's bare `except:`. AI catches Exception and does nothing
 /// useful with it.
 pub struct BareCatch;
 
-impl JavaRule for BareCatch {
+impl SourceRule for BareCatch {
     fn name(&self) -> &'static str {
         "java-bare-catch"
     }
 
-    fn check(&self, ctx: &JavaContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Java]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

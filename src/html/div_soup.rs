@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags excessive `<div>` nesting — the hallmark of AI-generated HTML.
 ///
@@ -8,15 +8,20 @@ use crate::html::{HtmlContext, HtmlRule};
 /// tree rather than resetting on non-div tags.
 pub struct DivSoup;
 
-impl HtmlRule for DivSoup {
+impl SourceRule for DivSoup {
     fn name(&self) -> &'static str {
         "div-soup"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
         let mut diagnostics = Vec::new();
 
-        let opening_tags: Vec<_> = ctx.parsed.tags.iter()
+        let opening_tags: Vec<_> = parsed.tags.iter()
             .filter(|t| !t.is_closing && !t.is_self_closing)
             .collect();
 
@@ -44,7 +49,7 @@ impl HtmlRule for DivSoup {
         let mut max_depth = 0usize;
         let mut max_depth_line = 1;
 
-        for tag in &ctx.parsed.tags {
+        for tag in &parsed.tags {
             if tag.name == "div" {
                 if tag.is_closing {
                     div_depth = div_depth.saturating_sub(1);

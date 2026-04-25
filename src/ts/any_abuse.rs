@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags excessive use of `any` type in TypeScript.
 ///
@@ -11,14 +11,18 @@ use crate::ts::{TsContext, TsRule};
 /// which are related escape hatches.
 pub struct AnyAbuse;
 
-impl TsRule for AnyAbuse {
+impl SourceRule for AnyAbuse {
     fn name(&self) -> &'static str {
         "any-abuse"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         // Only applies to .ts/.tsx files.
-        if !ctx.filename.ends_with(".ts") && !ctx.filename.ends_with(".tsx") {
+        if !ctx.is_ts_only() {
             return Vec::new();
         }
 

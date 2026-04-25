@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Detects CSS anti-patterns common in AI-generated stylesheets.
 ///
@@ -7,16 +7,21 @@ use crate::html::{HtmlContext, HtmlRule};
 /// Uses pre-parsed style blocks so we don't scan inside `<script>`.
 pub struct CssSmells;
 
-impl HtmlRule for CssSmells {
+impl SourceRule for CssSmells {
     fn name(&self) -> &'static str {
         "css-smells"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html, Lang::Css]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
         let css: Vec<&str> = if ctx.filename.ends_with(".css") {
             vec![ctx.source]
         } else {
-            ctx.parsed.style_blocks.iter().map(|s| s.as_str()).collect()
+            parsed.style_blocks.iter().map(|s| s.as_str()).collect()
         };
 
         if css.is_empty() {

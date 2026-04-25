@@ -1,15 +1,19 @@
 use crate::common::naming;
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::java::{JavaContext, JavaRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 pub struct GenericNaming;
 
-impl JavaRule for GenericNaming {
+impl SourceRule for GenericNaming {
     fn name(&self) -> &'static str {
         "java-generic-naming"
     }
 
-    fn check(&self, ctx: &JavaContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Java]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

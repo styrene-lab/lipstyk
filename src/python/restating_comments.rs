@@ -1,16 +1,20 @@
 use crate::common::comment_analysis;
 use crate::diagnostic::Diagnostic;
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags restating comments in Python — delegates to shared analysis.
 pub struct RestatingComments;
 
-impl PyRule for RestatingComments {
+impl SourceRule for RestatingComments {
     fn name(&self) -> &'static str {
         "py-restating-comment"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         comment_analysis::find_restating_comments(
             ctx.source,
             "#",

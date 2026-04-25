@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::python::{PyContext, PyRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags inconsistent type hint usage.
 ///
@@ -10,12 +10,16 @@ use crate::python::{PyContext, PyRule};
 /// "returns None" — annotating it is noise).
 pub struct TypeHintGaps;
 
-impl PyRule for TypeHintGaps {
+impl SourceRule for TypeHintGaps {
     fn name(&self) -> &'static str {
         "type-hint-gaps"
     }
 
-    fn check(&self, ctx: &PyContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Python]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut hinted = 0;
         let mut unhinted = 0;
 

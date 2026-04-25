@@ -12,6 +12,7 @@ pub mod render;
 pub mod report;
 pub mod rules;
 pub mod sarif;
+pub mod source_rule;
 pub mod ts;
 pub mod walk;
 

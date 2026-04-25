@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::ts::{TsContext, TsRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags nested ternary expressions.
 ///
@@ -9,12 +9,16 @@ use crate::ts::{TsContext, TsRule};
 /// This is nearly unreadable. Use `if`/`else` or early returns.
 pub struct NestedTernary;
 
-impl TsRule for NestedTernary {
+impl SourceRule for NestedTernary {
     fn name(&self) -> &'static str {
         "nested-ternary"
     }
 
-    fn check(&self, ctx: &TsContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::TypeScript, Lang::JavaScript]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
 
         for (i, line) in ctx.source.lines().enumerate() {

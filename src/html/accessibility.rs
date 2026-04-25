@@ -1,21 +1,26 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::html::{HtmlContext, HtmlRule};
+use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Flags accessibility gaps that AI-generated HTML commonly produces.
 ///
 /// Uses pre-parsed tags so multi-line attributes are handled correctly.
 pub struct Accessibility;
 
-impl HtmlRule for Accessibility {
+impl SourceRule for Accessibility {
     fn name(&self) -> &'static str {
         "accessibility"
     }
 
-    fn check(&self, ctx: &HtmlContext) -> Vec<Diagnostic> {
+    fn langs(&self) -> &[Lang] {
+        &[Lang::Html]
+    }
+
+    fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
+        let parsed = ctx.html.as_ref().unwrap();
         let mut diagnostics = Vec::new();
 
         // <img> without alt
-        let missing_alt: Vec<usize> = ctx.parsed.tags.iter()
+        let missing_alt: Vec<usize> = parsed.tags.iter()
             .filter(|t| t.name == "img" && !t.attrs.to_lowercase().contains("alt="))
             .map(|t| t.line)
             .collect();
@@ -31,7 +36,7 @@ impl HtmlRule for Accessibility {
         }
 
         // <html> without lang
-        let html_tag = ctx.parsed.tags.iter().find(|t| t.name == "html" && !t.is_closing);
+        let html_tag = parsed.tags.iter().find(|t| t.name == "html" && !t.is_closing);
         if let Some(tag) = html_tag
             && !tag.attrs.to_lowercase().contains("lang=") {
                 diagnostics.push(Diagnostic {
@@ -44,7 +49,7 @@ impl HtmlRule for Accessibility {
             }
 
         // <button> with no text content and no aria-label (best-effort single-line check)
-        let empty_buttons: Vec<usize> = ctx.parsed.tags.iter()
+        let empty_buttons: Vec<usize> = parsed.tags.iter()
             .filter(|t| {
                 t.name == "button" && !t.is_closing
                     && !t.attrs.to_lowercase().contains("aria-label")
