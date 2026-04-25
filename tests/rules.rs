@@ -417,3 +417,55 @@ fn java_restating_comment_fires() {
     let src = "// get the connection\nConnection conn = getConnection();\n";
     assert!(has_rule(src, "t.java", "java-restating-comment"));
 }
+
+// ── New error handling rules ────────────────────────────────────
+
+#[test]
+fn ts_empty_catch_fires() {
+    let src = "try { x(); } catch (e) {}\n";
+    assert!(has_rule(src, "t.ts", "ts-error-handling"));
+}
+
+#[test]
+fn ts_catch_log_only_fires() {
+    let src = "try {\n    x();\n} catch (e) {\n    console.error(e);\n}\n";
+    assert!(has_rule(src, "t.ts", "ts-error-handling"));
+}
+
+#[test]
+fn ts_catch_rethrow_clean() {
+    let src = "try {\n    x();\n} catch (e) {\n    throw new Error('wrapped', { cause: e });\n}\n";
+    assert!(no_rule(src, "t.ts", "ts-error-handling"));
+}
+
+#[test]
+fn py_broad_except_pass_fires() {
+    let src = "try:\n    x()\nexcept Exception:\n    pass\n";
+    assert!(has_rule(src, "t.py", "py-error-handling"));
+}
+
+#[test]
+fn py_specific_except_clean() {
+    let src = "try:\n    x()\nexcept ValueError:\n    handle()\n";
+    assert!(no_rule(src, "t.py", "py-error-handling"));
+}
+
+// ── New comment depth rules ─────────────────────────────────────
+
+#[test]
+fn ts_step_narration_fires() {
+    let src = "function f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
+    assert!(has_rule(src, "t.ts", "ts-comment-depth"));
+}
+
+#[test]
+fn py_step_narration_fires() {
+    let src = "def f():\n    # Step 1: Init\n    x()\n    # Step 2: Process\n    y()\n    # Step 3: Finish\n    z()\n";
+    assert!(has_rule(src, "t.py", "py-comment-depth"));
+}
+
+#[test]
+fn java_step_narration_fires() {
+    let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
+    assert!(has_rule(src, "t.java", "java-comment-depth"));
+}

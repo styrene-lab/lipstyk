@@ -1,4 +1,6 @@
 pub mod bare_except;
+pub mod comment_depth;
+pub mod error_handling;
 pub mod generic_naming;
 pub mod import_star;
 pub mod print_debug;

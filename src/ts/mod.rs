@@ -1,5 +1,7 @@
 pub mod any_abuse;
+pub mod comment_depth;
 pub mod console_dump;
+pub mod error_handling;
 pub mod generic_naming;
 pub mod nested_ternary;
 pub mod promise_antipattern;

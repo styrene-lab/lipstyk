@@ -71,6 +71,8 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::ts::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::ts::restating_comments::RestatingComments));
         linter.add_source_rule(Box::new(crate::ts::whitespace_uniformity::WhitespaceUniformity));
+        linter.add_source_rule(Box::new(crate::ts::error_handling::ErrorHandling));
+        linter.add_source_rule(Box::new(crate::ts::comment_depth::CommentDepth));
         linter.add_source_rule(Box::new(crate::python::bare_except::BareExcept));
         linter.add_source_rule(Box::new(crate::python::print_debug::PrintDebug));
         linter.add_source_rule(Box::new(crate::python::import_star::ImportStar));
@@ -78,9 +80,12 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::python::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::python::restating_comments::RestatingComments));
         linter.add_source_rule(Box::new(crate::python::whitespace_uniformity::WhitespaceUniformity));
+        linter.add_source_rule(Box::new(crate::python::error_handling::ErrorHandling));
+        linter.add_source_rule(Box::new(crate::python::comment_depth::CommentDepth));
         linter.add_source_rule(Box::new(crate::java::restating_comments::RestatingComments));
         linter.add_source_rule(Box::new(crate::java::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::java::bare_catch::BareCatch));
+        linter.add_source_rule(Box::new(crate::java::comment_depth::CommentDepth));
 
         info!(
             rust = linter.rust_rules.len(),

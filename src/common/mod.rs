@@ -1,4 +1,5 @@
 pub mod comment_analysis;
+pub mod comment_density;
 pub mod naming;
 pub mod whitespace;
 
