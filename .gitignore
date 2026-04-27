@@ -1,2 +1,10 @@
 /target/
 docs/
+
+# Omegon/local agent state
+.omegon/
+ai/
+.delegate-prompt-delegate_*.md
+
+# Generated local scan outputs
+dogfood-reports/latest.*
