@@ -317,6 +317,30 @@ fn console_dump_fires() {
 }
 
 #[test]
+fn fixed_delay_sync_fires() {
+    let src = "await new Promise(resolve => setTimeout(resolve, 1000));\n";
+    assert!(has_rule(src, "t.ts", "fixed-delay-sync"));
+}
+
+#[test]
+fn fixed_delay_sync_wait_for_timeout_fires() {
+    let src = "await page.waitForTimeout(1000);\n";
+    assert!(has_rule(src, "t.ts", "fixed-delay-sync"));
+}
+
+#[test]
+fn fixed_delay_sync_generic_wait_clean() {
+    let src = "await locator.wait(500);\n";
+    assert!(no_rule(src, "t.ts", "fixed-delay-sync"));
+}
+
+#[test]
+fn fixed_delay_sync_clean() {
+    let src = "await waitForElement(locator);\nsetTimeout(saveDraft, debounceMs);\n";
+    assert!(no_rule(src, "t.ts", "fixed-delay-sync"));
+}
+
+#[test]
 fn nested_ternary_fires() {
     let src = "const x = a ? b : c ? d : e;\n";
     assert!(has_rule(src, "t.ts", "nested-ternary"));
@@ -326,6 +350,18 @@ fn nested_ternary_fires() {
 fn promise_catch_swallow() {
     let src = "fetch('/api').then(r => r.json()).catch(() => {});\n";
     assert!(has_rule(src, "t.ts", "promise-antipattern"));
+}
+
+#[test]
+fn promise_event_emitter_wrapper_clean() {
+    let src = r#"
+function waitForExit(child) {
+    return new Promise((resolve) => {
+        child.on("exit", (code) => resolve(code));
+    });
+}
+"#;
+    assert!(no_rule(src, "t.ts", "promise-antipattern"));
 }
 
 #[test]
@@ -570,6 +606,25 @@ fn md_placeholder_fires() {
 fn md_generic_opener_fires() {
     let src = "# Tool\n\nThis project is a comprehensive solution for modern development.\n";
     assert!(has_rule(src, "t.md", "md-placeholder"));
+}
+
+
+#[test]
+fn prose_slop_phrases_fires_for_email() {
+    let src = "Hi Alex,\n\nI hope this email finds you well. I wanted to take a moment to share a comprehensive update.\n\nThis robust plan will streamline the process and drive impact across the team.\n\nPlease don't hesitate to reach out if you have any questions.\n";
+    assert!(has_rule(src, "email.txt", "prose-slop-phrases"));
+}
+
+#[test]
+fn prose_slop_phrases_clean() {
+    let src = "Alex,\n\nThe deploy failed because the migration used the old column name. I reverted it and opened a patch with the corrected SQL.\n\nCan you review the patch before 3pm?\n";
+    assert!(no_rule(src, "email.txt", "prose-slop-phrases"));
+}
+
+#[test]
+fn prose_structure_fires_for_uniform_blog_post() {
+    let src = "First section. It has two sentences.\n\nSecond section. It has two sentences.\n\nThird section. It has two sentences.\n\nFourth section. It has two sentences.\n";
+    assert!(has_rule(src, "post.txt", "prose-structure"));
 }
 
 // ── DevOps rule extensions ──────────────────────────────────────
