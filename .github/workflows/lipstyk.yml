@@ -1,0 +1,104 @@
+name: lipstyk
+
+on:
+  workflow_call:
+    inputs:
+      paths:
+        description: "Space-separated paths to scan"
+        required: false
+        type: string
+        default: "src/"
+      threshold:
+        description: "Full-scan threshold (exit 1 if any file exceeds)"
+        required: false
+        type: number
+        default: 50
+      diff-threshold:
+        description: "Diff-only threshold for PRs"
+        required: false
+        type: number
+        default: 15
+      exclude-tests:
+        description: "Skip test code"
+        required: false
+        type: boolean
+        default: true
+      lipstyk-version:
+        description: "Git ref to install from (tag, branch, or SHA)"
+        required: false
+        type: string
+        default: "main"
+
+jobs:
+  scan:
+    name: lipstyk scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache lipstyk binary
+        id: cache-lipstyk
+        uses: actions/cache@v5
+        with:
+          path: ~/.cargo/bin/lipstyk
+          key: lipstyk-${{ inputs.lipstyk-version }}
+
+      - name: Install lipstyk
+        if: steps.cache-lipstyk.outputs.cache-hit != 'true'
+        run: cargo install --git https://github.com/styrene-lab/lipstyk --branch ${{ inputs.lipstyk-version }}
+
+      - name: Full scan report
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.exclude-tests }}" = "true" ]; then
+            FLAGS="--exclude-tests"
+          fi
+          lipstyk --report $FLAGS ${{ inputs.paths }} | tee lipstyk-report.md >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
+
+      - name: Full scan threshold gate
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.exclude-tests }}" = "true" ]; then
+            FLAGS="--exclude-tests"
+          fi
+          lipstyk --threshold ${{ inputs.threshold }} $FLAGS ${{ inputs.paths }}
+
+      - name: Diff scan (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.exclude-tests }}" = "true" ]; then
+            FLAGS="--exclude-tests"
+          fi
+          lipstyk \
+            --diff origin/${{ github.base_ref }} \
+            --threshold ${{ inputs.diff-threshold }} \
+            $FLAGS \
+            ${{ inputs.paths }}
+
+      - name: SARIF (PR only)
+        if: github.event_name == 'pull_request' && always()
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.exclude-tests }}" = "true" ]; then
+            FLAGS="--exclude-tests"
+          fi
+          lipstyk \
+            --diff origin/${{ github.base_ref }} \
+            --sarif \
+            $FLAGS \
+            ${{ inputs.paths }} > lipstyk.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF
+        if: github.event_name == 'pull_request' && always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: lipstyk.sarif
+        continue-on-error: true
