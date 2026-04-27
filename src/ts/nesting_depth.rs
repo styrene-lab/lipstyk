@@ -21,13 +21,19 @@ impl SourceRule for NestingDepth {
             None => return Vec::new(),
         };
 
-        parsed.functions.iter()
+        parsed
+            .functions
+            .iter()
             .filter(|f| f.nesting_depth > MAX_NESTING)
             .map(|f| Diagnostic {
                 rule: "ts-nesting-depth",
                 message: format!(
                     "`{}` has nesting depth {} — extract inner logic",
-                    if f.name.is_empty() { "<anonymous>" } else { &f.name },
+                    if f.name.is_empty() {
+                        "<anonymous>"
+                    } else {
+                        &f.name
+                    },
                     f.nesting_depth
                 ),
                 line: f.line,
@@ -64,11 +70,16 @@ impl SourceRule for PyNestingDepth {
 
 fn measure_depth(node: tree_sitter::Node, depth: usize, diagnostics: &mut Vec<Diagnostic>) {
     let kind = node.kind();
-    let is_nesting = matches!(kind,
-        "if_statement" | "else_clause" |
-        "for_statement" | "for_in_statement" | "while_statement" |
-        "try_statement" | "except_clause" |
-        "with_statement"
+    let is_nesting = matches!(
+        kind,
+        "if_statement"
+            | "else_clause"
+            | "for_statement"
+            | "for_in_statement"
+            | "while_statement"
+            | "try_statement"
+            | "except_clause"
+            | "with_statement"
     );
     let new_depth = if is_nesting { depth + 1 } else { depth };
 

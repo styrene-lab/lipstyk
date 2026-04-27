@@ -44,7 +44,8 @@ fn parse_unified_diff(diff: &str) -> HashMap<String, HashSet<usize>> {
         } else if line.starts_with("@@ ") {
             // Parse hunk header: @@ -old,count +new,count @@
             if let Some(ref file) = current_file
-                && let Some(range) = parse_hunk_header(line) {
+                && let Some(range) = parse_hunk_header(line)
+            {
                 let lines = result.entry(file.clone()).or_default();
                 for n in range.start..=range.end {
                     lines.insert(n);

@@ -21,9 +21,7 @@ impl Rule for StructuralRepetition {
     }
 
     fn check(&self, file: &syn::File, _ctx: &LintContext) -> Vec<Diagnostic> {
-        let mut visitor = ShapeVisitor {
-            shapes: Vec::new(),
-        };
+        let mut visitor = ShapeVisitor { shapes: Vec::new() };
         visitor.visit_file(file);
 
         if visitor.shapes.len() < 4 {
@@ -109,7 +107,12 @@ fn shape_of_sig_and_block(sig: &syn::Signature, block: &syn::Block) -> FnShape {
     }
 }
 
-fn check_control_flow(stmt: &syn::Stmt, has_if: &mut bool, has_match: &mut bool, has_loop: &mut bool) {
+fn check_control_flow(
+    stmt: &syn::Stmt,
+    has_if: &mut bool,
+    has_match: &mut bool,
+    has_loop: &mut bool,
+) {
     match stmt {
         syn::Stmt::Expr(expr, _) => check_expr_flow(expr, has_if, has_match, has_loop),
         syn::Stmt::Local(local) => {

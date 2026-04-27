@@ -1,5 +1,5 @@
-use crate::report::{Report, FileResult};
 use crate::diagnostic::Severity;
+use crate::report::{FileResult, Report};
 
 /// Render a report as Markdown — suitable for PR comments, GH Action
 /// summaries, codex documents, or agent output.
@@ -34,15 +34,24 @@ pub fn to_markdown(report: &Report) -> String {
         out.push_str("| Category | Findings | Weight |\n");
         out.push_str("|----------|----------|--------|\n");
         let mut cats: Vec<_> = report.summary.by_category.iter().collect();
-        cats.sort_by(|a, b| b.1.total_weight.partial_cmp(&a.1.total_weight).unwrap_or(std::cmp::Ordering::Equal));
+        cats.sort_by(|a, b| {
+            b.1.total_weight
+                .partial_cmp(&a.1.total_weight)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         for (cat, stats) in &cats {
-            out.push_str(&format!("| {} | {} | {:.1} |\n", cat, stats.count, stats.total_weight));
+            out.push_str(&format!(
+                "| {} | {} | {:.1} |\n",
+                cat, stats.count, stats.total_weight
+            ));
         }
         out.push('\n');
     }
 
     // Per-file results (worst first, cap at 15).
-    let files_to_show: Vec<&FileResult> = report.files.iter()
+    let files_to_show: Vec<&FileResult> = report
+        .files
+        .iter()
         .filter(|f| !f.diagnostics.is_empty())
         .take(15)
         .collect();
@@ -50,10 +59,19 @@ pub fn to_markdown(report: &Report) -> String {
     if !files_to_show.is_empty() {
         out.push_str("### Files\n\n");
         for file in &files_to_show {
-            let file_emoji = if file.score >= 30.0 { "🔴" } else if file.score >= 15.0 { "🟡" } else { "🟢" };
+            let file_emoji = if file.score >= 30.0 {
+                "🔴"
+            } else if file.score >= 15.0 {
+                "🟡"
+            } else {
+                "🟢"
+            };
             out.push_str(&format!(
                 "<details>\n<summary>{} <code>{}</code> — score {:.1} ({} findings)</summary>\n\n",
-                file_emoji, file.file, file.score, file.diagnostics.len()
+                file_emoji,
+                file.file,
+                file.score,
+                file.diagnostics.len()
             ));
 
             out.push_str("| Line | Sev | Rule | Finding |\n");
@@ -61,14 +79,22 @@ pub fn to_markdown(report: &Report) -> String {
             for d in &file.diagnostics {
                 let sev = severity_badge(d.severity);
                 let msg = escape_pipes(&d.message);
-                out.push_str(&format!("| {} | {} | `{}` | {} |\n", d.line, sev, d.rule, msg));
+                out.push_str(&format!(
+                    "| {} | {} | `{}` | {} |\n",
+                    d.line, sev, d.rule, msg
+                ));
             }
             out.push_str("\n</details>\n\n");
         }
 
-        let remaining = report.summary.files_with_findings.saturating_sub(files_to_show.len());
+        let remaining = report
+            .summary
+            .files_with_findings
+            .saturating_sub(files_to_show.len());
         if remaining > 0 {
-            out.push_str(&format!("*...and {remaining} more file(s) with findings.*\n\n"));
+            out.push_str(&format!(
+                "*...and {remaining} more file(s) with findings.*\n\n"
+            ));
         }
     }
 
@@ -76,9 +102,16 @@ pub fn to_markdown(report: &Report) -> String {
     if report.summary.by_rule.len() > 1 {
         out.push_str("### Top Rules\n\n");
         let mut rules: Vec<_> = report.summary.by_rule.iter().collect();
-        rules.sort_by(|a, b| b.1.total_weight.partial_cmp(&a.1.total_weight).unwrap_or(std::cmp::Ordering::Equal));
+        rules.sort_by(|a, b| {
+            b.1.total_weight
+                .partial_cmp(&a.1.total_weight)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         for (rule, stats) in rules.iter().take(8) {
-            out.push_str(&format!("- `{}` — {} hits (weight {:.1})\n", rule, stats.count, stats.total_weight));
+            out.push_str(&format!(
+                "- `{}` — {} hits (weight {:.1})\n",
+                rule, stats.count, stats.total_weight
+            ));
         }
         out.push('\n');
     }
@@ -103,9 +136,7 @@ pub fn to_summary_line(report: &Report) -> String {
     let verdict = verdict_label(report.summary.total_score);
     format!(
         "{emoji} lipstyk: {verdict} (score {:.1}, {} findings across {} files)",
-        report.summary.total_score,
-        report.summary.total_diagnostics,
-        report.summary.files_scanned,
+        report.summary.total_score, report.summary.total_diagnostics, report.summary.files_scanned,
     )
 }
 

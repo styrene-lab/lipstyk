@@ -26,10 +26,15 @@ impl SourceRule for RedundantAsync {
             None => return Vec::new(),
         };
 
-        oxc.functions.iter()
+        oxc.functions
+            .iter()
             .filter(|f| f.is_async && !f.has_await)
             .map(|f| {
-                let name = if f.name.is_empty() { "<anonymous>" } else { &f.name };
+                let name = if f.name.is_empty() {
+                    "<anonymous>"
+                } else {
+                    &f.name
+                };
                 Diagnostic {
                     rule: "ts-redundant-async",
                     message: format!("`{name}` is async but never awaits"),

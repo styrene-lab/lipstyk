@@ -32,7 +32,8 @@ impl SourceRule for NamingEntropy {
         let mut diagnostics = Vec::new();
 
         // Go uses camelCase — use whole names as stems.
-        let stems: Vec<&str> = names.iter()
+        let stems: Vec<&str> = names
+            .iter()
             .map(|n| n.as_str())
             .filter(|s| s.len() > 1)
             .collect();
@@ -46,7 +47,9 @@ impl SourceRule for NamingEntropy {
                     rule: "go-naming-entropy",
                     message: format!(
                         "low naming entropy: {}/{} unique identifiers ({:.0}%)",
-                        unique.len(), stems.len(), ratio * 100.0
+                        unique.len(),
+                        stems.len(),
+                        ratio * 100.0
                     ),
                     line: 1,
                     severity: Severity::Warning,

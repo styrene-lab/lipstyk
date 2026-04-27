@@ -77,7 +77,11 @@ fn check_uniform_structure(lines: &[&str], diagnostics: &mut Vec<Diagnostic>) {
 
     // If 4+ H2 sections all have the same non-zero H3 count, that's template-like.
     if h2_child_counts.len() >= 4 {
-        let non_zero: Vec<usize> = h2_child_counts.iter().filter(|&&c| c > 0).copied().collect();
+        let non_zero: Vec<usize> = h2_child_counts
+            .iter()
+            .filter(|&&c| c > 0)
+            .copied()
+            .collect();
         if non_zero.len() >= 4 {
             let first = non_zero[0];
             if non_zero.iter().all(|&c| c == first) {

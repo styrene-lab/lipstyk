@@ -6,9 +6,9 @@ use tower_lsp::jsonrpc::Result;
 use tower_lsp::lsp_types::*;
 use tower_lsp::{Client, LanguageServer, LspService, Server};
 
-use lipstyk::diagnostic::Severity;
-use lipstyk::config::Config;
 use lipstyk::Linter;
+use lipstyk::config::Config;
+use lipstyk::diagnostic::Severity;
 
 struct Backend {
     client: Client,
@@ -39,7 +39,10 @@ impl Backend {
                 Diagnostic {
                     range: Range {
                         start: Position { line, character: 0 },
-                        end: Position { line, character: 999 },
+                        end: Position {
+                            line,
+                            character: 999,
+                        },
                     },
                     severity,
                     code: Some(NumberOrString::String(d.rule.to_string())),
@@ -78,18 +81,28 @@ impl LanguageServer for Backend {
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let uri = params.text_document.uri.clone();
         let text = params.text_document.text.clone();
-        self.open_files.write().await.insert(uri.clone(), text.clone());
+        self.open_files
+            .write()
+            .await
+            .insert(uri.clone(), text.clone());
         let diagnostics = self.lint_and_publish(uri.clone(), &text);
-        self.client.publish_diagnostics(uri, diagnostics, None).await;
+        self.client
+            .publish_diagnostics(uri, diagnostics, None)
+            .await;
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let uri = params.text_document.uri.clone();
         if let Some(change) = params.content_changes.into_iter().last() {
             let text = change.text;
-            self.open_files.write().await.insert(uri.clone(), text.clone());
+            self.open_files
+                .write()
+                .await
+                .insert(uri.clone(), text.clone());
             let diagnostics = self.lint_and_publish(uri.clone(), &text);
-            self.client.publish_diagnostics(uri, diagnostics, None).await;
+            self.client
+                .publish_diagnostics(uri, diagnostics, None)
+                .await;
         }
     }
 
@@ -97,7 +110,9 @@ impl LanguageServer for Backend {
         let uri = params.text_document.uri;
         if let Some(text) = self.open_files.read().await.get(&uri) {
             let diagnostics = self.lint_and_publish(uri.clone(), text);
-            self.client.publish_diagnostics(uri, diagnostics, None).await;
+            self.client
+                .publish_diagnostics(uri, diagnostics, None)
+                .await;
         }
     }
 

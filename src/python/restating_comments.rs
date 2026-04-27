@@ -27,7 +27,7 @@ impl SourceRule for RestatingComments {
                     || body.starts_with("TODO")
                     || body.starts_with("FIXME")
                     || body.starts_with("HACK")
-                    || body.starts_with("-*-")    // encoding declarations
+                    || body.starts_with("-*-") // encoding declarations
             },
         )
     }

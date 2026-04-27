@@ -42,9 +42,7 @@ impl SourceRule for ImportStar {
         if import_count >= 20 {
             diagnostics.push(Diagnostic {
                 rule: "import-star",
-                message: format!(
-                    "{import_count} imports — are all of these used?"
-                ),
+                message: format!("{import_count} imports — are all of these used?"),
                 line: 1,
                 severity: Severity::Hint,
                 weight: 0.75,

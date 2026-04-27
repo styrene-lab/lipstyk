@@ -36,40 +36,41 @@ pub fn check_function_comment_density(
         });
 
         if let Some(name) = fn_name
-            && !name.is_empty() {
-                let start = i;
-                let base_indent = indent;
+            && !name.is_empty()
+        {
+            let start = i;
+            let base_indent = indent;
 
-                // Find the end of the function body.
-                let mut end = i + 1;
-                while end < lines.len() {
-                    let next_line = lines[end];
-                    let next_trimmed = next_line.trim();
-                    let next_indent = next_line.len() - next_line.trim_start().len();
+            // Find the end of the function body.
+            let mut end = i + 1;
+            while end < lines.len() {
+                let next_line = lines[end];
+                let next_trimmed = next_line.trim();
+                let next_indent = next_line.len() - next_line.trim_start().len();
 
-                    // Function ends when we see a line at the same or lower
-                    // indentation that isn't blank (for indentation-based languages)
-                    // or when we hit the next function keyword at the same level.
-                    if !next_trimmed.is_empty() && next_indent <= base_indent && end > start + 1 {
-                        let is_next_fn = fn_keywords.iter().any(|kw| next_trimmed.starts_with(kw));
-                        let is_closing = next_trimmed == "}" || next_trimmed == "};";
-                        if is_next_fn || (!is_closing && next_indent < base_indent) {
-                            break;
-                        }
-                        if is_closing {
-                            end += 1;
-                            break;
-                        }
+                // Function ends when we see a line at the same or lower
+                // indentation that isn't blank (for indentation-based languages)
+                // or when we hit the next function keyword at the same level.
+                if !next_trimmed.is_empty() && next_indent <= base_indent && end > start + 1 {
+                    let is_next_fn = fn_keywords.iter().any(|kw| next_trimmed.starts_with(kw));
+                    let is_closing = next_trimmed == "}" || next_trimmed == "};";
+                    if is_next_fn || (!is_closing && next_indent < base_indent) {
+                        break;
                     }
-                    end += 1;
+                    if is_closing {
+                        end += 1;
+                        break;
+                    }
                 }
-
-                if end - start >= 6 {
-                    func_ranges.push((name, start, end));
-                }
-                i = end;
-                continue;
+                end += 1;
             }
+
+            if end - start >= 6 {
+                func_ranges.push((name, start, end));
+            }
+            i = end;
+            continue;
+        }
         i += 1;
     }
 
@@ -120,9 +121,7 @@ pub fn check_step_narration(
     rule_name: &'static str,
 ) -> Vec<Diagnostic> {
     let step_patterns = [
-        "Step 1", "Step 2", "Step 3",
-        "First,", "Second,", "Third,",
-        "Next,", "Then,", "Finally,",
+        "Step 1", "Step 2", "Step 3", "First,", "Second,", "Third,", "Next,", "Then,", "Finally,",
     ];
 
     let mut count = 0;
@@ -144,9 +143,7 @@ pub fn check_step_narration(
     if count >= 3 {
         vec![Diagnostic {
             rule: rule_name,
-            message: format!(
-                "{count} step-by-step comments — narrating code like a tutorial"
-            ),
+            message: format!("{count} step-by-step comments — narrating code like a tutorial"),
             line: first_line,
             severity: Severity::Slop,
             weight: 3.0,

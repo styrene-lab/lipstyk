@@ -24,7 +24,9 @@ impl SourceRule for TrivialWrapper {
             None => return Vec::new(),
         };
 
-        let wrappers: Vec<_> = oxc.functions.iter()
+        let wrappers: Vec<_> = oxc
+            .functions
+            .iter()
             .filter(|f| f.stmt_count == 1 && !f.name.is_empty())
             .collect();
 
@@ -32,8 +34,9 @@ impl SourceRule for TrivialWrapper {
             return Vec::new();
         }
 
-        wrappers.iter().map(|f| {
-            Diagnostic {
+        wrappers
+            .iter()
+            .map(|f| Diagnostic {
                 rule: "ts-trivial-wrapper",
                 message: format!(
                     "`{}` is a single-statement wrapper — does it add value?",
@@ -42,7 +45,7 @@ impl SourceRule for TrivialWrapper {
                 line: f.line,
                 severity: Severity::Hint,
                 weight: 0.75,
-            }
-        }).collect()
+            })
+            .collect()
     }
 }

@@ -42,8 +42,12 @@ impl SourceRule for Quoting {
                     let next = bytes[j + 1];
 
                     // Skip special vars and subshells.
-                    if next == b'?' || next == b'#' || next == b'@'
-                        || next == b'*' || next == b'(' || next == b'{'
+                    if next == b'?'
+                        || next == b'#'
+                        || next == b'@'
+                        || next == b'*'
+                        || next == b'('
+                        || next == b'{'
                         || next == b'\''
                     {
                         j += 2;

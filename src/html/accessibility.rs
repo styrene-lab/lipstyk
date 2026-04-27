@@ -20,7 +20,9 @@ impl SourceRule for Accessibility {
         let mut diagnostics = Vec::new();
 
         // <img> without alt
-        let missing_alt: Vec<usize> = parsed.tags.iter()
+        let missing_alt: Vec<usize> = parsed
+            .tags
+            .iter()
             .filter(|t| t.name == "img" && !t.attrs.to_lowercase().contains("alt="))
             .map(|t| t.line)
             .collect();
@@ -30,33 +32,48 @@ impl SourceRule for Accessibility {
                 rule: "accessibility",
                 message: format!("{} <img> tag(s) missing `alt` attribute", missing_alt.len()),
                 line: missing_alt[0],
-                severity: if missing_alt.len() > 3 { Severity::Slop } else { Severity::Warning },
+                severity: if missing_alt.len() > 3 {
+                    Severity::Slop
+                } else {
+                    Severity::Warning
+                },
                 weight: if missing_alt.len() > 3 { 3.0 } else { 1.5 },
             });
         }
 
         // <html> without lang
-        let html_tag = parsed.tags.iter().find(|t| t.name == "html" && !t.is_closing);
+        let html_tag = parsed
+            .tags
+            .iter()
+            .find(|t| t.name == "html" && !t.is_closing);
         if let Some(tag) = html_tag
-            && !tag.attrs.to_lowercase().contains("lang=") {
-                diagnostics.push(Diagnostic {
-                    rule: "accessibility",
-                    message: "<html> missing `lang` attribute".to_string(),
-                    line: tag.line,
-                    severity: Severity::Warning,
-                    weight: 1.0,
-                });
-            }
+            && !tag.attrs.to_lowercase().contains("lang=")
+        {
+            diagnostics.push(Diagnostic {
+                rule: "accessibility",
+                message: "<html> missing `lang` attribute".to_string(),
+                line: tag.line,
+                severity: Severity::Warning,
+                weight: 1.0,
+            });
+        }
 
         // <button> with no text content and no aria-label (best-effort single-line check)
-        let empty_buttons: Vec<usize> = parsed.tags.iter()
+        let empty_buttons: Vec<usize> = parsed
+            .tags
+            .iter()
             .filter(|t| {
-                t.name == "button" && !t.is_closing
+                t.name == "button"
+                    && !t.is_closing
                     && !t.attrs.to_lowercase().contains("aria-label")
             })
             .filter(|t| {
                 // Check if the line has visible text after the tag close.
-                let line = ctx.source.lines().nth(t.line.saturating_sub(1)).unwrap_or("");
+                let line = ctx
+                    .source
+                    .lines()
+                    .nth(t.line.saturating_sub(1))
+                    .unwrap_or("");
                 if let Some(gt) = line.find('>') {
                     let after = &line[gt + 1..];
                     let text = if let Some(close) = after.find("</") {

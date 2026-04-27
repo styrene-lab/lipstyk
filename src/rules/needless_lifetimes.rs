@@ -55,17 +55,16 @@ fn check_sig(sig: &syn::Signature, hits: &mut Vec<Diagnostic>) {
     let input_ref_count = sig
         .inputs
         .iter()
-        .filter(|arg| {
-            match arg {
-                syn::FnArg::Receiver(recv) => recv.reference.is_some(),
-                syn::FnArg::Typed(pat) => is_reference_type(&pat.ty),
-            }
+        .filter(|arg| match arg {
+            syn::FnArg::Receiver(recv) => recv.reference.is_some(),
+            syn::FnArg::Typed(pat) => is_reference_type(&pat.ty),
         })
         .count();
 
-    let has_self_ref = sig.inputs.iter().any(|arg| {
-        matches!(arg, syn::FnArg::Receiver(recv) if recv.reference.is_some())
-    });
+    let has_self_ref = sig
+        .inputs
+        .iter()
+        .any(|arg| matches!(arg, syn::FnArg::Receiver(recv) if recv.reference.is_some()));
 
     // Check if elision would produce the same result.
     let can_elide = if lifetime_params.len() == 1 {

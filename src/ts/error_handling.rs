@@ -34,7 +34,9 @@ impl SourceRule for ErrorHandling {
                 } else if c.body_is_log_only {
                     diagnostics.push(Diagnostic {
                         rule: "ts-error-handling",
-                        message: "catch block only logs — consider rethrowing or returning an error".to_string(),
+                        message:
+                            "catch block only logs — consider rethrowing or returning an error"
+                                .to_string(),
                         line: c.line,
                         severity: Severity::Warning,
                         weight: 1.5,
@@ -44,7 +46,8 @@ impl SourceRule for ErrorHandling {
                 if c.param_is_unused {
                     diagnostics.push(Diagnostic {
                         rule: "ts-error-handling",
-                        message: "catch discards the error — handle it or let it propagate".to_string(),
+                        message: "catch discards the error — handle it or let it propagate"
+                            .to_string(),
                         line: c.line,
                         severity: Severity::Warning,
                         weight: 1.5,
@@ -62,7 +65,8 @@ impl SourceRule for ErrorHandling {
             let trimmed = line.trim();
 
             // Empty catch block on same line: catch (e) {} or catch {}
-            if (trimmed.contains("catch") && trimmed.contains("{}")
+            if (trimmed.contains("catch")
+                && trimmed.contains("{}")
                 && (trimmed.contains("catch (") || trimmed.contains("catch{")))
                 || trimmed == "} catch {"
             {
@@ -77,29 +81,35 @@ impl SourceRule for ErrorHandling {
             }
 
             // Catch followed by only console.log/error on next line, then close brace
-            if trimmed.contains("catch") && trimmed.contains('{') && !trimmed.contains("{}")
-                && let Some(next) = lines.get(i + 1) {
-                    let next_trim = next.trim();
-                    let after_next = lines.get(i + 2).map(|l| l.trim()).unwrap_or("");
+            if trimmed.contains("catch")
+                && trimmed.contains('{')
+                && !trimmed.contains("{}")
+                && let Some(next) = lines.get(i + 1)
+            {
+                let next_trim = next.trim();
+                let after_next = lines.get(i + 2).map(|l| l.trim()).unwrap_or("");
 
-                    let is_log_only = (next_trim.starts_with("console.")
-                        || next_trim.starts_with("logger.")
-                        || next_trim.starts_with("log."))
-                        && (after_next == "}" || after_next.starts_with("}"));
+                let is_log_only = (next_trim.starts_with("console.")
+                    || next_trim.starts_with("logger.")
+                    || next_trim.starts_with("log."))
+                    && (after_next == "}" || after_next.starts_with("}"));
 
-                    if is_log_only {
-                        diagnostics.push(Diagnostic {
-                            rule: "ts-error-handling",
-                            message: "catch block only logs — consider rethrowing or returning an error".to_string(),
-                            line: i + 1,
-                            severity: Severity::Warning,
-                            weight: 1.5,
-                        });
-                    }
+                if is_log_only {
+                    diagnostics.push(Diagnostic {
+                        rule: "ts-error-handling",
+                        message:
+                            "catch block only logs — consider rethrowing or returning an error"
+                                .to_string(),
+                        line: i + 1,
+                        severity: Severity::Warning,
+                        weight: 1.5,
+                    });
                 }
+            }
 
             // Catch with underscore (deliberately ignoring): catch (_) or catch (_e)
-            if trimmed.starts_with("catch") && (trimmed.contains("(_)") || trimmed.contains("(_e)")) {
+            if trimmed.starts_with("catch") && (trimmed.contains("(_)") || trimmed.contains("(_e)"))
+            {
                 diagnostics.push(Diagnostic {
                     rule: "ts-error-handling",
                     message: "catch discards the error — handle it or let it propagate".to_string(),

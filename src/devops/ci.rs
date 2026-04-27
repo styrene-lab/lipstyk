@@ -39,11 +39,11 @@ impl SourceRule for CiRules {
 
 fn check_hardcoded_secrets(source: &str, diagnostics: &mut Vec<Diagnostic>) {
     let secret_patterns = [
-        "AKIA",          // AWS access key prefix
-        "ghp_",          // GitHub personal access token
-        "gho_",          // GitHub OAuth token
-        "sk-",           // OpenAI/Stripe API key prefix
-        "Bearer ",       // Hardcoded bearer token
+        "AKIA",    // AWS access key prefix
+        "ghp_",    // GitHub personal access token
+        "gho_",    // GitHub OAuth token
+        "sk-",     // OpenAI/Stripe API key prefix
+        "Bearer ", // Hardcoded bearer token
     ];
 
     for (i, line) in source.lines().enumerate() {
@@ -56,7 +56,9 @@ fn check_hardcoded_secrets(source: &str, diagnostics: &mut Vec<Diagnostic>) {
             if trimmed.contains(pattern) && !trimmed.starts_with('#') {
                 diagnostics.push(Diagnostic {
                     rule: "ci-workflow",
-                    message: format!("possible hardcoded secret (contains `{pattern}`) — use secrets"),
+                    message: format!(
+                        "possible hardcoded secret (contains `{pattern}`) — use secrets"
+                    ),
                     line: i + 1,
                     severity: Severity::Slop,
                     weight: 3.0,
@@ -86,10 +88,14 @@ fn check_wildcard_trigger(source: &str, diagnostics: &mut Vec<Diagnostic>) {
 fn check_auto_approve(source: &str, diagnostics: &mut Vec<Diagnostic>) {
     for (i, line) in source.lines().enumerate() {
         let trimmed = line.trim();
-        if trimmed.contains("-auto-approve") || (trimmed.contains("--force") && trimmed.contains("apply")) {
+        if trimmed.contains("-auto-approve")
+            || (trimmed.contains("--force") && trimmed.contains("apply"))
+        {
             diagnostics.push(Diagnostic {
                 rule: "ci-workflow",
-                message: "auto-approve/force in CI — require manual confirmation for destructive ops".to_string(),
+                message:
+                    "auto-approve/force in CI — require manual confirmation for destructive ops"
+                        .to_string(),
                 line: i + 1,
                 severity: Severity::Slop,
                 weight: 2.5,
@@ -102,7 +108,8 @@ fn check_missing_permissions(source: &str, diagnostics: &mut Vec<Diagnostic>) {
     if !source.contains("permissions:") {
         diagnostics.push(Diagnostic {
             rule: "ci-workflow",
-            message: "no `permissions:` block — workflows run with broad default permissions".to_string(),
+            message: "no `permissions:` block — workflows run with broad default permissions"
+                .to_string(),
             line: 1,
             severity: Severity::Warning,
             weight: 2.0,
@@ -122,10 +129,13 @@ fn check_unpinned_actions(source: &str, diagnostics: &mut Vec<Diagnostic>) {
             // Unpinned: uses: actions/checkout@v4
             if action.contains('@') && !action.contains("@sha256:") {
                 let after_at = action.split('@').nth(1).unwrap_or("");
-                let is_sha = after_at.len() >= 40 && after_at.chars().all(|c| c.is_ascii_hexdigit());
+                let is_sha =
+                    after_at.len() >= 40 && after_at.chars().all(|c| c.is_ascii_hexdigit());
                 if !is_sha {
                     unpinned += 1;
-                    if first_line == 0 { first_line = i + 1; }
+                    if first_line == 0 {
+                        first_line = i + 1;
+                    }
                 }
             }
         }

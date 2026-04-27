@@ -26,7 +26,9 @@ impl SourceRule for IndexLoop {
             if trimmed.starts_with("for ") && trimmed.contains("range(len(") {
                 diagnostics.push(Diagnostic {
                     rule: "py-index-loop",
-                    message: "C-style `for i in range(len(x))` — use `for item in x` or `enumerate()`".to_string(),
+                    message:
+                        "C-style `for i in range(len(x))` — use `for item in x` or `enumerate()`"
+                            .to_string(),
                     line: i + 1,
                     severity: Severity::Warning,
                     weight: 1.5,

@@ -21,7 +21,10 @@ impl SourceRule for Antipatterns {
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
-        let has_set_e = ctx.source.lines().take(10)
+        let has_set_e = ctx
+            .source
+            .lines()
+            .take(10)
             .any(|l| l.trim().contains("set -e"));
 
         for (i, line) in ctx.source.lines().enumerate() {
@@ -43,7 +46,8 @@ impl SourceRule for Antipatterns {
                 {
                     diagnostics.push(Diagnostic {
                         rule: "sh-antipattern",
-                        message: "useless use of cat — the tool can read the file directly".to_string(),
+                        message: "useless use of cat — the tool can read the file directly"
+                            .to_string(),
                         line: i + 1,
                         severity: Severity::Hint,
                         weight: 0.75,
@@ -63,10 +67,15 @@ impl SourceRule for Antipatterns {
             }
 
             // cd without error check (and no set -e).
-            if trimmed.starts_with("cd ") && !trimmed.contains("||") && !trimmed.contains("&&") && !has_set_e {
+            if trimmed.starts_with("cd ")
+                && !trimmed.contains("||")
+                && !trimmed.contains("&&")
+                && !has_set_e
+            {
                 diagnostics.push(Diagnostic {
                     rule: "sh-antipattern",
-                    message: "`cd` without error check — add `|| exit 1` or use `set -e`".to_string(),
+                    message: "`cd` without error check — add `|| exit 1` or use `set -e`"
+                        .to_string(),
                     line: i + 1,
                     severity: Severity::Warning,
                     weight: 1.5,
@@ -77,7 +86,8 @@ impl SourceRule for Antipatterns {
             if trimmed.starts_with("eval ") || trimmed.contains(" eval ") {
                 diagnostics.push(Diagnostic {
                     rule: "sh-antipattern",
-                    message: "`eval` is dangerous — use arrays or direct expansion instead".to_string(),
+                    message: "`eval` is dangerous — use arrays or direct expansion instead"
+                        .to_string(),
                     line: i + 1,
                     severity: Severity::Warning,
                     weight: 1.5,
@@ -85,7 +95,8 @@ impl SourceRule for Antipatterns {
             }
 
             // Hardcoded /tmp without mktemp.
-            if trimmed.contains("/tmp/") && !trimmed.contains("mktemp") && !trimmed.starts_with('#') {
+            if trimmed.contains("/tmp/") && !trimmed.contains("mktemp") && !trimmed.starts_with('#')
+            {
                 diagnostics.push(Diagnostic {
                     rule: "sh-antipattern",
                     message: "hardcoded /tmp path — use `mktemp` for safe temp files".to_string(),

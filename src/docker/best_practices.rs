@@ -52,7 +52,12 @@ fn check_latest_tag(lines: &[&str], diagnostics: &mut Vec<Diagnostic>) {
     for (i, line) in lines.iter().enumerate() {
         let trimmed = line.trim();
         if trimmed.starts_with("FROM ") {
-            let image = trimmed.strip_prefix("FROM ").unwrap_or("").split_whitespace().next().unwrap_or("");
+            let image = trimmed
+                .strip_prefix("FROM ")
+                .unwrap_or("")
+                .split_whitespace()
+                .next()
+                .unwrap_or("");
             if image.ends_with(":latest") || (!image.contains(':') && !image.contains('@')) {
                 diagnostics.push(Diagnostic {
                     rule: "docker-best-practices",
@@ -112,7 +117,9 @@ fn check_apt_cleanup(lines: &[&str], diagnostics: &mut Vec<Diagnostic>) {
             if !has_cleanup {
                 diagnostics.push(Diagnostic {
                     rule: "docker-best-practices",
-                    message: "apt-get install without cleanup — add `&& rm -rf /var/lib/apt/lists/*`".to_string(),
+                    message:
+                        "apt-get install without cleanup — add `&& rm -rf /var/lib/apt/lists/*`"
+                            .to_string(),
                     line: i + 1,
                     severity: Severity::Slop,
                     weight: 2.5,
@@ -128,7 +135,11 @@ fn check_add_vs_copy(lines: &[&str], diagnostics: &mut Vec<Diagnostic>) {
         if trimmed.starts_with("ADD ") {
             let args = trimmed.strip_prefix("ADD ").unwrap_or("");
             // ADD is fine for URLs and tar extraction. Flag for local copies.
-            if !args.contains("http://") && !args.contains("https://") && !args.contains(".tar") && !args.contains(".gz") {
+            if !args.contains("http://")
+                && !args.contains("https://")
+                && !args.contains(".tar")
+                && !args.contains(".gz")
+            {
                 diagnostics.push(Diagnostic {
                     rule: "docker-best-practices",
                     message: "use COPY instead of ADD for local files".to_string(),

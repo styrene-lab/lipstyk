@@ -32,8 +32,7 @@ struct SwallowVisitor {
 
 fn is_wildcard_err_pattern(pat: &syn::Pat) -> bool {
     if let syn::Pat::TupleStruct(ts) = pat {
-        let is_err = ts.path.segments.len() == 1
-            && ts.path.segments[0].ident == "Err";
+        let is_err = ts.path.segments.len() == 1 && ts.path.segments[0].ident == "Err";
         return is_err && ts.elems.iter().all(|p| matches!(p, syn::Pat::Wild(_)));
     }
     false

@@ -83,9 +83,7 @@ impl<'ast> Visit<'ast> for CloneVisitor {
 
     fn visit_expr_method_call(&mut self, node: &'ast syn::ExprMethodCall) {
         if node.method == "clone" && node.args.is_empty() {
-            let suppress =
-                // Closure field access: |r| r.field.clone()
-                (self.closure_depth > 0 && is_field_access_clone(node))
+            let suppress = (self.closure_depth > 0 && is_field_access_clone(node))
                 // Clone on a method call return: foo().clone() — often framework pattern
                 || is_method_return_clone(node)
                 // Inside async fn body with clone on a variable — likely moving into a future
@@ -111,7 +109,10 @@ fn is_field_access_clone(call: &syn::ExprMethodCall) -> bool {
 }
 
 fn is_method_return_clone(call: &syn::ExprMethodCall) -> bool {
-    matches!(call.receiver.as_ref(), syn::Expr::MethodCall(_) | syn::Expr::Call(_))
+    matches!(
+        call.receiver.as_ref(),
+        syn::Expr::MethodCall(_) | syn::Expr::Call(_)
+    )
 }
 
 fn is_variable_clone(call: &syn::ExprMethodCall) -> bool {

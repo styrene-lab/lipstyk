@@ -82,8 +82,8 @@ fn collect_from_statement(stmt: &Statement, source: &str, result: &mut OxcParsed
                 let line = line_of(catch.span.start, source);
                 let param_is_unused = catch.param.is_none();
                 let body_is_empty = catch.body.body.is_empty();
-                let body_is_log_only = catch.body.body.len() == 1
-                    && is_console_stmt(&catch.body.body[0]);
+                let body_is_log_only =
+                    catch.body.body.len() == 1 && is_console_stmt(&catch.body.body[0]);
 
                 result.catches.push(CatchInfo {
                     line,
@@ -104,7 +104,11 @@ fn collect_from_statement(stmt: &Statement, source: &str, result: &mut OxcParsed
 }
 
 fn collect_function(func: &Function, source: &str, result: &mut OxcParsed) {
-    let name = func.id.as_ref().map(|id| id.name.to_string()).unwrap_or_default();
+    let name = func
+        .id
+        .as_ref()
+        .map(|id| id.name.to_string())
+        .unwrap_or_default();
     let line = line_of(func.span.start, source);
     let param_count = func.params.items.len();
     let is_async = func.r#async;
@@ -121,8 +125,12 @@ fn collect_function(func: &Function, source: &str, result: &mut OxcParsed) {
         0
     };
 
+    if !name.is_empty() {
+        result.identifiers.push(name.clone());
+    }
+
     result.functions.push(FnInfo {
-        name: name.clone(),
+        name,
         line,
         param_count,
         stmt_count,
@@ -133,10 +141,6 @@ fn collect_function(func: &Function, source: &str, result: &mut OxcParsed) {
         has_await,
         nesting_depth,
     });
-
-    if !name.is_empty() {
-        result.identifiers.push(name);
-    }
 
     // Collect param names.
     for param in &func.params.items {
@@ -155,7 +159,6 @@ fn collect_var_decl(decl: &VariableDeclaration, source: &str, result: &mut OxcPa
     for d in &decl.declarations {
         collect_binding_names(&d.id, &mut result.identifiers);
 
-        // Check if the init is an arrow function.
         if let Some(Expression::ArrowFunctionExpression(arrow)) = &d.init {
             let name = match &d.id {
                 BindingPattern::BindingIdentifier(id) => id.name.to_string(),
@@ -190,12 +193,24 @@ fn analyze_stmts(stmts: &[Statement]) -> (usize, bool, bool, bool, bool) {
     let mut has_return = false;
     let mut has_await = false;
 
-    check_stmts_recursive(stmts, &mut has_if, &mut has_for, &mut has_return, &mut has_await);
+    check_stmts_recursive(
+        stmts,
+        &mut has_if,
+        &mut has_for,
+        &mut has_return,
+        &mut has_await,
+    );
 
     (stmts.len(), has_if, has_for, has_return, has_await)
 }
 
-fn check_stmts_recursive(stmts: &[Statement], has_if: &mut bool, has_for: &mut bool, has_return: &mut bool, has_await: &mut bool) {
+fn check_stmts_recursive(
+    stmts: &[Statement],
+    has_if: &mut bool,
+    has_for: &mut bool,
+    has_return: &mut bool,
+    has_await: &mut bool,
+) {
     for stmt in stmts {
         match stmt {
             Statement::IfStatement(s) => {
@@ -204,7 +219,9 @@ fn check_stmts_recursive(stmts: &[Statement], has_if: &mut bool, has_for: &mut b
                     check_stmts_recursive(&block.body, has_if, has_for, has_return, has_await);
                 }
             }
-            Statement::ForStatement(_) | Statement::ForInStatement(_) | Statement::ForOfStatement(_)
+            Statement::ForStatement(_)
+            | Statement::ForInStatement(_)
+            | Statement::ForOfStatement(_)
             | Statement::WhileStatement(_) => *has_for = true,
             Statement::ReturnStatement(_) => *has_return = true,
             Statement::TryStatement(s) => {
@@ -221,15 +238,17 @@ fn check_stmts_recursive(stmts: &[Statement], has_if: &mut bool, has_for: &mut b
 
         // Check for await in expressions.
         if let Statement::ExpressionStatement(expr) = stmt
-            && matches!(&expr.expression, Expression::AwaitExpression(_)) {
-                *has_await = true;
-            }
+            && matches!(&expr.expression, Expression::AwaitExpression(_))
+        {
+            *has_await = true;
+        }
         if let Statement::VariableDeclaration(decl) = stmt {
             for d in &decl.declarations {
                 if let Some(init) = &d.init
-                    && matches!(init, Expression::AwaitExpression(_)) {
-                        *has_await = true;
-                    }
+                    && matches!(init, Expression::AwaitExpression(_))
+                {
+                    *has_await = true;
+                }
             }
         }
     }
@@ -262,10 +281,11 @@ fn collect_binding_names(pattern: &BindingPattern, names: &mut Vec<String>) {
 fn is_console_stmt(stmt: &Statement) -> bool {
     if let Statement::ExpressionStatement(expr) = stmt
         && let Expression::CallExpression(call) = &expr.expression
-            && let Expression::StaticMemberExpression(member) = &call.callee
-                && let Expression::Identifier(obj) = &member.object {
-                    return obj.name == "console";
-                }
+        && let Expression::StaticMemberExpression(member) = &call.callee
+        && let Expression::Identifier(obj) = &member.object
+    {
+        return obj.name == "console";
+    }
     false
 }
 
@@ -286,25 +306,33 @@ fn measure_nesting_stmts(stmts: &[Statement], depth: usize) -> usize {
                 let d = depth + 1;
                 if let Statement::BlockStatement(block) = &s.body {
                     measure_nesting_stmts(&block.body, d)
-                } else { d }
+                } else {
+                    d
+                }
             }
             Statement::ForInStatement(s) => {
                 let d = depth + 1;
                 if let Statement::BlockStatement(block) = &s.body {
                     measure_nesting_stmts(&block.body, d)
-                } else { d }
+                } else {
+                    d
+                }
             }
             Statement::ForOfStatement(s) => {
                 let d = depth + 1;
                 if let Statement::BlockStatement(block) = &s.body {
                     measure_nesting_stmts(&block.body, d)
-                } else { d }
+                } else {
+                    d
+                }
             }
             Statement::WhileStatement(s) => {
                 let d = depth + 1;
                 if let Statement::BlockStatement(block) = &s.body {
                     measure_nesting_stmts(&block.body, d)
-                } else { d }
+                } else {
+                    d
+                }
             }
             Statement::TryStatement(s) => {
                 let d = depth + 1;
@@ -314,12 +342,12 @@ fn measure_nesting_stmts(stmts: &[Statement], depth: usize) -> usize {
                 }
                 m
             }
-            Statement::BlockStatement(s) => {
-                measure_nesting_stmts(&s.body, depth)
-            }
+            Statement::BlockStatement(s) => measure_nesting_stmts(&s.body, depth),
             _ => depth,
         };
-        if child_max > max { max = child_max; }
+        if child_max > max {
+            max = child_max;
+        }
     }
 
     max

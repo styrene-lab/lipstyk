@@ -26,8 +26,9 @@ impl SourceRule for PromiseAntipattern {
         for (i, line) in ctx.source.lines().enumerate() {
             let trimmed = line.trim();
 
-            // Explicit constructor anti-pattern.
-            if trimmed.contains("new Promise(") {
+            // Explicit constructor anti-pattern. Event-emitter wrappers legitimately need
+            // a Promise constructor because there is no awaitable API to call directly.
+            if trimmed.contains("new Promise(") && !ctx.source.contains(".on(") {
                 diagnostics.push(Diagnostic {
                     rule: "promise-antipattern",
                     message: "`new Promise()` — can this use async/await instead?".to_string(),
@@ -46,8 +47,10 @@ impl SourceRule for PromiseAntipattern {
             }
 
             // Silent error swallowing.
-            if trimmed.contains(".catch(() => {})") || trimmed.contains(".catch(() => null)")
-                || trimmed.contains(".catch(()=>{})") || trimmed.contains(".catch(e => {})")
+            if trimmed.contains(".catch(() => {})")
+                || trimmed.contains(".catch(() => null)")
+                || trimmed.contains(".catch(()=>{})")
+                || trimmed.contains(".catch(e => {})")
             {
                 diagnostics.push(Diagnostic {
                     rule: "promise-antipattern",

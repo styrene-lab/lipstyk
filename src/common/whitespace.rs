@@ -60,8 +60,8 @@ pub fn check_whitespace_uniformity(
     if lengths.len() >= 30 {
         let mean = lengths.iter().sum::<f64>() / lengths.len() as f64;
         if mean > 5.0 {
-            let variance = lengths.iter().map(|l| (l - mean).powi(2)).sum::<f64>()
-                / lengths.len() as f64;
+            let variance =
+                lengths.iter().map(|l| (l - mean).powi(2)).sum::<f64>() / lengths.len() as f64;
             let cv = variance.sqrt() / mean;
 
             if cv < 0.35 {

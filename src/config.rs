@@ -55,15 +55,17 @@ impl Config {
         loop {
             let candidate = dir.join(".lipstyk.toml");
             if candidate.exists() {
-                return match std::fs::read_to_string(&candidate) {
-                    Ok(contents) => {
-                        toml::from_str(&contents).unwrap_or_else(|e| {
-                            eprintln!("warning: invalid .lipstyk.toml: {e}");
-                            Config::default()
-                        })
-                    }
-                    Err(_) => Config::default(),
+                let Ok(contents) = std::fs::read_to_string(&candidate) else {
+                    eprintln!(
+                        "warning: failed to read .lipstyk.toml at {}",
+                        candidate.display()
+                    );
+                    return Config::default();
                 };
+                return toml::from_str(&contents).unwrap_or_else(|e| {
+                    eprintln!("warning: invalid .lipstyk.toml: {e}");
+                    Config::default()
+                });
             }
 
             match dir.parent() {
@@ -77,10 +79,7 @@ impl Config {
 
     /// Check if a rule is enabled (default: true).
     pub fn is_rule_enabled(&self, rule_name: &str) -> bool {
-        self.rules
-            .get(rule_name)
-            .map(|r| r.enabled)
-            .unwrap_or(true)
+        self.rules.get(rule_name).map(|r| r.enabled).unwrap_or(true)
     }
 
     /// Get weight override for a rule, if configured.

@@ -25,11 +25,10 @@ impl SourceRule for NamingEntropy {
     }
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
-        let names = match ctx.oxc.as_ref() {
-            Some(oxc) => oxc.identifiers.clone(),
-            None => return Vec::new(),
+        let Some(oxc) = ctx.oxc.as_ref() else {
+            return Vec::new();
         };
-        analyze_entropy(&names, "ts-naming-entropy")
+        analyze_entropy(&oxc.identifiers, "ts-naming-entropy")
     }
 }
 
@@ -78,7 +77,9 @@ fn analyze_entropy(names: &[String], rule_name: &'static str) -> Vec<Diagnostic>
                 rule: rule_name,
                 message: format!(
                     "low naming entropy: {}/{} unique stems ({:.0}%)",
-                    unique.len(), stems.len(), ratio * 100.0
+                    unique.len(),
+                    stems.len(),
+                    ratio * 100.0
                 ),
                 line: 1,
                 severity: Severity::Warning,
@@ -88,12 +89,11 @@ fn analyze_entropy(names: &[String], rule_name: &'static str) -> Vec<Diagnostic>
     }
 
     // Uniform verbosity check.
-    let lengths: Vec<usize> = names.iter().map(|n| n.len()).collect();
+    let mut lengths: Vec<usize> = names.iter().map(|n| n.len()).collect();
     if lengths.len() >= MIN_IDENTIFIERS {
-        let mut sorted = lengths.clone();
-        sorted.sort();
-        let median = sorted[sorted.len() / 2];
         let short_count = lengths.iter().filter(|&&l| l <= 4).count();
+        lengths.sort();
+        let median = lengths[lengths.len() / 2];
 
         if median >= VERBOSE_FLOOR && short_count == 0 {
             diagnostics.push(Diagnostic {

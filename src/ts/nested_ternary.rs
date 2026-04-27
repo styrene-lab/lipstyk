@@ -32,9 +32,7 @@ impl SourceRule for NestedTernary {
             if ternary_count >= 2 {
                 diagnostics.push(Diagnostic {
                     rule: "nested-ternary",
-                    message: format!(
-                        "{ternary_count} ternary operators on one line — use if/else"
-                    ),
+                    message: format!("{ternary_count} ternary operators on one line — use if/else"),
                     line: i + 1,
                     severity: Severity::Warning,
                     weight: 1.5,

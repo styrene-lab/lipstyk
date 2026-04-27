@@ -46,9 +46,7 @@ impl SourceRule for TypeHintGaps {
         if hinted_ratio > 0.2 && hinted_ratio < 0.8 {
             return vec![Diagnostic {
                 rule: "type-hint-gaps",
-                message: format!(
-                    "{hinted}/{total} functions have type hints — be consistent"
-                ),
+                message: format!("{hinted}/{total} functions have type hints — be consistent"),
                 line: 1,
                 severity: Severity::Hint,
                 weight: 1.0,

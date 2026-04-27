@@ -22,7 +22,8 @@ impl SourceRule for GenericNaming {
             // Match method declarations.
             for vis in ["public ", "private ", "protected ", "static ", ""] {
                 if let Some(rest) = trimmed.strip_prefix(vis) {
-                    if rest.contains('(') && !rest.starts_with("class ")
+                    if rest.contains('(')
+                        && !rest.starts_with("class ")
                         && !rest.starts_with("interface ")
                         && !rest.starts_with("if ")
                         && !rest.starts_with("for ")

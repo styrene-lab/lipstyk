@@ -50,7 +50,11 @@ impl SourceRule for ErrorHandling {
                     } else if next_trim.starts_with("print(") || next_trim.starts_with("logging.") {
                         let after = lines.get(i + 2).map(|l| l.trim()).unwrap_or("");
                         // If the only thing in the except block is a print/log, it's swallowing
-                        if after.is_empty() || !after.starts_with(' ') || after.starts_with("except") || after.starts_with("finally") {
+                        if after.is_empty()
+                            || !after.starts_with(' ')
+                            || after.starts_with("except")
+                            || after.starts_with("finally")
+                        {
                             diagnostics.push(Diagnostic {
                                 rule: "py-error-handling",
                                 message: "broad except only logs — consider re-raising or returning an error".to_string(),

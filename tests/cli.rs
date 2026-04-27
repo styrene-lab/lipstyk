@@ -1,5 +1,4 @@
 /// CLI integration tests — invoke the actual binary and check behavior.
-
 use std::process::Command;
 
 fn lipstyk() -> Command {
@@ -30,13 +29,21 @@ fn analyzes_fixture() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     let report: serde_json::Value = serde_json::from_str(&stdout).unwrap();
     let score = report["summary"]["total_score"].as_f64().unwrap();
-    assert!(score > 30.0, "sloppy fixture should score high, got {score}");
+    assert!(
+        score > 30.0,
+        "sloppy fixture should score high, got {score}"
+    );
 }
 
 #[test]
 fn threshold_passes_when_under() {
     let out = lipstyk()
-        .args(["--threshold", "999", "--exclude-tests", "tests/fixtures/sloppy.rs"])
+        .args([
+            "--threshold",
+            "999",
+            "--exclude-tests",
+            "tests/fixtures/sloppy.rs",
+        ])
         .output()
         .unwrap();
     assert!(out.status.success(), "should pass with very high threshold");
@@ -45,7 +52,12 @@ fn threshold_passes_when_under() {
 #[test]
 fn threshold_fails_when_over() {
     let out = lipstyk()
-        .args(["--threshold", "1", "--exclude-tests", "tests/fixtures/sloppy.rs"])
+        .args([
+            "--threshold",
+            "1",
+            "--exclude-tests",
+            "tests/fixtures/sloppy.rs",
+        ])
         .output()
         .unwrap();
     assert!(!out.status.success(), "should fail with very low threshold");
@@ -94,7 +106,10 @@ fn multi_language_scan() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     let report: serde_json::Value = serde_json::from_str(&stdout).unwrap();
     let scanned = report["summary"]["files_scanned"].as_u64().unwrap();
-    assert!(scanned >= 4, "should scan rs + html + ts + py fixtures, got {scanned}");
+    assert!(
+        scanned >= 4,
+        "should scan rs + html + ts + py fixtures, got {scanned}"
+    );
 }
 
 #[test]
@@ -113,8 +128,12 @@ fn exclude_tests_reduces_findings() {
     let without_report: serde_json::Value =
         serde_json::from_str(&String::from_utf8_lossy(&without.stdout)).unwrap();
 
-    let with_count = with_report["summary"]["total_diagnostics"].as_u64().unwrap();
-    let without_count = without_report["summary"]["total_diagnostics"].as_u64().unwrap();
+    let with_count = with_report["summary"]["total_diagnostics"]
+        .as_u64()
+        .unwrap();
+    let without_count = without_report["summary"]["total_diagnostics"]
+        .as_u64()
+        .unwrap();
     assert!(
         without_count <= with_count,
         "exclude-tests should reduce findings: {without_count} vs {with_count}"
@@ -126,11 +145,7 @@ fn config_disables_rule() {
     // Write a temp config that disables restating-comment
     let dir = tempfile::tempdir().unwrap();
     let config_path = dir.path().join(".lipstyk.toml");
-    std::fs::write(
-        &config_path,
-        "[rules.restating-comment]\nenabled = false\n",
-    )
-    .unwrap();
+    std::fs::write(&config_path, "[rules.restating-comment]\nenabled = false\n").unwrap();
 
     // Copy fixture into the temp dir so config is discovered
     let fixture = dir.path().join("test.rs");
@@ -164,7 +179,11 @@ fn config_ignore_skips_matching_file() {
     )
     .unwrap();
 
-    std::fs::write(dir.path().join("ignored.rs"), "fn ignored() { Some(1).unwrap(); }\n").unwrap();
+    std::fs::write(
+        dir.path().join("ignored.rs"),
+        "fn ignored() { Some(1).unwrap(); }\n",
+    )
+    .unwrap();
     std::fs::write(dir.path().join("checked.rs"), "fn checked() {}\n").unwrap();
 
     let out = lipstyk()
@@ -191,7 +210,11 @@ fn config_ignore_skips_directory_glob() {
 
     let generated = dir.path().join("generated");
     std::fs::create_dir(&generated).unwrap();
-    std::fs::write(generated.join("sloppy.rs"), "fn generated() { Some(1).unwrap(); }\n").unwrap();
+    std::fs::write(
+        generated.join("sloppy.rs"),
+        "fn generated() { Some(1).unwrap(); }\n",
+    )
+    .unwrap();
     std::fs::write(dir.path().join("checked.rs"), "fn checked() {}\n").unwrap();
 
     let out = lipstyk()

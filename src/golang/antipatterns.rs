@@ -31,12 +31,15 @@ impl SourceRule for Antipatterns {
                     "{count} uses of `interface{{}}` — use specific interfaces or generics"
                 ),
                 line: 1,
-                severity: if count > 8 { Severity::Slop } else { Severity::Warning },
+                severity: if count > 8 {
+                    Severity::Slop
+                } else {
+                    Severity::Warning
+                },
                 weight: if count > 8 { 2.5 } else { 1.5 },
             });
         }
 
-        // fmt.Print debugging.
         if !is_test && go.fmt_print_lines.len() >= 3 && !ctx.filename.ends_with("main.go") {
             diagnostics.push(Diagnostic {
                 rule: "go-antipattern",
@@ -45,8 +48,16 @@ impl SourceRule for Antipatterns {
                     go.fmt_print_lines.len()
                 ),
                 line: go.fmt_print_lines[0],
-                severity: if go.fmt_print_lines.len() > 8 { Severity::Slop } else { Severity::Warning },
-                weight: if go.fmt_print_lines.len() > 8 { 2.5 } else { 1.5 },
+                severity: if go.fmt_print_lines.len() > 8 {
+                    Severity::Slop
+                } else {
+                    Severity::Warning
+                },
+                weight: if go.fmt_print_lines.len() > 8 {
+                    2.5
+                } else {
+                    1.5
+                },
             });
         }
 
@@ -64,7 +75,9 @@ impl SourceRule for Antipatterns {
         }
 
         // Functions returning error that never actually return an error.
-        let error_fns_without_error: Vec<_> = go.functions.iter()
+        let error_fns_without_error: Vec<_> = go
+            .functions
+            .iter()
             .filter(|f| f.returns_error && !f.has_return && f.stmt_count > 0)
             .collect();
         if error_fns_without_error.len() >= 2 {

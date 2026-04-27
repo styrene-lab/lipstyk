@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::rules::{has_cfg_test_attr, LintContext, Rule};
+use crate::rules::{LintContext, Rule, has_cfg_test_attr};
 use syn::visit::Visit;
 
 /// Detects low-entropy naming patterns characteristic of AI generation.
@@ -76,12 +76,11 @@ impl Rule for NamingEntropy {
         }
 
         // Uniform verbosity check: are ALL identifiers unusually long?
-        let lengths: Vec<usize> = visitor.names.iter().map(|n| n.len()).collect();
+        let mut lengths: Vec<usize> = visitor.names.iter().map(|n| n.len()).collect();
         if lengths.len() >= MIN_IDENTIFIERS {
-            let mut sorted = lengths.clone();
-            sorted.sort();
-            let median = sorted[sorted.len() / 2];
             let short_count = lengths.iter().filter(|&&l| l <= 4).count();
+            lengths.sort();
+            let median = lengths[lengths.len() / 2];
 
             // AI produces uniformly verbose names. Humans have a mix:
             // short iterators (i, n, s), medium locals, verbose publics.

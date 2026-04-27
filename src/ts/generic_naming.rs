@@ -20,9 +20,16 @@ impl SourceRule for GenericNaming {
         for (i, line) in ctx.source.lines().enumerate() {
             let trimmed = line.trim();
 
-            for keyword in ["function ", "const ", "let ", "export function ", "async function "] {
+            for keyword in [
+                "function ",
+                "const ",
+                "let ",
+                "export function ",
+                "async function ",
+            ] {
                 if let Some(rest) = trimmed.strip_prefix(keyword) {
-                    let name = rest.split(|c: char| !c.is_alphanumeric() && c != '_')
+                    let name = rest
+                        .split(|c: char| !c.is_alphanumeric() && c != '_')
                         .next()
                         .unwrap_or("");
                     if !name.is_empty() && naming::is_generic_name(name) {

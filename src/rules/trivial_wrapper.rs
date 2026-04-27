@@ -11,15 +11,30 @@ pub struct TrivialWrapper;
 
 /// Files where thin wrappers are expected API design.
 const API_SURFACE_FILES: &[&str] = &[
-    "runtime", "types", "config", "constants", "consts",
-    "paths", "defaults", "prelude", "helpers", "api",
+    "runtime",
+    "types",
+    "config",
+    "constants",
+    "consts",
+    "paths",
+    "defaults",
+    "prelude",
+    "helpers",
+    "api",
 ];
 
 /// Files with orchestration/collector patterns where many small helpers
 /// that each extract one check are the correct architecture.
 const ORCHESTRATION_PATTERNS: &[&str] = &[
-    "ast", "collect", "check", "parse", "extract", "analyze",
-    "kubernetes", "ci", "best_practices",
+    "ast",
+    "collect",
+    "check",
+    "parse",
+    "extract",
+    "analyze",
+    "kubernetes",
+    "ci",
+    "best_practices",
 ];
 
 impl Rule for TrivialWrapper {
@@ -31,7 +46,8 @@ impl Rule for TrivialWrapper {
         let mut visitor = WrapperVisitor { hits: Vec::new() };
         visitor.visit_file(file);
 
-        let threshold = if is_api_surface_file(ctx.filename) || is_orchestration_file(ctx.filename) {
+        let threshold = if is_api_surface_file(ctx.filename) || is_orchestration_file(ctx.filename)
+        {
             15
         } else {
             6

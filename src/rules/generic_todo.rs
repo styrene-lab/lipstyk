@@ -73,9 +73,7 @@ impl Rule for GenericTodo {
             if GENERIC_TODO_PATTERNS.iter().any(|p| lower.starts_with(p)) {
                 diagnostics.push(Diagnostic {
                     rule: "generic-todo",
-                    message: format!(
-                        "generic TODO: `{todo_body}` — AI TODOs lack specificity"
-                    ),
+                    message: format!("generic TODO: `{todo_body}` — AI TODOs lack specificity"),
                     line: i + 1,
                     severity: Severity::Warning,
                     weight: 1.5,

@@ -65,7 +65,9 @@ impl SourceRule for AnyAbuse {
             };
             diagnostics.push(Diagnostic {
                 rule: "any-abuse",
-                message: format!("{any_count} uses of `any` type — the type system is there for a reason"),
+                message: format!(
+                    "{any_count} uses of `any` type — the type system is there for a reason"
+                ),
                 line: first_any_line,
                 severity,
                 weight,
@@ -75,9 +77,7 @@ impl SourceRule for AnyAbuse {
         if ts_ignore_count >= 3 {
             diagnostics.push(Diagnostic {
                 rule: "any-abuse",
-                message: format!(
-                    "{ts_ignore_count} @ts-ignore/@ts-expect-error suppressions"
-                ),
+                message: format!("{ts_ignore_count} @ts-ignore/@ts-expect-error suppressions"),
                 line: first_ignore_line,
                 severity: Severity::Warning,
                 weight: 1.5,
@@ -90,8 +90,9 @@ impl SourceRule for AnyAbuse {
 
 fn count_any_usage(line: &str) -> usize {
     let mut count = 0;
-    // `: any`, `as any`, `: object`, `<any>`, `any[]`, `any>`
-    for pattern in [": any", "as any", ": object", "<any>", "any[]", "any>", "any,", "any)"] {
+    for pattern in [
+        ": any", "as any", ": object", "<any>", "any[]", "any>", "any,", "any)",
+    ] {
         count += line.matches(pattern).count();
     }
     count

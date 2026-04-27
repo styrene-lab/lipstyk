@@ -6,8 +6,11 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 pub struct CommentDepth;
 
 const TS_FN_KEYWORDS: &[&str] = &[
-    "function ", "async function ", "export function ",
-    "export async function ", "export default function ",
+    "function ",
+    "async function ",
+    "export function ",
+    "export async function ",
+    "export default function ",
 ];
 
 impl SourceRule for CommentDepth {
@@ -23,10 +26,15 @@ impl SourceRule for CommentDepth {
         let mut diagnostics = Vec::new();
 
         diagnostics.extend(comment_density::check_function_comment_density(
-            ctx.source, "//", "ts-comment-depth", TS_FN_KEYWORDS,
+            ctx.source,
+            "//",
+            "ts-comment-depth",
+            TS_FN_KEYWORDS,
         ));
         diagnostics.extend(comment_density::check_step_narration(
-            ctx.source, "//", "ts-comment-depth",
+            ctx.source,
+            "//",
+            "ts-comment-depth",
         ));
 
         diagnostics

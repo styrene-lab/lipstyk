@@ -19,7 +19,8 @@ impl SourceRule for GenericNaming {
 
         for (i, line) in ctx.source.lines().enumerate() {
             let trimmed = line.trim();
-            let def_line = trimmed.strip_prefix("def ")
+            let def_line = trimmed
+                .strip_prefix("def ")
                 .or_else(|| trimmed.strip_prefix("async def "));
 
             if let Some(rest) = def_line {

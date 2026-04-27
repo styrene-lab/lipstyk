@@ -3,25 +3,22 @@ use std::path::{Path, PathBuf};
 use globset::{Glob, GlobSet, GlobSetBuilder};
 
 const SUPPORTED_EXTENSIONS: &[&str] = &[
-    "rs",
-    "html", "htm", "css", "vue", "svelte",
-    "ts", "tsx", "js", "jsx",
-    "py",
-    "java",
-    "go",
-    "sh", "bash", "zsh",
-    "yml", "yaml",
-    "md", "mdx",
+    "rs", "html", "htm", "css", "vue", "svelte", "ts", "tsx", "js", "jsx", "py", "java", "go",
+    "sh", "bash", "zsh", "yml", "yaml", "md", "mdx", "txt", "text", "email",
 ];
 
 /// Filenames without extensions that lipstyk recognizes.
-const SUPPORTED_FILENAMES: &[&str] = &[
-    "Dockerfile", "Containerfile",
-];
+const SUPPORTED_FILENAMES: &[&str] = &["Dockerfile", "Containerfile"];
 
 const SKIP_DIRS: &[&str] = &[
-    "target", "node_modules", "dist", "build", ".next",
-    "vendor", "third_party", "pkg",
+    "target",
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "vendor",
+    "third_party",
+    "pkg",
 ];
 
 /// Collect supported files from a list of paths, expanding directories recursively.
@@ -63,7 +60,8 @@ pub fn collect_rust_files(paths: &[&str]) -> Vec<PathBuf> {
 
 fn is_supported(path: &Path) -> bool {
     // Check extension.
-    if path.extension()
+    if path
+        .extension()
         .and_then(|ext| ext.to_str())
         .is_some_and(|ext| SUPPORTED_EXTENSIONS.contains(&ext))
     {

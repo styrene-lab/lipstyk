@@ -51,9 +51,10 @@ fn check_duplicate_blocks(
                 .collect();
 
             // Skip blocks that are mostly empty or just braces.
-            let meaningful = block.iter().filter(|l| {
-                !l.is_empty() && **l != "{" && **l != "}" && **l != "(" && **l != ")"
-            }).count();
+            let meaningful = block
+                .iter()
+                .filter(|l| !l.is_empty() && **l != "{" && **l != "}" && **l != "(" && **l != ")")
+                .count();
             if meaningful < 3 {
                 continue;
             }
@@ -78,7 +79,8 @@ fn check_duplicate_blocks(
         if unique_files.len() >= MIN_FILES {
             // Only flag once per file (the first occurrence).
             for file in &unique_files {
-                let line = locations.iter()
+                let line = locations
+                    .iter()
                     .find(|(f, _)| f == *file)
                     .map(|(_, l)| *l)
                     .unwrap_or(1);
@@ -124,13 +126,17 @@ fn check_import_uniformity(
             .join("\n");
 
         if header.len() > 20 {
-            import_blocks.entry(header).or_default().push(filename.clone());
+            import_blocks
+                .entry(header)
+                .or_default()
+                .push(filename.clone());
         }
     }
 
     for files in import_blocks.values() {
         if files.len() >= MIN_FILES {
-            let short_names: Vec<&str> = files.iter()
+            let short_names: Vec<&str> = files
+                .iter()
                 .map(|f| f.rsplit('/').next().unwrap_or(f))
                 .collect();
 
@@ -162,9 +168,7 @@ fn check_error_pattern_cloning(
 ) {
     const MIN_FILES: usize = 3;
 
-    let error_keywords = [
-        "catch", "except", "Err(", ".unwrap_or", ".catch(",
-    ];
+    let error_keywords = ["catch", "except", "Err(", ".unwrap_or", ".catch("];
 
     // Extract error-handling blocks: 3 lines starting from each error keyword.
     let mut error_blocks: HashMap<u64, Vec<(String, usize)>> = HashMap::new();
@@ -201,7 +205,8 @@ fn check_error_pattern_cloning(
 
         if unique_files.len() >= MIN_FILES {
             for file in &unique_files {
-                let line = locations.iter()
+                let line = locations
+                    .iter()
                     .find(|(f, _)| f == *file)
                     .map(|(_, l)| *l)
                     .unwrap_or(1);

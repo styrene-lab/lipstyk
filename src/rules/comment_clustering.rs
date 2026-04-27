@@ -1,7 +1,6 @@
 use crate::diagnostic::{Diagnostic, Severity};
-use crate::rules::{has_cfg_test_attr, has_test_attr, LintContext, Rule};
+use crate::rules::{LintContext, Rule, has_cfg_test_attr, has_test_attr};
 use syn::visit::Visit;
-
 
 /// Per-function comment density and comment clustering analysis.
 ///

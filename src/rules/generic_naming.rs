@@ -11,13 +11,7 @@ use syn::visit::Visit;
 pub struct GenericNaming;
 
 const GENERIC_PREFIXES: &[&str] = &[
-    "process_",
-    "handle_",
-    "do_",
-    "perform_",
-    "execute_",
-    "run_",
-    "manage_",
+    "process_", "handle_", "do_", "perform_", "execute_", "run_", "manage_",
 ];
 
 const GENERIC_SUFFIXES: &[&str] = &[

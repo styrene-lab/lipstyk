@@ -23,7 +23,8 @@ impl SourceRule for TrivialWrapper {
         };
 
         let shapes = treesitter::extract_fn_shapes(&tree, ctx.source);
-        let wrappers: Vec<&treesitter::FnShape> = shapes.iter()
+        let wrappers: Vec<&treesitter::FnShape> = shapes
+            .iter()
             .filter(|s| s.stmt_count == 1 && !s.name.is_empty())
             .collect();
 
@@ -31,8 +32,9 @@ impl SourceRule for TrivialWrapper {
             return Vec::new();
         }
 
-        wrappers.iter().map(|s| {
-            Diagnostic {
+        wrappers
+            .iter()
+            .map(|s| Diagnostic {
                 rule: "py-trivial-wrapper",
                 message: format!(
                     "`{}` is a single-statement wrapper — does it add value?",
@@ -41,7 +43,7 @@ impl SourceRule for TrivialWrapper {
                 line: s.line,
                 severity: Severity::Hint,
                 weight: 0.75,
-            }
-        }).collect()
+            })
+            .collect()
     }
 }

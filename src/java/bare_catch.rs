@@ -22,8 +22,13 @@ impl SourceRule for BareCatch {
             let trimmed = line.trim();
 
             if trimmed.starts_with("catch") && trimmed.contains("Exception") {
-                let next = ctx.source.lines().nth(i + 1)
-                    .unwrap_or("").trim().to_string();
+                let next = ctx
+                    .source
+                    .lines()
+                    .nth(i + 1)
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
 
                 let is_swallowed = next.is_empty()
                     || next == "}"

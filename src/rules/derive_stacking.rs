@@ -40,7 +40,7 @@ fn count_derives(attrs: &[syn::Attribute]) -> (usize, Vec<String>) {
         if let Ok(meta_list) = attr.meta.require_list() {
             // Count comma-separated items in derive(A, B, C, ...)
             if let Ok(paths) = meta_list.parse_args_with(
-                syn::punctuated::Punctuated::<syn::Path, syn::Token![,]>::parse_terminated
+                syn::punctuated::Punctuated::<syn::Path, syn::Token![,]>::parse_terminated,
             ) {
                 for path in &paths {
                     total += 1;
@@ -57,7 +57,12 @@ fn count_derives(attrs: &[syn::Attribute]) -> (usize, Vec<String>) {
     (total, names)
 }
 
-fn check_derives(attrs: &[syn::Attribute], type_name: &str, line: usize, hits: &mut Vec<Diagnostic>) {
+fn check_derives(
+    attrs: &[syn::Attribute],
+    type_name: &str,
+    line: usize,
+    hits: &mut Vec<Diagnostic>,
+) {
     let (count, names) = count_derives(attrs);
     if count >= DERIVE_THRESHOLD {
         hits.push(Diagnostic {

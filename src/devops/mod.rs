@@ -1,2 +1,2 @@
-pub mod kubernetes;
 pub mod ci;
+pub mod kubernetes;

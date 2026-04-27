@@ -2,8 +2,8 @@ use async_trait::async_trait;
 use omegon_extension::{Error as ExtError, Extension};
 use serde_json::{Value, json};
 
-use crate::config::Config;
 use crate::Linter;
+use crate::config::Config;
 use crate::report::Report;
 
 pub struct LipstykExtension;
@@ -109,15 +109,15 @@ impl LipstykExtension {
             analyze_path_with(&linter, path)?
         } else if let Some(code) = code {
             let fname = filename_hint.unwrap_or("<input>.rs");
-            let score = linter.lint_source(fname, code).map_err(|e| {
-                ExtError::invalid_params(format!("parse error: {e}"))
-            })?;
+            let score = linter
+                .lint_source(fname, code)
+                .map_err(|e| ExtError::invalid_params(format!("parse error: {e}")))?;
             let mut sources = std::collections::BTreeMap::new();
             sources.insert(fname.to_string(), code.to_string());
             (vec![score], sources, 1)
         } else {
             return Err(ExtError::invalid_params(
-                "provide either 'code' + 'filename' or 'path'"
+                "provide either 'code' + 'filename' or 'path'",
             ));
         };
 
@@ -130,7 +130,8 @@ impl LipstykExtension {
     }
 
     fn execute_diff(&self, params: &Value) -> omegon_extension::Result<Value> {
-        let path = params.get("path")
+        let path = params
+            .get("path")
             .and_then(|v| v.as_str())
             .ok_or_else(|| ExtError::invalid_params("missing 'path'"))?;
 
@@ -151,7 +152,8 @@ impl LipstykExtension {
     }
 
     fn execute_report(&self, params: &Value) -> omegon_extension::Result<Value> {
-        let path = params.get("path")
+        let path = params
+            .get("path")
             .and_then(|v| v.as_str())
             .ok_or_else(|| ExtError::invalid_params("missing 'path'"))?;
 
@@ -242,12 +244,17 @@ fn format_agent_response(report: &Report) -> Value {
     // Cap at 20 findings for token efficiency.
     findings.truncate(20);
 
-    let mut categories: Vec<Value> = report.summary.by_category.iter()
-        .map(|(cat, stats)| json!({
-            "category": cat,
-            "count": stats.count,
-            "weight": stats.total_weight,
-        }))
+    let mut categories: Vec<Value> = report
+        .summary
+        .by_category
+        .iter()
+        .map(|(cat, stats)| {
+            json!({
+                "category": cat,
+                "count": stats.count,
+                "weight": stats.total_weight,
+            })
+        })
         .collect();
     categories.sort_by(|a, b| {
         let wa = a["weight"].as_f64().unwrap_or(0.0);
@@ -284,77 +291,144 @@ fn severity_rank(s: &str) -> u8 {
 /// Map rule names to concrete fix suggestions for agents.
 fn suggest_fix(rule: &str, _message: &str) -> &'static str {
     match rule {
-        "unwrap-overuse" => "Replace .unwrap() with ? operator or handle the error with match/if let",
-        "error-swallowing" => "Handle the error explicitly — log it, propagate it, or convert it to a domain error",
-        "boxed-error" => "Define a domain error enum with thiserror and use it instead of Box<dyn Error>",
-        "redundant-clone" => "Restructure to borrow instead of cloning — pass references or use lifetime parameters",
-        "string-params" => "Change the parameter from String to &str — the caller can pass &s or &string",
-        "needless-lifetimes" => "Remove the explicit lifetime — Rust's elision rules handle this case automatically",
-        "verbose-match" => "Replace with if let, .map(), .unwrap_or(), or ? depending on the pattern",
-        "index-loop" => "Replace for i in 0..v.len() with for item in &v or for (i, item) in v.iter().enumerate()",
-        "needless-type-annotation" => "Remove the type annotation — the compiler infers it from the initializer",
-        "restating-comment" | "ts-restating-comment" | "py-restating-comment" =>
-            "Delete the comment — it says what the code already says. Keep only comments that explain why.",
-        "over-documentation" => "Remove step-by-step narration comments. Document intent, not mechanics.",
-        "comment-clustering" => "Remove mechanical per-line comments. Add a single block comment explaining the function's purpose.",
-        "generic-naming" | "ts-generic-naming" | "py-generic-naming" =>
-            "Rename to describe what this specifically does in your domain, not what kind of operation it is",
-        "generic-todo" => "Make the TODO specific: who, what, why, when. E.g. TODO(name): handle X because Y",
+        "unwrap-overuse" => {
+            "Replace .unwrap() with ? operator or handle the error with match/if let"
+        }
+        "error-swallowing" => {
+            "Handle the error explicitly — log it, propagate it, or convert it to a domain error"
+        }
+        "boxed-error" => {
+            "Define a domain error enum with thiserror and use it instead of Box<dyn Error>"
+        }
+        "redundant-clone" => {
+            "Restructure to borrow instead of cloning — pass references or use lifetime parameters"
+        }
+        "string-params" => {
+            "Change the parameter from String to &str — the caller can pass &s or &string"
+        }
+        "needless-lifetimes" => {
+            "Remove the explicit lifetime — Rust's elision rules handle this case automatically"
+        }
+        "verbose-match" => {
+            "Replace with if let, .map(), .unwrap_or(), or ? depending on the pattern"
+        }
+        "index-loop" => {
+            "Replace for i in 0..v.len() with for item in &v or for (i, item) in v.iter().enumerate()"
+        }
+        "needless-type-annotation" => {
+            "Remove the type annotation — the compiler infers it from the initializer"
+        }
+        "restating-comment" | "ts-restating-comment" | "py-restating-comment" => {
+            "Delete the comment — it says what the code already says. Keep only comments that explain why."
+        }
+        "over-documentation" => {
+            "Remove step-by-step narration comments. Document intent, not mechanics."
+        }
+        "comment-clustering" => {
+            "Remove mechanical per-line comments. Add a single block comment explaining the function's purpose."
+        }
+        "generic-naming" | "ts-generic-naming" | "py-generic-naming" => {
+            "Rename to describe what this specifically does in your domain, not what kind of operation it is"
+        }
+        "generic-todo" => {
+            "Make the TODO specific: who, what, why, when. E.g. TODO(name): handle X because Y"
+        }
         "trivial-wrapper" => "Inline the delegation if the wrapper adds no abstraction value",
-        "pub-overuse" => "Restrict visibility — use pub(crate) for internal API, keep only the true public surface pub",
+        "pub-overuse" => {
+            "Restrict visibility — use pub(crate) for internal API, keep only the true public surface pub"
+        }
         "derive-stacking" => "Remove derives you don't actually need — only derive traits you use",
         "dead-code-markers" => "Delete the unused code instead of suppressing the warning",
         "structural-repetition" => "Extract the repeated pattern into a generic function or macro",
-        "whitespace-uniformity" | "ts-whitespace-uniformity" | "py-whitespace-uniformity" =>
-            "Add intentional visual grouping — blank lines between logical sections, not between every statement",
-        "naming-entropy" => "Vary your naming vocabulary — use domain-specific terms, abbreviations, and different verb stems",
-        "div-soup" => "Replace wrapper <div>s with semantic elements: <main>, <nav>, <section>, <article>, <aside>",
-        "missing-semantics" => "Add semantic HTML structure: <header>, <main>, <nav>, <footer>, <article>",
-        "inline-styles" => "Move styles to CSS classes. Use className/class attributes instead of style=",
-        "generic-classes" => "Rename classes to describe content: 'product-card' not 'container', 'search-results' not 'wrapper'",
-        "accessibility" => "Add missing alt text, lang attribute, and aria-labels for interactive elements",
-        "css-smells" => "Replace !important with proper specificity. Use CSS custom properties for repeated values.",
+        "whitespace-uniformity" | "ts-whitespace-uniformity" | "py-whitespace-uniformity" => {
+            "Add intentional visual grouping — blank lines between logical sections, not between every statement"
+        }
+        "naming-entropy" => {
+            "Vary your naming vocabulary — use domain-specific terms, abbreviations, and different verb stems"
+        }
+        "div-soup" => {
+            "Replace wrapper <div>s with semantic elements: <main>, <nav>, <section>, <article>, <aside>"
+        }
+        "missing-semantics" => {
+            "Add semantic HTML structure: <header>, <main>, <nav>, <footer>, <article>"
+        }
+        "inline-styles" => {
+            "Move styles to CSS classes. Use className/class attributes instead of style="
+        }
+        "generic-classes" => {
+            "Rename classes to describe content: 'product-card' not 'container', 'search-results' not 'wrapper'"
+        }
+        "accessibility" => {
+            "Add missing alt text, lang attribute, and aria-labels for interactive elements"
+        }
+        "css-smells" => {
+            "Replace !important with proper specificity. Use CSS custom properties for repeated values."
+        }
         "any-abuse" => "Replace `any` with proper types — define interfaces for your data shapes",
-        "console-dump" => "Remove console.log calls. Use a structured logger if you need runtime diagnostics.",
+        "console-dump" => {
+            "Remove console.log calls. Use a structured logger if you need runtime diagnostics."
+        }
         "nested-ternary" => "Replace nested ternaries with if/else or a helper function",
-        "promise-antipattern" => "Convert .then() chains to async/await. Don't swallow errors in .catch().",
-        "bare-except" => "Catch specific exceptions (ValueError, KeyError, etc.) instead of bare except",
+        "promise-antipattern" => {
+            "Convert .then() chains to async/await. Don't swallow errors in .catch()."
+        }
+        "bare-except" => {
+            "Catch specific exceptions (ValueError, KeyError, etc.) instead of bare except"
+        }
         "print-debug" => "Replace print() with the logging module. Use logging.debug/info/error.",
         "import-star" => "Import specific names: from module import ClassA, function_b",
-        "type-hint-gaps" => "Be consistent — either annotate all functions or none. Prefer annotating all.",
+        "type-hint-gaps" => {
+            "Be consistent — either annotate all functions or none. Prefer annotating all."
+        }
         // Go
-        "go-error-handling" => "Wrap errors with fmt.Errorf(\"...: %w\", err). Don't panic in library code.",
-        "go-antipattern" => "Replace interface{} with specific interfaces or generics. Use a structured logger.",
+        "go-error-handling" => {
+            "Wrap errors with fmt.Errorf(\"...: %w\", err). Don't panic in library code."
+        }
+        "go-antipattern" => {
+            "Replace interface{} with specific interfaces or generics. Use a structured logger."
+        }
         "go-generic-naming" => "Rename to describe what the function does in your domain.",
-        "go-restating-comment" | "go-comment-depth" => "Delete the comment or explain why, not what.",
-        "go-structural-repetition" | "go-naming-entropy" | "go-nesting-depth" =>
-            "Extract repeated patterns. Vary naming. Reduce nesting with early returns.",
+        "go-restating-comment" | "go-comment-depth" => {
+            "Delete the comment or explain why, not what."
+        }
+        "go-structural-repetition" | "go-naming-entropy" | "go-nesting-depth" => {
+            "Extract repeated patterns. Vary naming. Reduce nesting with early returns."
+        }
         // Shell
         "sh-strict-mode" => "Add `set -euo pipefail` after the shebang.",
         "sh-unquoted-var" => "Quote variable expansions: \"$VAR\" instead of $VAR.",
-        "sh-antipattern" => "Use globs instead of ls, grep file instead of cat|grep, mktemp for temp files.",
+        "sh-antipattern" => {
+            "Use globs instead of ls, grep file instead of cat|grep, mktemp for temp files."
+        }
         // Docker
-        "docker-best-practices" => "Add USER directive, pin image tags, combine RUN layers, clean apt cache.",
+        "docker-best-practices" => {
+            "Add USER directive, pin image tags, combine RUN layers, clean apt cache."
+        }
         // K8s
         "k8s-manifest" => "Add resource limits, health probes, pin image tags, use specific RBAC.",
         // CI
         "ci-workflow" => "Add permissions block, pin actions to SHA, use branch filters.",
         // Markdown
-        "md-slop-phrases" => "Remove AI buzzwords. Write like a human: specific, direct, no filler.",
+        "md-slop-phrases" => {
+            "Remove AI buzzwords. Write like a human: specific, direct, no filler."
+        }
         "md-structure" => "Flatten heading depth. Vary section structure.",
         "md-placeholder" => "Fill in placeholder content or remove template scaffolding.",
-        // Cross-file
-        "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" =>
-            "Extract the duplicated pattern into a shared module.",
+        "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" => {
+            "Extract the duplicated pattern into a shared module."
+        }
         // New TS/Python rules
-        "ts-error-handling" | "py-error-handling" => "Handle errors explicitly. Don't catch and ignore.",
+        "ts-error-handling" | "py-error-handling" => {
+            "Handle errors explicitly. Don't catch and ignore."
+        }
         "ts-redundant-async" => "Remove async keyword — this function never awaits.",
         "ts-nesting-depth" | "py-nesting-depth" => "Extract inner logic into a separate function.",
         "ts-trivial-wrapper" | "py-trivial-wrapper" => "Inline the delegation if it adds no value.",
         "ts-structural-repetition" | "py-structural-repetition" => "Extract the repeated pattern.",
         "ts-naming-entropy" | "py-naming-entropy" => "Vary naming vocabulary.",
-        "ts-comment-depth" | "py-comment-depth" | "java-comment-depth" =>
-            "Remove step narration. Document intent, not mechanics.",
+        "ts-comment-depth" | "py-comment-depth" | "java-comment-depth" => {
+            "Remove step narration. Document intent, not mechanics."
+        }
         "java-bare-catch" => "Catch specific exceptions. Don't catch Exception.",
         "java-generic-naming" | "java-restating-comment" => "Rename or rewrite to be specific.",
         "py-index-loop" => "Use `for item in x` or `for i, item in enumerate(x)`.",
@@ -394,7 +468,11 @@ fn detect_git_info() -> Option<crate::report::GitInfo> {
         .ok()
         .is_some_and(|s| !s.success());
 
-    Some(crate::report::GitInfo { branch, commit, dirty })
+    Some(crate::report::GitInfo {
+        branch,
+        commit,
+        dirty,
+    })
 }
 
 fn analyze_path_with(
@@ -425,9 +503,8 @@ fn analyze_path_with(
     let mut sources = std::collections::BTreeMap::new();
 
     for file in &files {
-        let source = std::fs::read_to_string(file).map_err(|e| {
-            ExtError::internal_error(format!("{}: {e}", file.display()))
-        })?;
+        let source = std::fs::read_to_string(file)
+            .map_err(|e| ExtError::internal_error(format!("{}: {e}", file.display())))?;
 
         let filename = file.display().to_string();
         match linter.lint_source(&filename, &source) {
@@ -466,7 +543,8 @@ impl Extension for LipstykExtension {
             // `execute_tool` with {name, args}. Route to the right handler.
             "tools/call" | "execute_tool" => {
                 let name = params.get("name").and_then(|v| v.as_str()).unwrap_or("");
-                let args = params.get("arguments")
+                let args = params
+                    .get("arguments")
                     .or_else(|| params.get("args"))
                     .cloned()
                     .unwrap_or(serde_json::json!({}));

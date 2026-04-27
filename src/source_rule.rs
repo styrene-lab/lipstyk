@@ -1,6 +1,6 @@
 use crate::diagnostic::Diagnostic;
-use crate::html::parse::ParsedHtml;
 use crate::golang::ast::GoParsed;
+use crate::html::parse::ParsedHtml;
 use crate::oxc::OxcParsed;
 
 /// Language/file-type identifier for dispatch.
@@ -17,6 +17,7 @@ pub enum Lang {
     Dockerfile,
     Yaml,
     Markdown,
+    Text,
 }
 
 impl Lang {
@@ -32,6 +33,7 @@ impl Lang {
             "sh" | "bash" | "zsh" => Some(Self::Shell),
             "yml" | "yaml" => Some(Self::Yaml),
             "md" | "mdx" => Some(Self::Markdown),
+            "txt" | "text" | "email" => Some(Self::Text),
             _ => None,
         }
     }
@@ -42,10 +44,13 @@ impl Lang {
             .and_then(|n| n.to_str())
             .unwrap_or(filename);
 
-        if let Some(ext) = std::path::Path::new(filename).extension().and_then(|e| e.to_str())
-            && let Some(lang) = Self::from_ext(ext) {
-                return Some(lang);
-            }
+        if let Some(ext) = std::path::Path::new(filename)
+            .extension()
+            .and_then(|e| e.to_str())
+            && let Some(lang) = Self::from_ext(ext)
+        {
+            return Some(lang);
+        }
 
         match name {
             "Dockerfile" | "Containerfile" => Some(Self::Dockerfile),
@@ -83,7 +88,14 @@ impl<'a> SourceContext<'a> {
             Lang::Go => crate::golang::ast::parse_go(source),
             _ => None,
         };
-        Self { filename, source, lang, html, oxc, go }
+        Self {
+            filename,
+            source,
+            lang,
+            html,
+            oxc,
+            go,
+        }
     }
 
     pub fn is_ts_or_js(&self) -> bool {

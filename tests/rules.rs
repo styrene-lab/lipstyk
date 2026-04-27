@@ -3,7 +3,6 @@
 /// Each test provides a positive case (should flag) and a negative case
 /// (should not flag) for the named rule. Tests go through the full
 /// Linter::lint_source path.
-
 use lipstyk::Linter;
 
 fn has_rule(source: &str, filename: &str, rule: &str) -> bool {
@@ -20,7 +19,11 @@ fn no_rule(source: &str, filename: &str, rule: &str) -> bool {
 
 #[test]
 fn unwrap_overuse_fires() {
-    assert!(has_rule("fn f() { let x = Some(1).unwrap(); }", "t.rs", "unwrap-overuse"));
+    assert!(has_rule(
+        "fn f() { let x = Some(1).unwrap(); }",
+        "t.rs",
+        "unwrap-overuse"
+    ));
 }
 
 #[test]
@@ -253,7 +256,9 @@ fn div_soup_clean() {
 #[test]
 fn missing_semantics_fires() {
     // 15+ tags, all div/span
-    let tags: String = (0..20).map(|i| format!("<div><span>{i}</span></div>")).collect();
+    let tags: String = (0..20)
+        .map(|i| format!("<div><span>{i}</span></div>"))
+        .collect();
     assert!(has_rule(&tags, "t.html", "missing-semantics"));
 }
 
@@ -516,7 +521,8 @@ fn ts_redundant_async_fires() {
 
 #[test]
 fn ts_redundant_async_clean() {
-    let src = "async function withAwait() {\n  const data = await fetch('/api');\n  return data;\n}\n";
+    let src =
+        "async function withAwait() {\n  const data = await fetch('/api');\n  return data;\n}\n";
     assert!(no_rule(src, "t.ts", "ts-redundant-async"));
 }
 
@@ -572,7 +578,8 @@ fn go_generic_naming_clean() {
 
 #[test]
 fn go_restating_comment_fires() {
-    let src = "package main\n// process the data\nfunc process(data []byte) []byte { return data }\n";
+    let src =
+        "package main\n// process the data\nfunc process(data []byte) []byte { return data }\n";
     assert!(has_rule(src, "t.go", "go-restating-comment"));
 }
 
@@ -598,7 +605,8 @@ fn md_slop_phrases_clean() {
 
 #[test]
 fn md_placeholder_fires() {
-    let src = "# your-project\n\nReplace with your description here.\n\nInsert your API key below.\n";
+    let src =
+        "# your-project\n\nReplace with your description here.\n\nInsert your API key below.\n";
     assert!(has_rule(src, "t.md", "md-placeholder"));
 }
 
@@ -607,7 +615,6 @@ fn md_generic_opener_fires() {
     let src = "# Tool\n\nThis project is a comprehensive solution for modern development.\n";
     assert!(has_rule(src, "t.md", "md-placeholder"));
 }
-
 
 #[test]
 fn prose_slop_phrases_fires_for_email() {
@@ -657,7 +664,8 @@ fn ci_clean_not_flagged() {
 
 #[test]
 fn docker_root_user_fires() {
-    let src = "FROM ubuntu:22.04\nRUN apt-get update\nRUN apt-get install -y curl\nCMD [\"bash\"]\n";
+    let src =
+        "FROM ubuntu:22.04\nRUN apt-get update\nRUN apt-get install -y curl\nCMD [\"bash\"]\n";
     assert!(has_rule(src, "Dockerfile", "docker-best-practices"));
 }
 

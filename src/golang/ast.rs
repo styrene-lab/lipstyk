@@ -8,12 +8,12 @@ use tree_sitter::Node;
 pub struct GoParsed {
     pub functions: Vec<GoFnInfo>,
     pub identifiers: Vec<String>,
-    pub bare_error_returns: Vec<usize>,   // lines with bare `return err`
-    pub ignored_errors: Vec<usize>,       // lines with `_ =` or `_ ,`
-    pub interface_empty_count: usize,     // count of `interface{}`
-    pub fmt_print_lines: Vec<usize>,      // lines with fmt.Print*
-    pub panic_lines: Vec<usize>,          // lines with panic()
-    pub sleep_lines: Vec<usize>,          // lines with time.Sleep
+    pub bare_error_returns: Vec<usize>, // lines with bare `return err`
+    pub ignored_errors: Vec<usize>,     // lines with `_ =` or `_ ,`
+    pub interface_empty_count: usize,   // count of `interface{}`
+    pub fmt_print_lines: Vec<usize>,    // lines with fmt.Print*
+    pub panic_lines: Vec<usize>,        // lines with panic()
+    pub sleep_lines: Vec<usize>,        // lines with time.Sleep
 }
 
 pub struct GoFnInfo {
@@ -50,8 +50,8 @@ pub fn parse_go(source: &str) -> Option<GoParsed> {
     // Supplement interface{} count with text search — tree-sitter may not
     // create interface_type nodes in all syntactic positions.
     if result.interface_empty_count == 0 {
-        result.interface_empty_count = source.matches("interface{}").count()
-            + source.matches("interface {}").count();
+        result.interface_empty_count =
+            source.matches("interface{}").count() + source.matches("interface {}").count();
     }
 
     Some(result)
@@ -81,7 +81,9 @@ fn collect_from_node(node: Node, source: &str, result: &mut GoParsed) {
                 || text.starts_with("return 0, err")
                 || text.starts_with("return false, err")
             {
-                result.bare_error_returns.push(node.start_position().row + 1);
+                result
+                    .bare_error_returns
+                    .push(node.start_position().row + 1);
             }
         }
         "call_expression" => {
@@ -90,7 +92,8 @@ fn collect_from_node(node: Node, source: &str, result: &mut GoParsed) {
         "interface_type" => {
             // Check if it's the empty interface `interface{}`
             let mut cursor = node.walk();
-            let child_count = node.children(&mut cursor)
+            let child_count = node
+                .children(&mut cursor)
                 .filter(|c| c.kind() != "{" && c.kind() != "}")
                 .count();
             if child_count == 0 {
@@ -127,8 +130,12 @@ fn collect_function(node: Node, source: &str, result: &mut GoParsed, is_method: 
             }
             "parameter_list" => {
                 let mut pc = child.walk();
-                param_count = child.children(&mut pc)
-                    .filter(|c| c.kind() == "parameter_declaration" || c.kind() == "variadic_parameter_declaration")
+                param_count = child
+                    .children(&mut pc)
+                    .filter(|c| {
+                        c.kind() == "parameter_declaration"
+                            || c.kind() == "variadic_parameter_declaration"
+                    })
                     .count();
 
                 // Collect param identifiers.
@@ -151,12 +158,21 @@ fn collect_function(node: Node, source: &str, result: &mut GoParsed, is_method: 
                 let mut bc = child.walk();
                 for stmt in child.children(&mut bc) {
                     let sk = stmt.kind();
-                    if sk.ends_with("_statement") || sk.ends_with("_declaration") || sk == "short_var_declaration" {
+                    if sk.ends_with("_statement")
+                        || sk.ends_with("_declaration")
+                        || sk == "short_var_declaration"
+                    {
                         stmt_count += 1;
                     }
-                    if sk == "if_statement" { has_if = true; }
-                    if sk == "for_statement" { has_for = true; }
-                    if sk == "return_statement" { has_return = true; }
+                    if sk == "if_statement" {
+                        has_if = true;
+                    }
+                    if sk == "for_statement" {
+                        has_for = true;
+                    }
+                    if sk == "return_statement" {
+                        has_return = true;
+                    }
                 }
                 max_depth = measure_nesting(child, 0);
             }
@@ -164,7 +180,9 @@ fn collect_function(node: Node, source: &str, result: &mut GoParsed, is_method: 
                 // Check result types for error return.
                 if child.kind() == "type_identifier" {
                     let t = &source[child.byte_range()];
-                    if t == "error" { returns_error = true; }
+                    if t == "error" {
+                        returns_error = true;
+                    }
                 }
             }
         }
@@ -232,9 +250,15 @@ fn collect_identifiers_from_node(node: Node, source: &str, result: &mut GoParsed
 
 fn measure_nesting(node: Node, depth: usize) -> usize {
     let kind = node.kind();
-    let new_depth = if matches!(kind, "if_statement" | "for_statement" | "switch_statement"
-        | "select_statement" | "type_switch_statement" | "func_literal")
-    {
+    let new_depth = if matches!(
+        kind,
+        "if_statement"
+            | "for_statement"
+            | "switch_statement"
+            | "select_statement"
+            | "type_switch_statement"
+            | "func_literal"
+    ) {
         depth + 1
     } else {
         depth
@@ -244,7 +268,9 @@ fn measure_nesting(node: Node, depth: usize) -> usize {
     let mut cursor = node.walk();
     for child in node.children(&mut cursor) {
         let child_max = measure_nesting(child, new_depth);
-        if child_max > max { max = child_max; }
+        if child_max > max {
+            max = child_max;
+        }
     }
     max
 }

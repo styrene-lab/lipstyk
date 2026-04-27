@@ -46,9 +46,7 @@ fn check_sig(sig: &syn::Signature, hits: &mut Vec<Diagnostic>) {
             let fn_name = sig.ident.to_string();
             hits.push(Diagnostic {
                 rule: "string-params",
-                message: format!(
-                    "`fn {fn_name}` takes owned `String` — would `&str` work here?"
-                ),
+                message: format!("`fn {fn_name}` takes owned `String` — would `&str` work here?"),
                 line,
                 severity: Severity::Warning,
                 weight: 1.5,

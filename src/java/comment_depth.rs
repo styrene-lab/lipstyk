@@ -6,8 +6,13 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 pub struct CommentDepth;
 
 const JAVA_FN_KEYWORDS: &[&str] = &[
-    "public ", "private ", "protected ", "static ",
-    "public static ", "private static ", "protected static ",
+    "public ",
+    "private ",
+    "protected ",
+    "static ",
+    "public static ",
+    "private static ",
+    "protected static ",
 ];
 
 impl SourceRule for CommentDepth {
@@ -23,10 +28,15 @@ impl SourceRule for CommentDepth {
         let mut diagnostics = Vec::new();
 
         diagnostics.extend(comment_density::check_function_comment_density(
-            ctx.source, "//", "java-comment-depth", JAVA_FN_KEYWORDS,
+            ctx.source,
+            "//",
+            "java-comment-depth",
+            JAVA_FN_KEYWORDS,
         ));
         diagnostics.extend(comment_density::check_step_narration(
-            ctx.source, "//", "java-comment-depth",
+            ctx.source,
+            "//",
+            "java-comment-depth",
         ));
 
         diagnostics

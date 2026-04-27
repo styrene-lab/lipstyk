@@ -43,9 +43,7 @@ pub fn to_sarif(report: &Report) -> SarifLog {
                         artifact_location: SarifArtifactLocation {
                             uri: file.file.as_str().into(),
                         },
-                        region: SarifRegion {
-                            start_line: d.line,
-                        },
+                        region: SarifRegion { start_line: d.line },
                     },
                 }],
                 properties: SarifResultProperties {

@@ -21,7 +21,9 @@ impl SourceRule for DivSoup {
         let parsed = ctx.html.as_ref().unwrap();
         let mut diagnostics = Vec::new();
 
-        let opening_tags: Vec<_> = parsed.tags.iter()
+        let opening_tags: Vec<_> = parsed
+            .tags
+            .iter()
             .filter(|t| !t.is_closing && !t.is_self_closing)
             .collect();
 

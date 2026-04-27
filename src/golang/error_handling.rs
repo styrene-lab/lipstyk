@@ -29,7 +29,11 @@ impl SourceRule for ErrorHandling {
                     "{count} bare `return err` — wrap with fmt.Errorf(\"...: %w\", err) for context"
                 ),
                 line: go.bare_error_returns[0],
-                severity: if count > 8 { Severity::Slop } else { Severity::Warning },
+                severity: if count > 8 {
+                    Severity::Slop
+                } else {
+                    Severity::Warning
+                },
                 weight: if count > 8 { 2.5 } else { 1.5 },
             });
         }

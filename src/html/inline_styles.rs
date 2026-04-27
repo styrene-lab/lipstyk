@@ -19,7 +19,9 @@ impl SourceRule for InlineStyles {
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let parsed = ctx.html.as_ref().unwrap();
-        let hits: Vec<usize> = parsed.tags.iter()
+        let hits: Vec<usize> = parsed
+            .tags
+            .iter()
             .filter(|t| !t.is_closing && t.attrs.contains("style="))
             .map(|t| t.line)
             .collect();

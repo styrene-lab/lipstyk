@@ -8,10 +8,20 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 pub struct Placeholders;
 
 const PLACEHOLDER_PATTERNS: &[&str] = &[
-    "your-project", "your-app", "your-name", "your-username",
-    "your-api-key", "your-token", "your project", "your app",
-    "insert ", "replace with", "add description here",
-    "description here", "enter your", "fill in",
+    "your-project",
+    "your-app",
+    "your-name",
+    "your-username",
+    "your-api-key",
+    "your-token",
+    "your project",
+    "your app",
+    "insert ",
+    "replace with",
+    "add description here",
+    "description here",
+    "enter your",
+    "fill in",
 ];
 
 const GENERIC_OPENERS: &[&str] = &[
@@ -66,7 +76,9 @@ impl SourceRule for Placeholders {
         }
 
         // Check for generic opening paragraph (first 5 non-heading, non-empty lines).
-        let opening: String = ctx.source.lines()
+        let opening: String = ctx
+            .source
+            .lines()
             .filter(|l| !l.trim().starts_with('#') && !l.trim().is_empty())
             .take(3)
             .collect::<Vec<_>>()

@@ -20,10 +20,15 @@ impl SourceRule for CommentDepth {
         let mut diagnostics = Vec::new();
 
         diagnostics.extend(comment_density::check_function_comment_density(
-            ctx.source, "#", "py-comment-depth", PY_FN_KEYWORDS,
+            ctx.source,
+            "#",
+            "py-comment-depth",
+            PY_FN_KEYWORDS,
         ));
         diagnostics.extend(comment_density::check_step_narration(
-            ctx.source, "#", "py-comment-depth",
+            ctx.source,
+            "#",
+            "py-comment-depth",
         ));
 
         diagnostics

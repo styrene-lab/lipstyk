@@ -40,9 +40,7 @@ impl SourceRule for StrictMode {
         // Check for set -e or set -euo pipefail in first 10 lines.
         let has_strict = lines.iter().take(10).any(|l| {
             let t = l.trim();
-            t.contains("set -e")
-                || t.contains("set -o errexit")
-                || t.contains("set -euo pipefail")
+            t.contains("set -e") || t.contains("set -o errexit") || t.contains("set -euo pipefail")
         });
 
         if !has_strict && lines.len() > 5 {

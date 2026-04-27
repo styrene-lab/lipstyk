@@ -82,47 +82,99 @@ pub struct FileDiagnostic {
     pub weight: f64,
 }
 
+/// Rule metadata used by reports and registry validation tests.
+///
+/// Keep this table in sync with `Linter::with_defaults()` and `RULES.md` when
+/// adding a rule. A validation test fails if a registered rule is missing here.
+pub const RULE_CATEGORIES: &[(&str, &str)] = &[
+    ("unwrap-overuse", "error-handling"),
+    ("error-swallowing", "error-handling"),
+    ("boxed-error", "error-handling"),
+    ("redundant-clone", "ownership"),
+    ("string-params", "ownership"),
+    ("needless-lifetimes", "ownership"),
+    ("verbose-match", "idiom"),
+    ("index-loop", "idiom"),
+    ("needless-type-annotation", "idiom"),
+    ("generic-naming", "naming"),
+    ("generic-todo", "naming"),
+    ("restating-comment", "documentation"),
+    ("over-documentation", "documentation"),
+    ("comment-clustering", "documentation"),
+    ("trivial-wrapper", "structure"),
+    ("ts-trivial-wrapper", "structure"),
+    ("py-trivial-wrapper", "structure"),
+    ("pub-overuse", "structure"),
+    ("derive-stacking", "structure"),
+    ("dead-code-markers", "structure"),
+    ("whitespace-uniformity", "statistical"),
+    ("structural-repetition", "statistical"),
+    ("ts-structural-repetition", "statistical"),
+    ("py-structural-repetition", "statistical"),
+    ("naming-entropy", "statistical"),
+    ("ts-naming-entropy", "statistical"),
+    ("py-naming-entropy", "statistical"),
+    ("div-soup", "html-structure"),
+    ("missing-semantics", "html-structure"),
+    ("generic-classes", "html-structure"),
+    ("inline-styles", "css"),
+    ("css-smells", "css"),
+    ("accessibility", "accessibility"),
+    ("any-abuse", "ts-quality"),
+    ("promise-antipattern", "ts-quality"),
+    ("console-dump", "debug-output"),
+    ("print-debug", "debug-output"),
+    ("nested-ternary", "ts-idiom"),
+    ("ts-nesting-depth", "ts-idiom"),
+    ("ts-redundant-async", "ts-idiom"),
+    ("py-nesting-depth", "py-quality"),
+    ("py-index-loop", "py-quality"),
+    ("py-mutable-default", "py-quality"),
+    ("ts-generic-naming", "naming"),
+    ("py-generic-naming", "naming"),
+    ("ts-restating-comment", "documentation"),
+    ("py-restating-comment", "documentation"),
+    ("bare-except", "error-handling"),
+    ("java-bare-catch", "error-handling"),
+    ("ts-error-handling", "error-handling"),
+    ("py-error-handling", "error-handling"),
+    ("ts-comment-depth", "documentation"),
+    ("py-comment-depth", "documentation"),
+    ("java-comment-depth", "documentation"),
+    ("java-generic-naming", "naming"),
+    ("java-restating-comment", "documentation"),
+    ("import-star", "py-structure"),
+    ("type-hint-gaps", "py-quality"),
+    ("cross-file-duplicate", "cross-file"),
+    ("cross-file-imports", "cross-file"),
+    ("cross-file-error-pattern", "cross-file"),
+    ("sh-strict-mode", "shell"),
+    ("sh-unquoted-var", "shell"),
+    ("sh-antipattern", "shell"),
+    ("docker-best-practices", "docker"),
+    ("k8s-manifest", "kubernetes"),
+    ("ci-workflow", "ci-cd"),
+    ("go-error-handling", "error-handling"),
+    ("go-antipattern", "go-quality"),
+    ("go-nesting-depth", "go-quality"),
+    ("go-generic-naming", "naming"),
+    ("go-restating-comment", "documentation"),
+    ("go-comment-depth", "documentation"),
+    ("go-structural-repetition", "statistical"),
+    ("go-naming-entropy", "statistical"),
+    ("md-slop-phrases", "documentation"),
+    ("md-structure", "documentation"),
+    ("md-placeholder", "documentation"),
+    ("prose-slop-phrases", "documentation"),
+    ("prose-structure", "documentation"),
+];
+
 /// Map rule names to their category.
 pub fn rule_category(rule: &str) -> &'static str {
-    match rule {
-        "unwrap-overuse" | "error-swallowing" | "boxed-error" => "error-handling",
-        "redundant-clone" | "string-params" | "needless-lifetimes" => "ownership",
-        "verbose-match" | "index-loop" | "needless-type-annotation" => "idiom",
-        "generic-naming" | "generic-todo" => "naming",
-        "restating-comment" | "over-documentation" => "documentation",
-        "trivial-wrapper" | "ts-trivial-wrapper" | "py-trivial-wrapper"
-        | "pub-overuse" | "derive-stacking" | "dead-code-markers" => "structure",
-        "whitespace-uniformity" | "structural-repetition"
-        | "ts-structural-repetition" | "py-structural-repetition"
-        | "naming-entropy" | "ts-naming-entropy" | "py-naming-entropy" => "statistical",
-        "div-soup" | "missing-semantics" | "generic-classes" => "html-structure",
-        "inline-styles" | "css-smells" => "css",
-        "accessibility" => "accessibility",
-        "any-abuse" | "promise-antipattern" => "ts-quality",
-        "console-dump" | "print-debug" => "debug-output",
-        "nested-ternary" | "ts-nesting-depth" | "ts-redundant-async" => "ts-idiom",
-        "py-nesting-depth" | "py-index-loop" | "py-mutable-default" => "py-quality",
-        "ts-generic-naming" | "py-generic-naming" => "naming",
-        "ts-restating-comment" | "py-restating-comment" => "documentation",
-        "bare-except" | "java-bare-catch" | "ts-error-handling" | "py-error-handling" => "error-handling",
-        "ts-comment-depth" | "py-comment-depth" | "java-comment-depth" => "documentation",
-        "java-generic-naming" => "naming",
-        "java-restating-comment" => "documentation",
-        "import-star" => "py-structure",
-        "type-hint-gaps" => "py-quality",
-        "cross-file-duplicate" | "cross-file-imports" | "cross-file-error-pattern" => "cross-file",
-        "sh-strict-mode" | "sh-unquoted-var" | "sh-antipattern" => "shell",
-        "docker-best-practices" => "docker",
-        "k8s-manifest" => "kubernetes",
-        "ci-workflow" => "ci-cd",
-        "go-error-handling" => "error-handling",
-        "go-antipattern" | "go-nesting-depth" => "go-quality",
-        "go-generic-naming" => "naming",
-        "go-restating-comment" | "go-comment-depth" => "documentation",
-        "go-structural-repetition" | "go-naming-entropy" => "statistical",
-        "md-slop-phrases" | "md-structure" | "md-placeholder" => "documentation",
-        _ => "other",
-    }
+    RULE_CATEGORIES
+        .iter()
+        .find_map(|(name, category)| (*name == rule).then_some(*category))
+        .unwrap_or("other")
 }
 
 impl Report {
@@ -208,7 +260,11 @@ impl Report {
         }
 
         // Sort files by score descending — worst offenders first.
-        file_results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+        file_results.sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         Report {
             version: env!("CARGO_PKG_VERSION"),

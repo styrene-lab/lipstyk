@@ -37,24 +37,38 @@ impl Linter {
         // Rust rules — AST-level via syn
         linter.add_rust_rule(Box::new(crate::rules::unwrap_overuse::UnwrapOveruse));
         linter.add_rust_rule(Box::new(crate::rules::redundant_clone::RedundantClone));
-        linter.add_rust_rule(Box::new(crate::rules::restating_comments::RestatingComments));
-        linter.add_rust_rule(Box::new(crate::rules::needless_type_annotation::NeedlessTypeAnnotation));
+        linter.add_rust_rule(Box::new(
+            crate::rules::restating_comments::RestatingComments,
+        ));
+        linter.add_rust_rule(Box::new(
+            crate::rules::needless_type_annotation::NeedlessTypeAnnotation,
+        ));
         linter.add_rust_rule(Box::new(crate::rules::trivial_wrapper::TrivialWrapper));
         linter.add_rust_rule(Box::new(crate::rules::verbose_match::VerboseMatch));
         linter.add_rust_rule(Box::new(crate::rules::generic_naming::GenericNaming));
-        linter.add_rust_rule(Box::new(crate::rules::over_documentation::OverDocumentation));
+        linter.add_rust_rule(Box::new(
+            crate::rules::over_documentation::OverDocumentation,
+        ));
         linter.add_rust_rule(Box::new(crate::rules::string_params::StringParams));
         linter.add_rust_rule(Box::new(crate::rules::pub_overuse::PubOveruse));
         linter.add_rust_rule(Box::new(crate::rules::index_loop::IndexLoop));
         linter.add_rust_rule(Box::new(crate::rules::generic_todo::GenericTodo));
         linter.add_rust_rule(Box::new(crate::rules::error_swallowing::ErrorSwallowing));
-        linter.add_rust_rule(Box::new(crate::rules::whitespace_uniformity::WhitespaceUniformity));
-        linter.add_rust_rule(Box::new(crate::rules::structural_repetition::StructuralRepetition));
-        linter.add_rust_rule(Box::new(crate::rules::needless_lifetimes::NeedlessLifetimes));
+        linter.add_rust_rule(Box::new(
+            crate::rules::whitespace_uniformity::WhitespaceUniformity,
+        ));
+        linter.add_rust_rule(Box::new(
+            crate::rules::structural_repetition::StructuralRepetition,
+        ));
+        linter.add_rust_rule(Box::new(
+            crate::rules::needless_lifetimes::NeedlessLifetimes,
+        ));
         linter.add_rust_rule(Box::new(crate::rules::boxed_error::BoxedError));
         linter.add_rust_rule(Box::new(crate::rules::derive_stacking::DeriveStacking));
         linter.add_rust_rule(Box::new(crate::rules::dead_code_markers::DeadCodeMarkers));
-        linter.add_rust_rule(Box::new(crate::rules::comment_clustering::CommentClustering));
+        linter.add_rust_rule(Box::new(
+            crate::rules::comment_clustering::CommentClustering,
+        ));
         linter.add_rust_rule(Box::new(crate::rules::naming_entropy::NamingEntropy));
 
         // Source rules — text-based, all other languages
@@ -66,15 +80,22 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::html::css_smells::CssSmells));
         linter.add_source_rule(Box::new(crate::ts::any_abuse::AnyAbuse));
         linter.add_source_rule(Box::new(crate::ts::console_dump::ConsoleDump));
+        linter.add_source_rule(Box::new(crate::ts::fixed_delay_sync::FixedDelaySync));
         linter.add_source_rule(Box::new(crate::ts::nested_ternary::NestedTernary));
         linter.add_source_rule(Box::new(crate::ts::promise_antipattern::PromiseAntipattern));
         linter.add_source_rule(Box::new(crate::ts::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::ts::restating_comments::RestatingComments));
-        linter.add_source_rule(Box::new(crate::ts::whitespace_uniformity::WhitespaceUniformity));
+        linter.add_source_rule(Box::new(
+            crate::ts::whitespace_uniformity::WhitespaceUniformity,
+        ));
         linter.add_source_rule(Box::new(crate::ts::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::ts::comment_depth::CommentDepth));
-        linter.add_source_rule(Box::new(crate::ts::structural_repetition::StructuralRepetition));
-        linter.add_source_rule(Box::new(crate::ts::structural_repetition::PyStructuralRepetition));
+        linter.add_source_rule(Box::new(
+            crate::ts::structural_repetition::StructuralRepetition,
+        ));
+        linter.add_source_rule(Box::new(
+            crate::ts::structural_repetition::PyStructuralRepetition,
+        ));
         linter.add_source_rule(Box::new(crate::ts::naming_entropy::NamingEntropy));
         linter.add_source_rule(Box::new(crate::ts::naming_entropy::PyNamingEntropy));
         linter.add_source_rule(Box::new(crate::ts::trivial_wrapper::TrivialWrapper));
@@ -86,8 +107,12 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::python::import_star::ImportStar));
         linter.add_source_rule(Box::new(crate::python::type_hint_gaps::TypeHintGaps));
         linter.add_source_rule(Box::new(crate::python::generic_naming::GenericNaming));
-        linter.add_source_rule(Box::new(crate::python::restating_comments::RestatingComments));
-        linter.add_source_rule(Box::new(crate::python::whitespace_uniformity::WhitespaceUniformity));
+        linter.add_source_rule(Box::new(
+            crate::python::restating_comments::RestatingComments,
+        ));
+        linter.add_source_rule(Box::new(
+            crate::python::whitespace_uniformity::WhitespaceUniformity,
+        ));
         linter.add_source_rule(Box::new(crate::python::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::python::comment_depth::CommentDepth));
         linter.add_source_rule(Box::new(crate::python::index_loop::IndexLoop));
@@ -102,9 +127,13 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::golang::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::golang::antipatterns::Antipatterns));
         linter.add_source_rule(Box::new(crate::golang::generic_naming::GenericNaming));
-        linter.add_source_rule(Box::new(crate::golang::restating_comments::RestatingComments));
+        linter.add_source_rule(Box::new(
+            crate::golang::restating_comments::RestatingComments,
+        ));
         linter.add_source_rule(Box::new(crate::golang::comment_depth::CommentDepth));
-        linter.add_source_rule(Box::new(crate::golang::structural_repetition::StructuralRepetition));
+        linter.add_source_rule(Box::new(
+            crate::golang::structural_repetition::StructuralRepetition,
+        ));
         linter.add_source_rule(Box::new(crate::golang::naming_entropy::NamingEntropy));
         linter.add_source_rule(Box::new(crate::golang::nesting_depth::NestingDepth));
 
@@ -117,6 +146,8 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::docker::best_practices::BestPractices));
 
         // Markdown rules
+        linter.add_source_rule(Box::new(crate::prose::SlopPhrases));
+        linter.add_source_rule(Box::new(crate::prose::Structure));
         linter.add_source_rule(Box::new(crate::markdown::slop_phrases::SlopPhrases));
         linter.add_source_rule(Box::new(crate::markdown::structure::Structure));
         linter.add_source_rule(Box::new(crate::markdown::placeholders::Placeholders));
@@ -133,9 +164,22 @@ impl Linter {
         linter
     }
 
+    /// Names of all registered built-in rules.
+    pub fn rule_names(&self) -> Vec<&'static str> {
+        let mut names: Vec<&'static str> = self
+            .rust_rules
+            .iter()
+            .map(|rule| rule.name())
+            .chain(self.source_rules.iter().map(|rule| rule.name()))
+            .collect();
+        names.sort_unstable();
+        names.dedup();
+        names
+    }
+
     pub fn rule_counts(&self) -> RuleCounts {
         let (mut html, mut css, mut ts, mut js, mut py, mut java, mut go) = (0, 0, 0, 0, 0, 0, 0);
-        let (mut shell, mut docker, mut yaml, mut markdown) = (0, 0, 0, 0);
+        let (mut shell, mut docker, mut yaml, mut markdown, mut text) = (0, 0, 0, 0, 0);
 
         for rule in &self.source_rules {
             for lang in rule.langs() {
@@ -151,13 +195,25 @@ impl Linter {
                     Lang::Dockerfile => docker += 1,
                     Lang::Yaml => yaml += 1,
                     Lang::Markdown => markdown += 1,
+                    Lang::Text => text += 1,
                 }
             }
         }
 
         RuleCounts {
             rust: self.rust_rules.len(),
-            html, css, ts, js, py, java, go, shell, docker, yaml, markdown,
+            html,
+            css,
+            ts,
+            js,
+            py,
+            java,
+            go,
+            shell,
+            docker,
+            yaml,
+            markdown,
+            text,
         }
     }
 
@@ -234,9 +290,9 @@ impl Linter {
         }
 
         if let Some(ref changed) = self.changed_lines {
-            let file_changes = changed.iter().find(|(path, _)| {
-                diff::normalize_diff_path(path, filename)
-            });
+            let file_changes = changed
+                .iter()
+                .find(|(path, _)| diff::normalize_diff_path(path, filename));
             if let Some((_, lines)) = file_changes {
                 diff::filter_to_changed(&mut diagnostics, lines, 3);
             } else {
@@ -261,7 +317,11 @@ impl Linter {
         Ok(score)
     }
 
-    fn lint_rust(&self, filename: &str, source: &str) -> Result<Vec<crate::Diagnostic>, crate::LintError> {
+    fn lint_rust(
+        &self,
+        filename: &str,
+        source: &str,
+    ) -> Result<Vec<crate::Diagnostic>, crate::LintError> {
         let syntax = syn::parse_file(source).map_err(|e| {
             warn!(file = filename, error = %e, "parse failed");
             crate::LintError::Parse {
@@ -293,7 +353,12 @@ impl Linter {
         Ok(diagnostics)
     }
 
-    fn lint_source_rules(&self, filename: &str, source: &str, lang: Lang) -> Vec<crate::Diagnostic> {
+    fn lint_source_rules(
+        &self,
+        filename: &str,
+        source: &str,
+        lang: Lang,
+    ) -> Vec<crate::Diagnostic> {
         let ctx = SourceContext::new(filename, source, lang);
 
         let mut diagnostics = Vec::new();
@@ -331,6 +396,7 @@ pub struct RuleCounts {
     pub docker: usize,
     pub yaml: usize,
     pub markdown: usize,
+    pub text: usize,
 }
 
 impl RuleCounts {
@@ -339,8 +405,16 @@ impl RuleCounts {
     }
 
     pub fn source_total(&self) -> usize {
-        self.html.max(self.css) + self.ts.max(self.js) + self.py + self.java + self.go
-            + self.shell + self.docker + self.yaml + self.markdown
+        self.html.max(self.css)
+            + self.ts.max(self.js)
+            + self.py
+            + self.java
+            + self.go
+            + self.shell
+            + self.docker
+            + self.yaml
+            + self.markdown
+            + self.text
     }
 }
 

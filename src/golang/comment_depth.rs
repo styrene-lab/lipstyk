@@ -18,10 +18,15 @@ impl SourceRule for CommentDepth {
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let mut diagnostics = Vec::new();
         diagnostics.extend(comment_density::check_function_comment_density(
-            ctx.source, "//", "go-comment-depth", GO_FN_KEYWORDS,
+            ctx.source,
+            "//",
+            "go-comment-depth",
+            GO_FN_KEYWORDS,
         ));
         diagnostics.extend(comment_density::check_step_narration(
-            ctx.source, "//", "go-comment-depth",
+            ctx.source,
+            "//",
+            "go-comment-depth",
         ));
         diagnostics
     }

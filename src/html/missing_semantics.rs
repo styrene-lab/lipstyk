@@ -8,9 +8,21 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 pub struct MissingSemantics;
 
 const SEMANTIC_ELEMENTS: &[&str] = &[
-    "main", "nav", "article", "section", "header", "footer",
-    "aside", "figure", "figcaption", "details", "summary",
-    "dialog", "address", "time", "mark",
+    "main",
+    "nav",
+    "article",
+    "section",
+    "header",
+    "footer",
+    "aside",
+    "figure",
+    "figcaption",
+    "details",
+    "summary",
+    "dialog",
+    "address",
+    "time",
+    "mark",
 ];
 
 impl SourceRule for MissingSemantics {
@@ -24,15 +36,14 @@ impl SourceRule for MissingSemantics {
 
     fn check(&self, ctx: &SourceContext) -> Vec<Diagnostic> {
         let parsed = ctx.html.as_ref().unwrap();
-        let opening_tags: Vec<_> = parsed.tags.iter()
-            .filter(|t| !t.is_closing)
-            .collect();
+        let opening_tags: Vec<_> = parsed.tags.iter().filter(|t| !t.is_closing).collect();
 
         if opening_tags.len() < 15 {
             return Vec::new();
         }
 
-        let has_any_semantic = opening_tags.iter()
+        let has_any_semantic = opening_tags
+            .iter()
             .any(|t| SEMANTIC_ELEMENTS.contains(&t.name.as_str()));
 
         if !has_any_semantic {

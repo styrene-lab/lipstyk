@@ -10,10 +10,23 @@ use crate::source_rule::{Lang, SourceContext, SourceRule};
 pub struct GenericClasses;
 
 const GENERIC_CLASS_NAMES: &[&str] = &[
-    "container", "wrapper", "content", "box", "item", "inner",
-    "outer", "element", "component", "module",
-    "main-content", "content-wrapper", "page-wrapper", "outer-wrapper",
-    "inner-wrapper", "content-container", "main-container",
+    "container",
+    "wrapper",
+    "content",
+    "box",
+    "item",
+    "inner",
+    "outer",
+    "element",
+    "component",
+    "module",
+    "main-content",
+    "content-wrapper",
+    "page-wrapper",
+    "outer-wrapper",
+    "inner-wrapper",
+    "content-container",
+    "main-container",
 ];
 
 impl SourceRule for GenericClasses {

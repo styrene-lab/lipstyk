@@ -25,9 +25,18 @@ impl SourceRule for StructuralRepetition {
             return Vec::new();
         }
 
-        let mut groups: HashMap<(usize, usize, bool, bool, bool), Vec<&crate::golang::ast::GoFnInfo>> = HashMap::new();
+        let mut groups: HashMap<
+            (usize, usize, bool, bool, bool),
+            Vec<&crate::golang::ast::GoFnInfo>,
+        > = HashMap::new();
         for f in &go.functions {
-            let key = (f.param_count, f.stmt_count, f.has_if, f.has_for, f.has_return);
+            let key = (
+                f.param_count,
+                f.stmt_count,
+                f.has_if,
+                f.has_for,
+                f.has_return,
+            );
             groups.entry(key).or_default().push(f);
         }
 
@@ -39,7 +48,9 @@ impl SourceRule for StructuralRepetition {
                     rule: "go-structural-repetition",
                     message: format!(
                         "{} functions share the same shape ({} params, {} stmts): {}",
-                        fns.len(), fns[0].param_count, fns[0].stmt_count,
+                        fns.len(),
+                        fns[0].param_count,
+                        fns[0].stmt_count,
                         names.join(", ")
                     ),
                     line: fns[0].line,

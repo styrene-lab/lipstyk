@@ -45,7 +45,11 @@ impl SourceRule for ConsoleDump {
                 hits.len()
             ),
             line: hits[0],
-            severity: if hits.len() > 10 { Severity::Slop } else { Severity::Warning },
+            severity: if hits.len() > 10 {
+                Severity::Slop
+            } else {
+                Severity::Warning
+            },
             weight: if hits.len() > 10 { 3.0 } else { 1.5 },
         }]
     }

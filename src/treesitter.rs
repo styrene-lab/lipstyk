@@ -40,16 +40,18 @@ pub fn extract_fn_shapes(tree: &Tree, source: &str) -> Vec<FnShape> {
 fn collect_functions(node: Node, source: &str, shapes: &mut Vec<FnShape>) {
     let kind = node.kind();
 
-    let is_function = matches!(kind,
-        "function_declaration" | "function_definition" |
-        "method_definition" | "arrow_function" |
-        "generator_function_declaration"
+    let is_function = matches!(
+        kind,
+        "function_declaration"
+            | "function_definition"
+            | "method_definition"
+            | "arrow_function"
+            | "generator_function_declaration"
     );
 
-    if is_function
-        && let Some(shape) = shape_of_function(node, source) {
-            shapes.push(shape);
-        }
+    if is_function && let Some(shape) = shape_of_function(node, source) {
+        shapes.push(shape);
+    }
 
     // Recurse into children.
     let mut cursor = node.walk();
@@ -70,16 +72,19 @@ fn shape_of_function(node: Node, source: &str) -> Option<FnShape> {
 
     let line = node.start_position().row + 1;
 
-    let param_count = node.children(&mut node.walk())
+    let param_count = node
+        .children(&mut node.walk())
         .find(|c| c.kind() == "formal_parameters" || c.kind() == "parameters")
         .map(|params| {
-            params.children(&mut params.walk())
+            params
+                .children(&mut params.walk())
                 .filter(|c| c.kind() != "(" && c.kind() != ")" && c.kind() != ",")
                 .count()
         })
         .unwrap_or(0);
 
-    let body = node.children(&mut node.walk())
+    let body = node
+        .children(&mut node.walk())
         .find(|c| c.kind() == "statement_block" || c.kind() == "block");
 
     let (stmt_count, has_if, has_for, has_return) = if let Some(body) = body {
@@ -91,12 +96,21 @@ fn shape_of_function(node: Node, source: &str) -> Option<FnShape> {
         let mut cursor = body.walk();
         for child in body.children(&mut cursor) {
             let ck = child.kind();
-            if ck.ends_with("_statement") || ck.ends_with("_declaration") || ck == "expression_statement" {
+            if ck.ends_with("_statement")
+                || ck.ends_with("_declaration")
+                || ck == "expression_statement"
+            {
                 stmts += 1;
             }
-            if ck == "if_statement" { has_if = true; }
-            if ck == "for_statement" || ck == "for_in_statement" || ck == "while_statement" { has_for = true; }
-            if ck == "return_statement" { has_return = true; }
+            if ck == "if_statement" {
+                has_if = true;
+            }
+            if ck == "for_statement" || ck == "for_in_statement" || ck == "while_statement" {
+                has_for = true;
+            }
+            if ck == "return_statement" {
+                has_return = true;
+            }
         }
         (stmts, has_if, has_for, has_return)
     } else {
@@ -125,22 +139,32 @@ fn collect_identifiers(node: Node, source: &str, names: &mut Vec<String>) {
     let kind = node.kind();
 
     // Collect names from declarations.
-    let should_collect = matches!(kind,
-        "function_declaration" | "function_definition" |
-        "method_definition" | "variable_declarator" |
-        "assignment" | "augmented_assignment"
+    let should_collect = matches!(
+        kind,
+        "function_declaration"
+            | "function_definition"
+            | "method_definition"
+            | "variable_declarator"
+            | "assignment"
+            | "augmented_assignment"
     );
 
     if should_collect
         && let Some(name) = find_child_text(node, "identifier", source)
-            && name != "_" && name != "self" && name.len() > 1 {
-                names.push(name.to_string());
-            }
+        && name != "_"
+        && name != "self"
+        && name.len() > 1
+    {
+        names.push(name.to_string());
+    }
 
     // Also collect parameter names.
     if kind == "identifier" {
         let parent_kind = node.parent().map(|p| p.kind()).unwrap_or("");
-        if matches!(parent_kind, "formal_parameters" | "parameters" | "typed_parameter" | "default_parameter") {
+        if matches!(
+            parent_kind,
+            "formal_parameters" | "parameters" | "typed_parameter" | "default_parameter"
+        ) {
             let text = node_text(node, source);
             if text.len() > 1 && text != "self" {
                 names.push(text.to_string());

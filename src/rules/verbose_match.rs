@@ -72,8 +72,8 @@ impl<'ast> Visit<'ast> for MatchVisitor {
 
             let pat_set: Vec<&str> = patterns.iter().map(|s| s.as_str()).collect();
 
-            let is_option_match = pat_set.iter().any(|p| p.starts_with("Some"))
-                && pat_set.contains(&"None");
+            let is_option_match =
+                pat_set.iter().any(|p| p.starts_with("Some")) && pat_set.contains(&"None");
 
             let is_result_match = pat_set.iter().any(|p| p.starts_with("Ok"))
                 && pat_set.iter().any(|p| p.starts_with("Err"));

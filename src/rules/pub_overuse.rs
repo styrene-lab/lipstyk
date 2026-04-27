@@ -14,8 +14,14 @@ use syn::visit::Visit;
 pub struct PubOveruse;
 
 const EXEMPT_FILES: &[&str] = &[
-    "types", "prelude", "constants", "consts", "errors",
-    "models", "schema", "dto",
+    "types",
+    "prelude",
+    "constants",
+    "consts",
+    "errors",
+    "models",
+    "schema",
+    "dto",
 ];
 
 impl Rule for PubOveruse {

@@ -37,7 +37,8 @@ impl SourceRule for CssSmells {
 }
 
 fn check_important_overuse(blocks: &[&str], diagnostics: &mut Vec<Diagnostic>) {
-    let count: usize = blocks.iter()
+    let count: usize = blocks
+        .iter()
         .flat_map(|b| b.lines())
         .filter(|l| l.contains("!important"))
         .count();
@@ -49,7 +50,11 @@ fn check_important_overuse(blocks: &[&str], diagnostics: &mut Vec<Diagnostic>) {
                 "{count} uses of `!important` — fix specificity instead of bulldozing it"
             ),
             line: 1,
-            severity: if count > 10 { Severity::Slop } else { Severity::Warning },
+            severity: if count > 10 {
+                Severity::Slop
+            } else {
+                Severity::Warning
+            },
             weight: if count > 10 { 3.0 } else { 2.0 },
         });
     }
@@ -68,17 +73,18 @@ fn check_magic_numbers(blocks: &[&str], diagnostics: &mut Vec<Diagnostic>) {
             for word in trimmed.split_whitespace() {
                 let clean = word.trim_end_matches(';').trim_end_matches(',');
                 if let Some(num_str) = clean.strip_suffix("px")
-                    && let Ok(val) = num_str.parse::<f64>() {
-                        // Non-magic: multiples of 4 (spacing scale), 0, 1, 2, 100.
-                        let is_scale = val == 0.0
-                            || val == 1.0
-                            || val == 2.0
-                            || val == 100.0
-                            || (val > 0.0 && val % 4.0 == 0.0);
-                        if !is_scale {
-                            magic_count += 1;
-                        }
+                    && let Ok(val) = num_str.parse::<f64>()
+                {
+                    // Non-magic: multiples of 4 (spacing scale), 0, 1, 2, 100.
+                    let is_scale = val == 0.0
+                        || val == 1.0
+                        || val == 2.0
+                        || val == 100.0
+                        || (val > 0.0 && val % 4.0 == 0.0);
+                    if !is_scale {
+                        magic_count += 1;
                     }
+                }
             }
         }
     }

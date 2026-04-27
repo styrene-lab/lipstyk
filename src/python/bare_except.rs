@@ -22,8 +22,17 @@ impl SourceRule for BareExcept {
         for (i, line) in ctx.source.lines().enumerate() {
             let trimmed = line.trim();
 
-            if trimmed == "except:" || trimmed == "except Exception:" || trimmed == "except Exception as e:" {
-                let next = ctx.source.lines().nth(i + 1).unwrap_or("").trim().to_string();
+            if trimmed == "except:"
+                || trimmed == "except Exception:"
+                || trimmed == "except Exception as e:"
+            {
+                let next = ctx
+                    .source
+                    .lines()
+                    .nth(i + 1)
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
                 let is_swallowed = next == "pass"
                     || next.starts_with("print(")
                     || next.starts_with("logging.")
@@ -39,9 +48,7 @@ impl SourceRule for BareExcept {
 
                 diagnostics.push(Diagnostic {
                     rule: "bare-except",
-                    message: format!(
-                        "`{trimmed}` — catch specific exceptions"
-                    ),
+                    message: format!("`{trimmed}` — catch specific exceptions"),
                     line: i + 1,
                     severity,
                     weight,

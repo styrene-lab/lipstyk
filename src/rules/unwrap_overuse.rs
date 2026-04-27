@@ -62,9 +62,13 @@ impl<'s> Visit<'s> for UnwrapVisitor<'s> {
 
             let line = node.method.span().start().line;
 
-            let source_line = self.source.lines().nth(line.saturating_sub(1)).unwrap_or("");
-            let unwrap_count = source_line.matches(".unwrap()").count()
-                + source_line.matches(".expect(").count();
+            let source_line = self
+                .source
+                .lines()
+                .nth(line.saturating_sub(1))
+                .unwrap_or("");
+            let unwrap_count =
+                source_line.matches(".unwrap()").count() + source_line.matches(".expect(").count();
 
             let (severity, weight) = if self.in_test {
                 // Test code: downweight heavily, hint only.
