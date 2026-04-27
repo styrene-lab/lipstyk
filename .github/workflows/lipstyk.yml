@@ -50,7 +50,16 @@ jobs:
 
       - name: Install lipstyk
         if: steps.cache-lipstyk.outputs.cache-hit != 'true'
-        run: cargo install --git https://github.com/styrene-lab/lipstyk --branch ${{ inputs.lipstyk-version }}
+        shell: bash
+        run: |
+          REF="${{ inputs.lipstyk-version }}"
+          if [[ "$REF" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            cargo install --git https://github.com/styrene-lab/lipstyk --tag "$REF"
+          elif [[ "$REF" =~ ^[0-9a-f]{7,40}$ ]]; then
+            cargo install --git https://github.com/styrene-lab/lipstyk --rev "$REF"
+          else
+            cargo install --git https://github.com/styrene-lab/lipstyk --branch "$REF"
+          fi
 
       - name: Full scan report
         run: |
