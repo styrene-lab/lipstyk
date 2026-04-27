@@ -25,7 +25,10 @@ impl SourceRule for FixedDelaySync {
                 continue;
             }
 
-            if is_sleep_promise(trimmed) || is_test_framework_wait(trimmed) {
+            if is_sleep_promise(trimmed)
+                || is_direct_fixed_timeout(trimmed)
+                || is_test_framework_wait(trimmed)
+            {
                 diagnostics.push(Diagnostic {
                     rule: "fixed-delay-sync",
                     message: "fixed delay used for synchronization — wait for an observable condition instead".to_string(),
@@ -42,6 +45,14 @@ impl SourceRule for FixedDelaySync {
 
 fn is_sleep_promise(line: &str) -> bool {
     line.contains("setTimeout(") && (line.contains("await") || line.contains("Promise"))
+}
+
+fn is_direct_fixed_timeout(line: &str) -> bool {
+    line.contains("setTimeout(")
+        && !line.contains("Promise")
+        && !line.contains("debounce")
+        && !line.contains("throttle")
+        && !line.contains("backoff")
 }
 
 fn is_test_framework_wait(line: &str) -> bool {

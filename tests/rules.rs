@@ -334,6 +334,12 @@ fn fixed_delay_sync_wait_for_timeout_fires() {
 }
 
 #[test]
+fn fixed_delay_sync_direct_timeout_fires() {
+    let src = "setTimeout(() => checkStatus(), 1000);\n";
+    assert!(has_rule(src, "t.ts", "fixed-delay-sync"));
+}
+
+#[test]
 fn fixed_delay_sync_generic_wait_clean() {
     let src = "await locator.wait(500);\n";
     assert!(no_rule(src, "t.ts", "fixed-delay-sync"));
