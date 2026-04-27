@@ -71,13 +71,7 @@ fn main() -> ExitCode {
         .map(|(_, a)| a.as_str())
         .collect();
 
-    let files = lipstyk::walk::collect_files(&paths);
-    if files.is_empty() {
-        eprintln!("no supported files found");
-        return ExitCode::from(1);
-    }
-
-    // Load config.
+    // Load config before collecting files so settings.ignore can filter discovery.
     let config = if let Some(path) = config_path {
         lipstyk::Config::discover(std::path::Path::new(&path))
     } else if let Some(first) = paths.first() {
@@ -85,6 +79,12 @@ fn main() -> ExitCode {
     } else {
         lipstyk::Config::default()
     };
+
+    let files = lipstyk::walk::collect_files_with_ignore(&paths, &config.settings.ignore);
+    if files.is_empty() {
+        eprintln!("no supported files found");
+        return ExitCode::from(1);
+    }
 
     let effective_threshold = threshold.or(config.settings.threshold);
 

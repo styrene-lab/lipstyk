@@ -25,6 +25,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 toml = "0.8"
+globset = "0.4"
 
 # AST parsers
 oxc_allocator = "0.127"

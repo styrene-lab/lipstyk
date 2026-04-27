@@ -154,3 +154,55 @@ fn config_disables_rule() {
         "restating-comment should be disabled by config"
     );
 }
+
+#[test]
+fn config_ignore_skips_matching_file() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join(".lipstyk.toml"),
+        "[settings]\nignore = [\"ignored.rs\"]\n",
+    )
+    .unwrap();
+
+    std::fs::write(dir.path().join("ignored.rs"), "fn ignored() { Some(1).unwrap(); }\n").unwrap();
+    std::fs::write(dir.path().join("checked.rs"), "fn checked() {}\n").unwrap();
+
+    let out = lipstyk()
+        .args(["--json", dir.path().to_str().unwrap()])
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let report: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+
+    assert_eq!(report["summary"]["files_scanned"].as_u64().unwrap(), 1);
+    let files = report["files"].as_array().unwrap();
+    assert_eq!(files.len(), 1);
+    assert!(files[0]["file"].as_str().unwrap().ends_with("checked.rs"));
+}
+
+#[test]
+fn config_ignore_skips_directory_glob() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join(".lipstyk.toml"),
+        "[settings]\nignore = [\"generated/**\"]\n",
+    )
+    .unwrap();
+
+    let generated = dir.path().join("generated");
+    std::fs::create_dir(&generated).unwrap();
+    std::fs::write(generated.join("sloppy.rs"), "fn generated() { Some(1).unwrap(); }\n").unwrap();
+    std::fs::write(dir.path().join("checked.rs"), "fn checked() {}\n").unwrap();
+
+    let out = lipstyk()
+        .args(["--json", dir.path().to_str().unwrap()])
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let report: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+
+    assert_eq!(report["summary"]["files_scanned"].as_u64().unwrap(), 1);
+    let files = report["files"].as_array().unwrap();
+    assert_eq!(files.len(), 1);
+    assert!(files[0]["file"].as_str().unwrap().ends_with("checked.rs"));
+}
