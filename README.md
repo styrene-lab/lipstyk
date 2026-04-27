@@ -229,7 +229,7 @@ and CI in [INTEGRATION.md](INTEGRATION.md).
 Lipstyk analyzes itself. Reports in
 [`dogfood-reports/`](dogfood-reports/).
 
-Current self-scan: score 49.5, 32/108 files with findings, mostly hints.
+Current self-scan: score 29.0, 29/108 files with findings, mostly hints.
 
 ## Scoring
 

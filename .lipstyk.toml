@@ -7,9 +7,21 @@
 exclude_tests = true
 
 [rules.structural-repetition]
-# Visitor impls inherently repeat — this fires on our own codebase.
+# Trait impls (name/langs/check) naturally share shape across rules.
 weight = 0.5
 
 [rules.pub-overuse]
-# Our rules/mod.rs is intentionally all-pub.
+# rules/mod.rs and common/ are intentionally all-pub internal APIs.
 weight = 0.5
+
+[rules.cross-file-duplicate]
+# Diagnostic::push boilerplate is inherent to a lint tool — every rule emits them.
+enabled = false
+
+[rules.trivial-wrapper]
+# oxc AST traversal uses intentional single-delegation helpers for readability.
+weight = 0.3
+
+[rules.error-swallowing]
+# unwrap_or_default() on parser output is intentional graceful degradation.
+weight = 0.2
