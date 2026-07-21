@@ -38,12 +38,13 @@ fn main() -> ExitCode {
     }
 
     let effective_threshold = options.threshold.or(config.settings.threshold);
+    let exclude_tests = options.exclude_tests || config.settings.exclude_tests;
 
     info!(files = files.len(), "starting analysis");
     let start = Instant::now();
 
     let mut linter = lipstyk::Linter::with_defaults()
-        .exclude_tests(options.exclude_tests)
+        .exclude_tests(exclude_tests)
         .with_config(config);
 
     if options.diff_mode {

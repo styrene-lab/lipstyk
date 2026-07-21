@@ -181,13 +181,20 @@ Helix setup.
 
 ## pre-commit
 
+The hook is self-contained: pre-commit builds the pinned Lipstyk revision with
+Cargo, so contributors do not need to install `lipstyk` separately.
+
 ```yaml
 repos:
   - repo: https://github.com/styrene-lab/lipstyk
-    rev: main
+    rev: v0.2.1                 # pin a release tag or immutable commit SHA
     hooks:
-      - id: lipstyk
+      - id: lipstyk             # scans the staged source files
 ```
+
+For a lower-noise changed-line gate, use `id: lipstyk-diff` instead. Do not use
+`rev: main` in a real project: moving revisions make hook environments
+non-reproducible.
 
 ## Agent integration
 

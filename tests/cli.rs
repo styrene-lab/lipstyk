@@ -94,7 +94,7 @@ fn sarif_mode_produces_valid_sarif() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     let sarif: serde_json::Value = serde_json::from_str(&stdout).unwrap();
     assert_eq!(sarif["version"], "2.1.0");
-    assert!(sarif["runs"][0]["results"].as_array().unwrap().len() > 0);
+    assert!(!sarif["runs"][0]["results"].as_array().unwrap().is_empty());
 }
 
 #[test]
@@ -137,6 +137,35 @@ fn exclude_tests_reduces_findings() {
     assert!(
         without_count <= with_count,
         "exclude-tests should reduce findings: {without_count} vs {with_count}"
+    );
+}
+
+#[test]
+fn config_exclude_tests_is_applied() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join(".lipstyk.toml"),
+        "[settings]\nexclude_tests = true\n",
+    )
+    .unwrap();
+    let fixture = dir.path().join("with_tests.rs");
+    std::fs::copy("tests/fixtures/with_tests.rs", &fixture).unwrap();
+
+    let configured = lipstyk()
+        .args(["--json", fixture.to_str().unwrap()])
+        .output()
+        .unwrap();
+    let explicit = lipstyk()
+        .args(["--json", "--exclude-tests", fixture.to_str().unwrap()])
+        .output()
+        .unwrap();
+
+    let configured_report: serde_json::Value = serde_json::from_slice(&configured.stdout).unwrap();
+    let explicit_report: serde_json::Value = serde_json::from_slice(&explicit.stdout).unwrap();
+    assert_eq!(
+        configured_report["summary"]["total_diagnostics"],
+        explicit_report["summary"]["total_diagnostics"],
+        "settings.exclude_tests should have the same effect as --exclude-tests"
     );
 }
 

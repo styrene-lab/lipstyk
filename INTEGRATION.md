@@ -453,18 +453,24 @@ the diagnostic code.
 
 ## pre-commit
 
+The repository ships Rust-language hooks, so pre-commit builds the pinned
+Lipstyk revision in an isolated environment. A separate system installation is
+not required.
+
 Add to `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
   - repo: https://github.com/styrene-lab/lipstyk
-    rev: main
+    rev: v0.2.1                 # pin a release tag or immutable commit SHA
     hooks:
-      - id: lipstyk           # full scan, threshold 20
-      - id: lipstyk-diff      # changed lines only, threshold 15
+      - id: lipstyk             # staged files, per-file threshold 20
 ```
 
-Requires `lipstyk` on `$PATH`.
+Use `id: lipstyk-diff` instead for a changed-line-only threshold of 15. Avoid
+`rev: main` in production: moving revisions make hook environments
+non-reproducible. Projects can override `args` to choose their own threshold or
+pass `--config .lipstyk.toml`.
 
 ---
 
