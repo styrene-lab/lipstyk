@@ -1,5 +1,5 @@
 use crate::common::comment_density;
-use crate::diagnostic::Diagnostic;
+use crate::diagnostic::{Diagnostic, Severity};
 use crate::source_rule::{Lang, SourceContext, SourceRule};
 
 /// Per-function comment density and step narration for Python.
@@ -30,7 +30,50 @@ impl SourceRule for CommentDepth {
             "#",
             "py-comment-depth",
         ));
+        diagnostics.extend(check_imperative_narration(ctx.source));
 
         diagnostics
     }
+}
+
+/// Detect a sequence of comments that narrates routine operations rather than
+/// recording intent. Requiring three comments in one file keeps isolated
+/// headings and explanatory comments quiet.
+fn check_imperative_narration(source: &str) -> Vec<Diagnostic> {
+    const VERBS: &[&str] = &[
+        "add", "calculate", "check", "convert", "create", "determine", "ensure", "extract",
+        "find", "get", "increment", "initialize", "iterate", "loop", "print", "process",
+        "read", "return", "set", "store", "sum", "try", "update",
+    ];
+
+    let narrated: Vec<(usize, &str)> = source
+        .lines()
+        .enumerate()
+        .filter_map(|(index, line)| {
+            let body = line.trim().strip_prefix('#')?.trim();
+            let first_word = body
+                .split(|character: char| !character.is_alphabetic())
+                .next()?
+                .to_ascii_lowercase();
+            VERBS
+                .contains(&first_word.as_str())
+                .then_some((index + 1, body))
+        })
+        .collect();
+
+    if narrated.len() < 3 {
+        return Vec::new();
+    }
+
+    vec![Diagnostic {
+        rule: "py-comment-depth",
+        message: format!(
+            "{} imperative comments narrate routine operations like `{}`",
+            narrated.len(),
+            narrated[0].1
+        ),
+        line: narrated[0].0,
+        severity: Severity::Warning,
+        weight: 1.5,
+    }]
 }

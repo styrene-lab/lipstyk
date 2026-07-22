@@ -89,9 +89,13 @@ true positives, 8 false positives, 42 true negatives, and 45 false negatives
 of zero; 24/25 Java agent samples and 21/25 Python agent samples had no findings.
 Human mean scores exceeded agent mean scores in both languages. Threshold tuning
 cannot repair missing or inverted signal, so detector defaults remain unchanged.
-The next detector work should improve language-specific rule coverage and be
-measured on this calibration split before one-time evaluation on a disjoint test
-split.
+A first Python-specific calibration pass extended `py-comment-depth` to detect
+files containing at least three imperative comments that narrate routine
+operations. On this fixed slice it added findings to 4 agent samples and 0 human
+samples: Python agent zero-finding samples fell from 21/25 to 17/25 and the agent
+mean rose from 1.50 to 2.62 per 100 lines, while the human distribution remained
+unchanged. This is calibration evidence, not held-out validation; further detector
+work should use this split before one-time evaluation on a disjoint test split.
 
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic

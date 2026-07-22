@@ -709,6 +709,18 @@ fn py_step_narration_fires() {
 }
 
 #[test]
+fn py_imperative_narration_fires() {
+    let src = "def total(items):\n    # Initialize the result\n    result = 0\n    # Iterate over each item\n    for item in items:\n        # Add the item to the result\n        result += item\n    return result\n";
+    assert!(has_rule(src, "t.py", "py-comment-depth"));
+}
+
+#[test]
+fn py_isolated_imperative_comments_clean() {
+    let src = "def load(path):\n    # Read through the compatibility layer because direct I/O bypasses caching\n    data = cache.read(path)\n    # Return a copy so callers cannot mutate the cache\n    return data.copy()\n";
+    assert!(no_rule(src, "t.py", "py-comment-depth"));
+}
+
+#[test]
 fn java_step_narration_fires() {
     let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
     assert!(has_rule(src, "t.java", "java-comment-depth"));
