@@ -175,3 +175,14 @@ The immediate corpus-building target is Rust, TypeScript, Python, and Go, with
 independent human, raw-agent, and reviewed-agent cohorts. Production patches
 are the unit of interest; isolated contest solutions are not representative of
 Lipstyk's intended use.
+
+## Python human precision corpus
+
+[`corpus/python-human-precision-v1/`](corpus/python-human-precision-v1/) contains
+24 licensed files from immutable CPython, Flask, Click, Requests, pytest, and
+NumPy revisions released by May 2021. It exists to measure false positives on
+diverse, established human code. At `1.0/100 lines`, 12/24 files crossed the
+compatibility threshold (50% specificity); `py-trivial-wrapper` and
+`py-structural-repetition` produced 58 of 78 diagnostics. See the corpus README
+for complete provenance, attribution, and consequences. The result reinforces
+that general quality smells must not be interpreted as authorship evidence.

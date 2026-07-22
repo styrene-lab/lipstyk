@@ -1,0 +1,568 @@
+{
+  "$schema": "../../schema/corpus-v1.schema.json",
+  "schema_version": 1,
+  "corpus": {
+    "id": "python-human-precision-v1",
+    "revision": "1",
+    "description": "Diverse human-authored Python precision corpus pinned to six upstream releases published by May 2021, before widespread code-generating LLM use.",
+    "license": "mixed: Python-2.0, BSD-3-Clause, Apache-2.0, MIT"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "samples": [
+    {
+      "id": "cpython-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/cpython-59c8a8b76d075ccc.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/python/cpython/blob/3d8993a744813c5144851da5347d7b4b1885f234/Lib/queue.py",
+        "source_revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+        "license": "Python-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=Lib/queue.py"
+      }
+    },
+    {
+      "id": "cpython-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/cpython-776078e89fd7dadb.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/python/cpython/blob/3d8993a744813c5144851da5347d7b4b1885f234/Lib/zipapp.py",
+        "source_revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+        "license": "Python-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=cli; original_path=Lib/zipapp.py"
+      }
+    },
+    {
+      "id": "cpython-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/cpython-066a541e6d38ead9.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/python/cpython/blob/3d8993a744813c5144851da5347d7b4b1885f234/Lib/tty.py",
+        "source_revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+        "license": "Python-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=systems; original_path=Lib/tty.py"
+      }
+    },
+    {
+      "id": "cpython-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/cpython-926dbbfdb452592f.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/python/cpython/blob/3d8993a744813c5144851da5347d7b4b1885f234/Lib/rlcompleter.py",
+        "source_revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+        "license": "Python-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=Lib/rlcompleter.py"
+      }
+    },
+    {
+      "id": "flask-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/flask-59c639524a93cac1.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/flask/blob/1ca199f9b38b70a4e97cb47a4252ffd7fccc008c/src/flask/logging.py",
+        "source_revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=application; original_path=src/flask/logging.py"
+      }
+    },
+    {
+      "id": "flask-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/flask-ddd7a3bd04587cd1.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/flask/blob/1ca199f9b38b70a4e97cb47a4252ffd7fccc008c/src/flask/config.py",
+        "source_revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=application; original_path=src/flask/config.py"
+      }
+    },
+    {
+      "id": "flask-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/flask-7218f179c0c2b39c.py",
+          "role": "test"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/flask/blob/1ca199f9b38b70a4e97cb47a4252ffd7fccc008c/tests/test_logging.py",
+        "source_revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=test; original_path=tests/test_logging.py"
+      }
+    },
+    {
+      "id": "flask-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/flask-26a2882d8fda28d8.py",
+          "role": "documentation"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/flask/blob/1ca199f9b38b70a4e97cb47a4252ffd7fccc008c/examples/tutorial/flaskr/auth.py",
+        "source_revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=example; original_path=examples/tutorial/flaskr/auth.py"
+      }
+    },
+    {
+      "id": "click-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/click-59be20a8512959a2.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/click/blob/1784558ed7c75c65764d2a434bd9cbb206ca939d/src/click/formatting.py",
+        "source_revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=src/click/formatting.py"
+      }
+    },
+    {
+      "id": "click-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/click-dd3bc43bf0646879.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/click/blob/1784558ed7c75c65764d2a434bd9cbb206ca939d/src/click/decorators.py",
+        "source_revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=src/click/decorators.py"
+      }
+    },
+    {
+      "id": "click-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/click-3f40d5297301419b.py",
+          "role": "test"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/click/blob/1784558ed7c75c65764d2a434bd9cbb206ca939d/tests/test_imports.py",
+        "source_revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=test; original_path=tests/test_imports.py"
+      }
+    },
+    {
+      "id": "click-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/click-d28a1bb3c177a961.py",
+          "role": "documentation"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pallets/click/blob/1784558ed7c75c65764d2a434bd9cbb206ca939d/examples/colors/colors.py",
+        "source_revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=example; original_path=examples/colors/colors.py"
+      }
+    },
+    {
+      "id": "requests-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/requests-38ca092152b244bc.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/psf/requests/blob/c2b307dbefe21177af03f9feb37181a89a799fcc/requests/auth.py",
+        "source_revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=requests/auth.py"
+      }
+    },
+    {
+      "id": "requests-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/requests-3e51ccf874f73d0e.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/psf/requests/blob/c2b307dbefe21177af03f9feb37181a89a799fcc/requests/api.py",
+        "source_revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=requests/api.py"
+      }
+    },
+    {
+      "id": "requests-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/requests-f26f8702aee16cdb.py",
+          "role": "test"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/psf/requests/blob/c2b307dbefe21177af03f9feb37181a89a799fcc/tests/test_structures.py",
+        "source_revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=test; original_path=tests/test_structures.py"
+      }
+    },
+    {
+      "id": "requests-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/requests-051dd8f381e959f3.py",
+          "role": "test"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/psf/requests/blob/c2b307dbefe21177af03f9feb37181a89a799fcc/tests/test_hooks.py",
+        "source_revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=test; original_path=tests/test_hooks.py"
+      }
+    },
+    {
+      "id": "pytest-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/pytest-f9d1dc116cb1fef3.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pytest-dev/pytest/blob/017dd1ccd60055bc6a7a41af11b74425da87a696/src/_pytest/recwarn.py",
+        "source_revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=library; original_path=src/_pytest/recwarn.py"
+      }
+    },
+    {
+      "id": "pytest-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/pytest-bda01e18786ff59b.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pytest-dev/pytest/blob/017dd1ccd60055bc6a7a41af11b74425da87a696/src/_pytest/stepwise.py",
+        "source_revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=application; original_path=src/_pytest/stepwise.py"
+      }
+    },
+    {
+      "id": "pytest-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/pytest-8ad3f5463d2be464.py",
+          "role": "test"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pytest-dev/pytest/blob/017dd1ccd60055bc6a7a41af11b74425da87a696/testing/test_nodes.py",
+        "source_revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=test; original_path=testing/test_nodes.py"
+      }
+    },
+    {
+      "id": "pytest-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/pytest-e739e223610e056d.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/pytest-dev/pytest/blob/017dd1ccd60055bc6a7a41af11b74425da87a696/scripts/release.py",
+        "source_revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=cli; original_path=scripts/release.py"
+      }
+    },
+    {
+      "id": "numpy-01",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/numpy-6940e4192f24a493.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/numpy/numpy/blob/27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d/numpy/_globals.py",
+        "source_revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=scientific; original_path=numpy/_globals.py"
+      }
+    },
+    {
+      "id": "numpy-02",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/numpy-181f6df191b9a206.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/numpy/numpy/blob/27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d/numpy/_pytesttester.py",
+        "source_revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=scientific; original_path=numpy/_pytesttester.py"
+      }
+    },
+    {
+      "id": "numpy-03",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/numpy-8dca60dc584e13b8.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/numpy/numpy/blob/27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d/benchmarks/benchmarks/bench_records.py",
+        "source_revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=benchmark; original_path=benchmarks/benchmarks/bench_records.py"
+      }
+    },
+    {
+      "id": "numpy-04",
+      "label": "human",
+      "unit": "file",
+      "split": "calibration",
+      "language": "python",
+      "artifacts": [
+        {
+          "path": "objects/numpy-c05e3cd45beb4b34.py",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://github.com/numpy/numpy/blob/27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d/tools/changelog.py",
+        "source_revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM tagged revision; category=cli; original_path=tools/changelog.py"
+      }
+    }
+  ]
+}

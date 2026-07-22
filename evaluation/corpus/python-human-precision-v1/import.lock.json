@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "selection_policy": "Four manually selected files per repository spanning library/application/CLI/test/example/scientific/benchmark categories; immutable pre-June-2021 commits.",
+  "samples": [
+    {
+      "id": "cpython-01",
+      "repository": "cpython",
+      "revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+      "path": "Lib/queue.py",
+      "sha256": "59c8a8b76d075cccc83e7888666b0c5dff91cd058bffdc7b32b5acfe6fa29f8c",
+      "category": "library",
+      "object": "cpython-59c8a8b76d075ccc.py"
+    },
+    {
+      "id": "cpython-02",
+      "repository": "cpython",
+      "revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+      "path": "Lib/zipapp.py",
+      "sha256": "776078e89fd7dadbce41678f8bacd3b493135e6d610911c867489415420de383",
+      "category": "cli",
+      "object": "cpython-776078e89fd7dadb.py"
+    },
+    {
+      "id": "cpython-03",
+      "repository": "cpython",
+      "revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+      "path": "Lib/tty.py",
+      "sha256": "066a541e6d38ead952d63cc32afbac51a33acf354799f235c582eab17488105d",
+      "category": "systems",
+      "object": "cpython-066a541e6d38ead9.py"
+    },
+    {
+      "id": "cpython-04",
+      "repository": "cpython",
+      "revision": "3d8993a744813c5144851da5347d7b4b1885f234",
+      "path": "Lib/rlcompleter.py",
+      "sha256": "926dbbfdb452592f7a565e20f3d742ce54e89a7cefd0feb6b28a93d091c4a6ac",
+      "category": "library",
+      "object": "cpython-926dbbfdb452592f.py"
+    },
+    {
+      "id": "flask-01",
+      "repository": "flask",
+      "revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+      "path": "src/flask/logging.py",
+      "sha256": "59c639524a93cac19f9a8b32ca04a55f26581b03a9df2f95b04e9e868278f1d9",
+      "category": "application",
+      "object": "flask-59c639524a93cac1.py"
+    },
+    {
+      "id": "flask-02",
+      "repository": "flask",
+      "revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+      "path": "src/flask/config.py",
+      "sha256": "ddd7a3bd04587cd1f0fd5edd08b33153c50d1692f7e3120a7a637b80764867c6",
+      "category": "application",
+      "object": "flask-ddd7a3bd04587cd1.py"
+    },
+    {
+      "id": "flask-03",
+      "repository": "flask",
+      "revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+      "path": "tests/test_logging.py",
+      "sha256": "7218f179c0c2b39c1c49b3d4c317c70e8913aa603774897865ed80f2ce6d24ee",
+      "category": "test",
+      "object": "flask-7218f179c0c2b39c.py"
+    },
+    {
+      "id": "flask-04",
+      "repository": "flask",
+      "revision": "1ca199f9b38b70a4e97cb47a4252ffd7fccc008c",
+      "path": "examples/tutorial/flaskr/auth.py",
+      "sha256": "26a2882d8fda28d8ec0082d7146ebc3785eb2ddc5a44f809e40edb17fad0e25c",
+      "category": "example",
+      "object": "flask-26a2882d8fda28d8.py"
+    },
+    {
+      "id": "click-01",
+      "repository": "click",
+      "revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+      "path": "src/click/formatting.py",
+      "sha256": "59be20a8512959a28f8006cebe790297ca7e6c4671e4aa4ce59481ca196724d9",
+      "category": "library",
+      "object": "click-59be20a8512959a2.py"
+    },
+    {
+      "id": "click-02",
+      "repository": "click",
+      "revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+      "path": "src/click/decorators.py",
+      "sha256": "dd3bc43bf06468797b93a121d46e5e0bb24ae0b28f76916a1fd24fd100f24e53",
+      "category": "library",
+      "object": "click-dd3bc43bf0646879.py"
+    },
+    {
+      "id": "click-03",
+      "repository": "click",
+      "revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+      "path": "tests/test_imports.py",
+      "sha256": "3f40d5297301419b6c22595155591bcc7876d67351cd4427f010f3138d68cccb",
+      "category": "test",
+      "object": "click-3f40d5297301419b.py"
+    },
+    {
+      "id": "click-04",
+      "repository": "click",
+      "revision": "1784558ed7c75c65764d2a434bd9cbb206ca939d",
+      "path": "examples/colors/colors.py",
+      "sha256": "d28a1bb3c177a961cad38d2a38af02b9c0c4f0ce475dfefa67ca99c906653d2e",
+      "category": "example",
+      "object": "click-d28a1bb3c177a961.py"
+    },
+    {
+      "id": "requests-01",
+      "repository": "requests",
+      "revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+      "path": "requests/auth.py",
+      "sha256": "38ca092152b244bcbd4c7afdd72f2bc72b19b9c9703c1f8ad57835cc1a265214",
+      "category": "library",
+      "object": "requests-38ca092152b244bc.py"
+    },
+    {
+      "id": "requests-02",
+      "repository": "requests",
+      "revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+      "path": "requests/api.py",
+      "sha256": "3e51ccf874f73d0e65cae7e8786995fa7271462ed49d4c86561ece57b07d5d5e",
+      "category": "library",
+      "object": "requests-3e51ccf874f73d0e.py"
+    },
+    {
+      "id": "requests-03",
+      "repository": "requests",
+      "revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+      "path": "tests/test_structures.py",
+      "sha256": "f26f8702aee16cdba4152a76c456669199a5b9fd3899a5b96d1b033cc37138ba",
+      "category": "test",
+      "object": "requests-f26f8702aee16cdb.py"
+    },
+    {
+      "id": "requests-04",
+      "repository": "requests",
+      "revision": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+      "path": "tests/test_hooks.py",
+      "sha256": "051dd8f381e959f3fac9247a6d7991c2459be88a6d2f4bf605759c7374fa6e71",
+      "category": "test",
+      "object": "requests-051dd8f381e959f3.py"
+    },
+    {
+      "id": "pytest-01",
+      "repository": "pytest",
+      "revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+      "path": "src/_pytest/recwarn.py",
+      "sha256": "f9d1dc116cb1fef3f23b70b511b02360b60630cf0bd5adba824fc4e51ffaf4ce",
+      "category": "library",
+      "object": "pytest-f9d1dc116cb1fef3.py"
+    },
+    {
+      "id": "pytest-02",
+      "repository": "pytest",
+      "revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+      "path": "src/_pytest/stepwise.py",
+      "sha256": "bda01e18786ff59b537344c938b9462bba3cd42c226e111d964013ec0e46119b",
+      "category": "application",
+      "object": "pytest-bda01e18786ff59b.py"
+    },
+    {
+      "id": "pytest-03",
+      "repository": "pytest",
+      "revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+      "path": "testing/test_nodes.py",
+      "sha256": "8ad3f5463d2be4645a5d7ada9e04f78d1cf4b7b5eda9e7e4eb7157a4354f5564",
+      "category": "test",
+      "object": "pytest-8ad3f5463d2be464.py"
+    },
+    {
+      "id": "pytest-04",
+      "repository": "pytest",
+      "revision": "017dd1ccd60055bc6a7a41af11b74425da87a696",
+      "path": "scripts/release.py",
+      "sha256": "e739e223610e056d7fc47ca264e1fe7b6917fabf767ddff9f9dfb515ee50ec97",
+      "category": "cli",
+      "object": "pytest-e739e223610e056d.py"
+    },
+    {
+      "id": "numpy-01",
+      "repository": "numpy",
+      "revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+      "path": "numpy/_globals.py",
+      "sha256": "6940e4192f24a493549eb8d247c6d81ad484e30268c350a69779358e1498878d",
+      "category": "scientific",
+      "object": "numpy-6940e4192f24a493.py"
+    },
+    {
+      "id": "numpy-02",
+      "repository": "numpy",
+      "revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+      "path": "numpy/_pytesttester.py",
+      "sha256": "181f6df191b9a2064df1ae07b5d218692b39e80d59d7a705e0f414cb94288675",
+      "category": "scientific",
+      "object": "numpy-181f6df191b9a206.py"
+    },
+    {
+      "id": "numpy-03",
+      "repository": "numpy",
+      "revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+      "path": "benchmarks/benchmarks/bench_records.py",
+      "sha256": "8dca60dc584e13b8691fe23f9bfa7d0a2774e86ce584cf350a47147b7fdbbdac",
+      "category": "benchmark",
+      "object": "numpy-8dca60dc584e13b8.py"
+    },
+    {
+      "id": "numpy-04",
+      "repository": "numpy",
+      "revision": "27b98cbe0dd9d2969e9c227e7a2070aa56f41d6d",
+      "path": "tools/changelog.py",
+      "sha256": "c05e3cd45beb4b348c0e04102316dc90d3b9ba79d6fb2af082766b5729365f7b",
+      "category": "cli",
+      "object": "numpy-c05e3cd45beb4b34.py"
+    }
+  ]
+}
