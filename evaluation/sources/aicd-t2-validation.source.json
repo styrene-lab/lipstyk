@@ -1,0 +1,52 @@
+{
+  "source_version": 1,
+  "provider": "hugging_face",
+  "dataset": "AICD-bench/AICD-Bench",
+  "revision": "b7dc6d82257de6e0146d1e7b0831abd7088633af",
+  "config": "T2",
+  "split": "validation",
+  "rows_url": null,
+  "corpus": {
+    "id": "aicd-t2-validation-slice",
+    "description": "Pinned deterministic AICD-Bench T2 validation slice for continuity testing; language is inferred because AICD-Bench exposes only code and label.",
+    "license": "upstream-per-sample-unknown",
+    "collected_at": "2026-07-21",
+    "output": "aicd-t2-validation"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "fields": {
+    "code": "code",
+    "label": "label",
+    "language": null,
+    "id": null,
+    "generator": null
+  },
+  "labels": {
+    "0": { "label": "human", "generator": null },
+    "1": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "2": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "3": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "4": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "5": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "6": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "7": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "8": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "9": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "10": { "label": "agent", "generator": "upstream-ai-cohort" },
+    "11": { "label": "agent", "generator": "upstream-ai-cohort" }
+  },
+  "languages": {},
+  "selection": {
+    "seed": "lipstyk-aicd-v1",
+    "scan_rows": 100,
+    "strata": [
+      { "label": "human", "language": "python", "limit": 3 },
+      { "label": "agent", "language": "python", "limit": 2 },
+      { "label": "human", "language": "java", "limit": 2 },
+      { "label": "agent", "language": "java", "limit": 2 }
+    ]
+  }
+}

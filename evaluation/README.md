@@ -20,6 +20,32 @@ threshold without changing corpus provenance.
 The checked-in `smoke` corpus contains constructed examples. It verifies the
 pipeline only and **must not be quoted as detector accuracy**.
 
+## Import a pinned external corpus
+
+External datasets are described by small source specifications under
+[`sources/`](sources/). The importer downloads only the configured row window,
+selects each label/language stratum by a stable SHA-256 ordering, and writes a
+corpus plus an `import.lock.json` containing upstream row IDs and content
+hashes:
+
+```bash
+cargo run --bin lipstyk-eval -- import \
+  evaluation/sources/aicd-t2-validation.source.json
+```
+
+A source revision must be an immutable 40-character commit SHA. The `output` directory is resolved beneath the source specification directory;
+generated artifacts are content-addressed, and rerunning the same source
+specification and upstream revision produces the same selection. The AICD
+source specification is intentionally small and records its unresolved
+per-sample licensing status. Do not commit imported source objects until
+redistribution rights have been verified. Commit the source specification and
+lock metadata; keep large or license-unclear generated corpus directories out
+of release artifacts.
+
+`rows_url` exists only to support an explicit alternate dataset-server mirror
+and hermetic integration tests. Production source specifications should leave
+it `null` so the importer constructs the Hugging Face rows endpoint.
+
 ## Corpus v1 contract
 
 The authoritative machine-readable schema is
