@@ -100,9 +100,13 @@ executable demonstration code outside designated example/demo/docs paths. It
 added findings to 4 previously uncovered agent samples and 0 human samples:
 Python agent zero-finding samples fell from 17/25 to 13/25 and the agent mean
 rose from 2.62 to 4.12 per 100 lines, while the human distribution again
-remained unchanged. This is calibration evidence, not held-out validation;
-further detector work should use this split before one-time evaluation on a
-disjoint test split.
+remained unchanged. A third pass extended `py-restating-comment` to require at
+least three trailing comments that mechanically narrate inputs, parity branches,
+or returns. It added a finding to 1 previously uncovered agent sample and 0 human
+samples: Python agent zero-finding samples fell from 13/25 to 12/25 and the agent
+mean rose from 4.12 to 4.59 per 100 lines, with no human-distribution change.
+This is calibration evidence, not held-out validation; further detector work
+should use this split before one-time evaluation on a disjoint test split.
 
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic

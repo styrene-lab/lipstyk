@@ -555,6 +555,18 @@ fn py_restating_comment_fires() {
     assert!(has_rule(src, "t.py", "py-restating-comment"));
 }
 
+#[test]
+fn py_repeated_inline_narration_fires() {
+    let src = "def solve():\n    count = int(input())  # Reading the number of cases\n    value = int(input())  # Reading the value for this case\n    if value % 2 == 0:  # value is even\n        return 1\n    else:  # value is odd\n        return 0\n";
+    assert!(has_rule(src, "t.py", "py-restating-comment"));
+}
+
+#[test]
+fn py_isolated_inline_explanation_clean() {
+    let src = "def load():\n    value = read()  # Keep this local because the reader owns its buffer\n    return value\n";
+    assert!(no_rule(src, "t.py", "py-restating-comment"));
+}
+
 // ── Java rules ────────��───────────────────────────────���─────────
 
 #[test]
