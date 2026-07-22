@@ -208,6 +208,13 @@ pub fn rule_channel(rule: &str) -> ScoreChannel {
 
 pub fn diagnostic_channel(diagnostic: &Diagnostic) -> ScoreChannel {
     match diagnostic.rule {
+        "ts-restating-comment"
+            if diagnostic
+                .message
+                .contains("repeated comments narrate declarations") =>
+        {
+            ScoreChannel::Generation
+        }
         "py-comment-depth"
             if diagnostic
                 .message

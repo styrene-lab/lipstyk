@@ -1,0 +1,95 @@
+{
+  "source_version": 1,
+  "provider": "hugging_face",
+  "dataset": "AICD-bench/AICD-Bench",
+  "revision": "b7dc6d82257de6e0146d1e7b0831abd7088633af",
+  "config": "T2",
+  "split": "train",
+  "rows_url": null,
+  "corpus": {
+    "id": "aicd-t2-typescript-calibration-v1",
+    "description": "Pinned deterministic AICD-Bench T2 training subset for TypeScript/JavaScript calibration research.",
+    "license": "upstream-per-sample-unknown",
+    "collected_at": "2026-07-21",
+    "output": "aicd-t2-typescript-calibration",
+    "dataset_split": "calibration"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "fields": {
+    "code": "code",
+    "label": "label",
+    "language": null,
+    "id": null,
+    "generator": null
+  },
+  "labels": {
+    "0": {
+      "label": "human",
+      "generator": null
+    },
+    "1": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "2": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "3": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "4": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "5": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "6": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "7": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "8": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "9": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "10": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    },
+    "11": {
+      "label": "agent",
+      "generator": "upstream-ai-cohort"
+    }
+  },
+  "languages": {},
+  "selection": {
+    "seed": "lipstyk-aicd-typescript-calibration-v1",
+    "scan_rows": 1000,
+    "strata": [
+      {
+        "label": "human",
+        "language": "typescript",
+        "limit": 25
+      },
+      {
+        "label": "agent",
+        "language": "typescript",
+        "limit": 21
+      }
+    ]
+  }
+}

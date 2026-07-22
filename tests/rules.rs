@@ -499,6 +499,18 @@ fn ts_restating_comment_fires() {
 }
 
 #[test]
+fn ts_repeated_declaration_narration_fires() {
+    let src = "class Pool {\n  // Allocate a single block\n  allocateBlock() { return 1; }\n  // Deallocate a block\n  deallocateBlock() { return 2; }\n  // Get the number of free blocks\n  getFreeBlocks() { return 3; }\n}\n";
+    assert!(has_rule(src, "t.ts", "ts-restating-comment"));
+}
+
+#[test]
+fn ts_isolated_declaration_heading_clean() {
+    let src = "class Pool {\n  // Explain why the free count excludes quarantined blocks\n  getFreeBlocks() { return this.free.length; }\n}\n";
+    assert!(no_rule(src, "t.ts", "ts-restating-comment"));
+}
+
+#[test]
 fn ts_generic_naming_fires() {
     let src = "function processData(x) { return x; }\n";
     assert!(has_rule(src, "t.ts", "ts-generic-naming"));
