@@ -6,6 +6,7 @@ pub mod diagnostic;
 pub mod diff;
 pub mod docker;
 pub mod elixir;
+pub mod eval;
 #[cfg(feature = "agent")]
 pub mod extension;
 pub mod golang;

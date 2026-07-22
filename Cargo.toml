@@ -53,6 +53,10 @@ name = "lipstyk"
 path = "src/main.rs"
 
 [[bin]]
+name = "lipstyk-eval"
+path = "src/eval_main.rs"
+
+[[bin]]
 name = "lipstyk-agent"
 path = "src/agent.rs"
 required-features = ["agent"]

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/styrene-lab/lipstyk/evaluation/schema/corpus-v1.schema.json",
+  "title": "Lipstyk evaluation corpus v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "corpus", "evaluation", "samples"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision", "description", "license"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "threshold"],
+      "properties": {
+        "score": { "enum": ["raw", "per_100_lines"] },
+        "threshold": { "type": "number", "minimum": 0 }
+      }
+    },
+    "samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sample" }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["source", "test", "config", "documentation", "patch"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "source_revision", "license", "collected_at"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "source_revision": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 },
+        "collected_at": { "type": "string", "format": "date" },
+        "generator": { "type": ["string", "null"] },
+        "generator_version": { "type": ["string", "null"] },
+        "prompt_record": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "unit", "split", "language", "artifacts", "provenance"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "enum": ["human", "agent", "mixed", "unknown"] },
+        "unit": { "enum": ["file", "patch", "repository"] },
+        "split": { "enum": ["calibration", "validation", "test"] },
+        "language": { "type": "string", "minLength": 1 },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/artifact" }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    }
+  }
+}

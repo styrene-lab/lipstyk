@@ -1,0 +1,56 @@
+{
+  "$schema": "../../schema/corpus-v1.schema.json",
+  "schema_version": 1,
+  "corpus": {
+    "id": "lipstyk-smoke",
+    "revision": "1",
+    "description": "Synthetic smoke corpus for exercising the evaluation pipeline; not a calibration dataset.",
+    "license": "MIT"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 5.0
+  },
+  "samples": [
+    {
+      "id": "human-clean-rust",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "rust",
+      "artifacts": [
+        { "path": "samples/human/clean.rs", "role": "source" }
+      ],
+      "provenance": {
+        "source": "lipstyk synthetic fixture",
+        "source_revision": "48037f8",
+        "license": "MIT",
+        "collected_at": "2026-07-21",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Hand-authored solely to verify the harness plumbing."
+      }
+    },
+    {
+      "id": "agent-sloppy-rust",
+      "label": "agent",
+      "unit": "file",
+      "split": "validation",
+      "language": "rust",
+      "artifacts": [
+        { "path": "samples/agent/sloppy.rs", "role": "source" }
+      ],
+      "provenance": {
+        "source": "lipstyk synthetic fixture",
+        "source_revision": "48037f8",
+        "license": "MIT",
+        "collected_at": "2026-07-21",
+        "generator": "synthetic",
+        "generator_version": "1",
+        "prompt_record": null,
+        "notes": "Intentionally constructed from patterns already covered by unit tests; never use for reported accuracy."
+      }
+    }
+  ]
+}
