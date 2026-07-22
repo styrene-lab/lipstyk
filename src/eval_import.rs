@@ -339,6 +339,9 @@ fn select_rows(source: &ImportSource, response: &Value) -> Result<Vec<Candidate>
             .and_then(|field| field_string(row.get(field)))
             .and_then(|value| source.languages.get(&value).cloned().or(Some(value)))
             .unwrap_or_else(|| detect_language(&code).to_string());
+        if language_conflicts_with_content(&language, &code) {
+            continue;
+        }
         let sample_id = source
             .fields
             .id
@@ -494,6 +497,33 @@ fn field_string(value: Option<&Value>) -> Option<String> {
         Value::Bool(value) => Some(value.to_string()),
         _ => None,
     }
+}
+
+fn language_conflicts_with_content(language: &str, code: &str) -> bool {
+    if !matches!(language, "typescript" | "javascript") {
+        return false;
+    }
+
+    let cpp_includes = code
+        .lines()
+        .filter(|line| line.trim_start().starts_with("#include <"))
+        .count();
+    let cpp_std = code.matches("std::").count();
+    let cpp_access_labels = code
+        .lines()
+        .filter(|line| {
+            matches!(
+                line.trim(),
+                "public:" | "private:" | "protected:"
+            )
+        })
+        .count();
+    let cpp_signals = usize::from(cpp_includes >= 2)
+        + usize::from(cpp_std >= 2)
+        + usize::from(cpp_access_labels >= 1)
+        + usize::from(code.contains("using namespace std"));
+
+    cpp_signals >= 2
 }
 
 fn detect_language(code: &str) -> &'static str {
