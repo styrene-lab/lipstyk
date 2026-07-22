@@ -1,7 +1,8 @@
 # lipstyk
 
-Static analysis for machine-generated code patterns. No ML, no
-classifiers — deterministic rules you can read and argue with.
+Static analysis for code-quality patterns that frequently appear in
+machine-generated code. No ML, no authorship classifier — deterministic rules
+you can read and argue with.
 
 ```
 src/handler.rs — slop score: 42.5 (12.3/100 lines)
@@ -31,17 +32,19 @@ Any single instance is fine. A file full of them is slop.
 **If you're writing code with AI** — run it before you commit. Catch
 the patterns your copilot leaves behind.
 
-**If you're reviewing PRs** — `lipstyk --diff main` scores only the
-changed lines. Drop it in CI and stop eyeballing for slop manually.
+**If you're reviewing PRs** — `lipstyk --diff main` reports these patterns only
+on changed lines. Use it as a focused review aid; do not treat a score as proof
+of who or what authored the code.
 
 **If you run infrastructure** — Dockerfiles running as root, K8s
 manifests without resource limits, shell scripts without `set -e`,
 CI workflows with hardcoded secrets. lipstyk catches the DevOps
 patterns that AI gets wrong and humans miss in review.
 
-**If you own a codebase** — track slop density over time with JSON
-reports. Set a threshold gate in CI. Know where the debt is
-accumulating before it compounds.
+**If you own a codebase** — track pattern density over time with JSON reports.
+Set a threshold gate only after calibrating it against accepted and rejected
+changes in that codebase; the threshold is a policy limit, not a universal
+classifier cutoff.
 
 ## Install
 
@@ -251,24 +254,32 @@ Verdicts: clean (<5), mild (<15), suspicious (<30), sloppy (>=30).
 
 ## Research
 
-Rule design draws from published work on detecting machine-generated
-code:
+Rule design draws from published work on patterns associated with
+machine-generated code, but Lipstyk has not established a general-purpose
+authorship-classification accuracy claim. Current evidence supports using the
+rules as review signals:
 
-- Comment-to-code ratio is the most reliable single discriminator
-  across multi-language studies
-- Function-level analysis outperforms file-level by a wide margin
-- AI distributes comments uniformly; humans cluster near complexity
-- Naming entropy separates human and AI code
-- Detection accuracy degrades with each model generation — the rules
-  will need to evolve as models improve
+- Comment density can be informative in aggregate, but is not a reliable
+  standalone authorship discriminator.
+- Function-level structure, naming entropy, and cross-file uniformity are useful
+  code-quality signals whose authorship meaning depends on language, model,
+  prompting, editing, and repository context.
+- Model and workflow drift means thresholds require periodic recalibration.
+- A pinned nine-sample AICD-Bench integration slice found 1/4 agent samples and
+  falsely flagged 1/5 human samples at `1.0/100 lines`. The slice is too small
+  for a population estimate, but it falsifies any assumption that the current
+  score is a broadly reliable authorship classifier.
 
-Citations in [RULES.md](RULES.md).
+Citations in [RULES.md](RULES.md). The evaluation harness and reproducible
+external-corpus importer live under [`evaluation/`](evaluation/README.md).
+Reported metrics describe only the named corpus revision and threshold.
 
 ## Limitations
 
-Detects patterns, not intent. False positives on verbose human code.
-False negatives on edited AI output. Not a replacement for reading
-the code.
+Detects patterns, not authorship or intent. Scores are weighted code-quality
+signals, not probabilities. Expect false positives on human code and false
+negatives on generated or edited output; performance varies by language and
+corpus. Calibrate CI thresholds locally and read the underlying findings.
 
 ## License
 

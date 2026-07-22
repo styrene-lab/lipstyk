@@ -65,6 +65,21 @@ Artifact paths resolve relative to the manifest and may not escape that
 directory. This keeps a corpus portable and prevents a manifest from reading
 arbitrary host files.
 
+The current evidence requires a conservative interpretation of these reports:
+
+- `predicted_agent` is retained as a version-1 compatibility field. It means
+  only that the configured pattern-score threshold was crossed; it is **not**
+  a verified authorship determination or probability.
+- Every report includes explicit caveats and per-finding rule, file, line, and
+  weight data so aggregate errors can be traced back to detector behavior.
+- A pinned nine-sample AICD-Bench integration slice at `1.0/100 lines` produced
+  1 true positive, 1 false positive, 4 true negatives, and 3 false negatives.
+  This slice is too small and narrow for a population accuracy estimate, but it
+  demonstrates that the current threshold is not a reliable general-purpose
+  authorship classifier. Do not tune detector defaults to this integration
+  slice; select operating points on a larger calibration split and report once
+  on a disjoint held-out test split.
+
 `mixed` and `unknown` samples are scored and reported but excluded from binary
 metrics. A parse or unsupported-language failure remains visible on the sample
 result and is counted in `excluded_errors`; it is never treated as a correct

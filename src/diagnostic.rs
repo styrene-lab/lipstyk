@@ -1,13 +1,13 @@
 use serde::Serialize;
 
-/// How confident we are that something is AI-generated slop.
+/// How strongly a finding contributes to the code-quality pattern score.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub enum Severity {
     /// Mild smell — could be human, but suspicious in aggregate.
     Hint,
     /// Likely slop pattern.
     Warning,
-    /// Strong indicator of machine-generated code.
+    /// Strong code-quality signal associated with generated-code failure modes.
     Slop,
 }
 
@@ -20,13 +20,13 @@ pub struct Diagnostic {
     pub message: String,
     /// Approximate line in the source file.
     pub line: usize,
-    /// Severity / confidence level.
+    /// Severity of the matched code-quality pattern.
     pub severity: Severity,
-    /// Weight this contributes to the overall slop score.
+    /// Weight this contributes to the overall pattern score.
     pub weight: f64,
 }
 
-/// Aggregate slop score for a file.
+/// Aggregate pattern score for a file.
 #[derive(Debug, Clone, Serialize)]
 pub struct SlopScore {
     pub file: String,

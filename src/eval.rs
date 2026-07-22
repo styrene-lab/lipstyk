@@ -117,6 +117,7 @@ pub struct EvaluationReport {
     pub detector_version: &'static str,
     pub score: &'static str,
     pub threshold: f64,
+    pub caveats: Vec<&'static str>,
     pub metrics: BinaryMetrics,
     pub samples: Vec<SampleResult>,
 }
@@ -146,7 +147,16 @@ pub struct SampleResult {
     pub score_per_100_lines: f64,
     pub predicted_agent: bool,
     pub diagnostics: usize,
+    pub findings: Vec<FindingSummary>,
     pub error: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct FindingSummary {
+    pub file: String,
+    pub rule: &'static str,
+    pub line: usize,
+    pub weight: f64,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -248,6 +258,10 @@ pub fn evaluate_manifest(
             ScoreKind::Per100Lines => "per_100_lines",
         },
         threshold,
+        caveats: vec![
+            "Predictions indicate rule-pattern matches, not verified authorship.",
+            "Metrics are descriptive for this corpus and threshold only; do not generalize without a representative held-out test set.",
+        ],
         metrics,
         samples: results,
     })
@@ -306,6 +320,7 @@ fn evaluate_sample(
                     score_per_100_lines: 0.0,
                     predicted_agent: false,
                     diagnostics: 0,
+                    findings: Vec::new(),
                     error: Some(error.to_string()),
                 });
             }
@@ -324,6 +339,17 @@ fn evaluate_sample(
         ScoreKind::Raw => raw_score,
         ScoreKind::Per100Lines => score_per_100_lines,
     };
+    let findings = scores
+        .iter()
+        .flat_map(|score| {
+            score.diagnostics.iter().map(|diagnostic| FindingSummary {
+                file: score.file.clone(),
+                rule: diagnostic.rule,
+                line: diagnostic.line,
+                weight: diagnostic.weight,
+            })
+        })
+        .collect();
 
     Ok(SampleResult {
         id: sample.id.clone(),
@@ -334,6 +360,7 @@ fn evaluate_sample(
         score_per_100_lines,
         predicted_agent: selected_score >= threshold,
         diagnostics: scores.iter().map(|score| score.diagnostics.len()).sum(),
+        findings,
         error: None,
     })
 }

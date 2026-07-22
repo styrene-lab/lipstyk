@@ -10,6 +10,7 @@ fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
         score_per_100_lines: 10.0,
         predicted_agent,
         diagnostics: 1,
+        findings: Vec::new(),
         error: None,
     }
 }
@@ -63,6 +64,13 @@ fn smoke_corpus_separates_constructed_samples() {
     assert_eq!(report.metrics.true_negative, 1);
     assert_eq!(report.metrics.false_positive, 0);
     assert_eq!(report.metrics.false_negative, 0);
+    assert_eq!(report.caveats.len(), 2);
+    assert!(!report.samples[1].findings.is_empty());
+    let finding = &report.samples[1].findings[0];
+    assert!(!finding.file.is_empty());
+    assert!(!finding.rule.is_empty());
+    assert!(finding.line > 0);
+    assert!(finding.weight > 0.0);
 }
 
 #[test]
