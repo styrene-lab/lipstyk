@@ -721,6 +721,34 @@ fn py_isolated_imperative_comments_clean() {
 }
 
 #[test]
+fn py_demo_scaffolding_fires() {
+    let src = "def total(items):\n    return sum(items)\n\n# Example usage\nvalues = [1, 2, 3]\nprint(total(values))\n";
+    assert!(has_rule(src, "service.py", "py-demo-scaffolding"));
+}
+
+#[test]
+fn py_demo_scaffolding_inside_main_guard_fires() {
+    let src = "class Client:\n    def run(self):\n        return 1\n\nif __name__ == '__main__':\n    # Test cases\n    client = Client()\n    print(client.run())\n";
+    assert!(has_rule(src, "service.py", "py-demo-scaffolding"));
+}
+
+#[test]
+fn py_demo_scaffolding_example_file_clean() {
+    let src = "def total(items):\n    return sum(items)\n\n# Example usage\nprint(total([1, 2, 3]))\n";
+    assert!(no_rule(
+        src,
+        "examples/total.py",
+        "py-demo-scaffolding"
+    ));
+}
+
+#[test]
+fn py_demo_heading_without_executable_code_clean() {
+    let src = "def total(items):\n    return sum(items)\n\n# Example usage is documented in the project guide.\n";
+    assert!(no_rule(src, "service.py", "py-demo-scaffolding"));
+}
+
+#[test]
 fn java_step_narration_fires() {
     let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
     assert!(has_rule(src, "t.java", "java-comment-depth"));

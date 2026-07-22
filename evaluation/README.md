@@ -94,8 +94,15 @@ files containing at least three imperative comments that narrate routine
 operations. On this fixed slice it added findings to 4 agent samples and 0 human
 samples: Python agent zero-finding samples fell from 21/25 to 17/25 and the agent
 mean rose from 1.50 to 2.62 per 100 lines, while the human distribution remained
-unchanged. This is calibration evidence, not held-out validation; further detector
-work should use this split before one-time evaluation on a disjoint test split.
+unchanged. A second Python-specific pass added `py-demo-scaffolding`, which requires an
+implementation definition, an explicit example/test heading, and subsequent
+executable demonstration code outside designated example/demo/docs paths. It
+added findings to 4 previously uncovered agent samples and 0 human samples:
+Python agent zero-finding samples fell from 17/25 to 13/25 and the agent mean
+rose from 2.62 to 4.12 per 100 lines, while the human distribution again
+remained unchanged. This is calibration evidence, not held-out validation;
+further detector work should use this split before one-time evaluation on a
+disjoint test split.
 
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic

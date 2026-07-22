@@ -115,6 +115,9 @@ impl Linter {
         ));
         linter.add_source_rule(Box::new(crate::python::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::python::comment_depth::CommentDepth));
+        linter.add_source_rule(Box::new(
+            crate::python::demo_scaffolding::DemoScaffolding,
+        ));
         linter.add_source_rule(Box::new(crate::python::index_loop::IndexLoop));
         linter.add_source_rule(Box::new(crate::python::mutable_default::MutableDefault));
         linter.add_source_rule(Box::new(crate::python::trivial_wrapper::TrivialWrapper));
