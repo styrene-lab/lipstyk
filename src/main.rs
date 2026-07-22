@@ -89,14 +89,15 @@ fn main() -> ExitCode {
     info!(
         files_scanned = report.summary.files_scanned,
         files_with_findings = report.summary.files_with_findings,
-        total_score = report.summary.total_score,
+        quality_score = report.summary.channel_scores.quality,
+        generation_score = report.summary.channel_scores.generation,
         total_diagnostics = report.summary.total_diagnostics,
         duration_ms = report.duration_ms,
         "analysis complete"
     );
 
-    let exceeded_threshold =
-        effective_threshold.is_some_and(|t| report.files.iter().any(|f| f.score > t));
+    let exceeded_threshold = effective_threshold
+        .is_some_and(|t| report.files.iter().any(|f| f.channel_scores.quality > t));
 
     if options.sarif_output {
         let sarif = lipstyk::sarif::to_sarif(&report);
@@ -163,7 +164,11 @@ fn main() -> ExitCode {
                 report.summary.by_severity.warning,
                 report.summary.by_severity.slop,
             );
-            println!("total score: {:.1}", report.summary.total_score);
+            println!(
+                "quality score: {:.1}; generation evidence: {:.1}",
+                report.summary.channel_scores.quality,
+                report.summary.channel_scores.generation
+            );
             if options.diff_mode {
                 println!("mode: diff (changed lines only)");
             }

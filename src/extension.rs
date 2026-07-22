@@ -180,9 +180,10 @@ impl LipstykExtension {
         Ok(json!({
             "markdown": markdown,
             "summary": summary,
-            "score": report.summary.total_score,
-            "verdict": verdict_label(report.summary.total_score),
-            "pass": report.summary.total_score < 15.0,
+            "quality_score": report.summary.channel_scores.quality,
+            "generation_score": report.summary.channel_scores.generation,
+            "verdict": verdict_label(report.summary.channel_scores.quality),
+            "pass": report.summary.channel_scores.quality < 15.0,
         }))
     }
 
@@ -214,10 +215,11 @@ impl LipstykExtension {
 /// - Top findings with fix suggestions
 /// - Per-category breakdown
 fn format_agent_response(report: &Report) -> Value {
-    let total = report.summary.total_score;
-    let verdict = verdict_label(total);
+    let quality = report.summary.channel_scores.quality;
+    let generation = report.summary.channel_scores.generation;
+    let verdict = verdict_label(quality);
 
-    let pass = total < 15.0;
+    let pass = quality < 15.0;
 
     // Build compact findings with fix suggestions.
     let mut findings: Vec<Value> = Vec::new();
@@ -228,6 +230,7 @@ fn format_agent_response(report: &Report) -> Value {
                 "line": d.line,
                 "rule": d.rule,
                 "severity": format!("{:?}", d.severity),
+                "channel": d.channel,
                 "message": d.message,
                 "fix": suggest_fix(&d.rule, &d.message),
             }));
@@ -265,7 +268,8 @@ fn format_agent_response(report: &Report) -> Value {
     json!({
         "pass": pass,
         "verdict": verdict,
-        "score": total,
+        "quality_score": quality,
+        "generation_score": generation,
         "files_scanned": report.summary.files_scanned,
         "files_with_findings": report.summary.files_with_findings,
         "total_findings": report.summary.total_diagnostics,

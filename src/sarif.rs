@@ -28,6 +28,7 @@ pub fn to_sarif(report: &Report) -> SarifLog {
                     },
                     properties: SarifRuleProperties {
                         category: d.category.as_str().into(),
+                        channel: format!("{:?}", d.channel).to_ascii_lowercase(),
                     },
                 });
             }
@@ -49,6 +50,7 @@ pub fn to_sarif(report: &Report) -> SarifLog {
                 properties: SarifResultProperties {
                     weight: d.weight,
                     category: d.category.as_str().into(),
+                    channel: format!("{:?}", d.channel).to_ascii_lowercase(),
                 },
             });
         }
@@ -131,6 +133,7 @@ struct SarifRuleConfig {
 #[derive(Debug, Serialize)]
 struct SarifRuleProperties {
     category: String,
+    channel: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -152,6 +155,7 @@ struct SarifResult {
 struct SarifResultProperties {
     weight: f64,
     category: String,
+    channel: String,
 }
 
 #[derive(Debug, Serialize)]

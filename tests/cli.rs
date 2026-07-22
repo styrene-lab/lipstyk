@@ -94,6 +94,7 @@ fn sarif_mode_produces_valid_sarif() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     let sarif: serde_json::Value = serde_json::from_str(&stdout).unwrap();
     assert_eq!(sarif["version"], "2.1.0");
+    assert_eq!(sarif["runs"][0]["results"][0]["properties"]["channel"], "quality");
     assert!(!sarif["runs"][0]["results"].as_array().unwrap().is_empty());
 }
 

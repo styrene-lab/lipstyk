@@ -6,15 +6,18 @@ use crate::report::{FileResult, Report};
 pub fn to_markdown(report: &Report) -> String {
     let mut out = String::new();
 
-    // Header with verdict badge.
-    let verdict = verdict_label(report.summary.total_score);
-    let emoji = verdict_emoji(report.summary.total_score);
+    // Header with quality verdict badge.
+    let quality = report.summary.channel_scores.quality;
+    let generation = report.summary.channel_scores.generation;
+    let verdict = verdict_label(quality);
+    let emoji = verdict_emoji(quality);
     out.push_str(&format!("## {emoji} Lipstyk Report — {verdict}\n\n"));
 
     // Score line.
     out.push_str(&format!(
-        "**Score:** {:.1} | **Files:** {}/{} with findings | **Diagnostics:** {} ({} slop, {} warn, {} hint)\n\n",
-        report.summary.total_score,
+        "**Quality score:** {:.1} | **Generation evidence:** {:.1} | **Files:** {}/{} with findings | **Diagnostics:** {} ({} slop, {} warn, {} hint)\n\n",
+        quality,
+        generation,
         report.summary.files_with_findings,
         report.summary.files_scanned,
         report.summary.total_diagnostics,
@@ -132,11 +135,13 @@ pub fn to_markdown(report: &Report) -> String {
 
 /// Render a compact one-line summary for GH Action step summaries.
 pub fn to_summary_line(report: &Report) -> String {
-    let emoji = verdict_emoji(report.summary.total_score);
-    let verdict = verdict_label(report.summary.total_score);
+    let quality = report.summary.channel_scores.quality;
+    let generation = report.summary.channel_scores.generation;
+    let emoji = verdict_emoji(quality);
+    let verdict = verdict_label(quality);
     format!(
-        "{emoji} lipstyk: {verdict} (score {:.1}, {} findings across {} files)",
-        report.summary.total_score, report.summary.total_diagnostics, report.summary.files_scanned,
+        "{emoji} lipstyk: {verdict} (quality {:.1}, generation {:.1}, {} findings across {} files)",
+        quality, generation, report.summary.total_diagnostics, report.summary.files_scanned,
     )
 }
 
