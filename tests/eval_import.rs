@@ -37,7 +37,8 @@ fn source_json(url: &str, output: &str) -> Value {
             "description": "import integration test",
             "license": "MIT",
             "collected_at": "2026-07-21",
-            "output": output
+            "output": output,
+            "dataset_split": "validation"
         },
         "evaluation": {"score": "per_100_lines", "threshold": 1.0},
         "fields": {"code": "code", "label": "label", "language": "language", "id": "id", "generator": null},

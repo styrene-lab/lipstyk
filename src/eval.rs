@@ -27,7 +27,7 @@ pub struct CorpusMetadata {
     pub license: String,
 }
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(rename_all = "snake_case")]
 pub enum SampleLabel {
     Human,
@@ -119,7 +119,23 @@ pub struct EvaluationReport {
     pub threshold: f64,
     pub caveats: Vec<&'static str>,
     pub metrics: BinaryMetrics,
+    pub distributions: Vec<ScoreDistribution>,
     pub samples: Vec<SampleResult>,
+}
+
+#[derive(Debug, Serialize, PartialEq)]
+pub struct ScoreDistribution {
+    pub language: String,
+    pub label: SampleLabel,
+    pub samples: usize,
+    pub zero_scores: usize,
+    pub min: f64,
+    pub p25: f64,
+    pub median: f64,
+    pub p75: f64,
+    pub p95: f64,
+    pub max: f64,
+    pub mean: f64,
 }
 
 #[derive(Debug, Default, Serialize, PartialEq)]
@@ -248,6 +264,8 @@ pub fn evaluate_manifest(
     }
 
     let metrics = calculate_metrics(&results);
+    let distributions =
+        calculate_distributions(&manifest.samples, &results, manifest.evaluation.score);
     Ok(EvaluationReport {
         schema_version: CORPUS_SCHEMA_VERSION,
         corpus_id: manifest.corpus.id,
@@ -263,6 +281,7 @@ pub fn evaluate_manifest(
             "Metrics are descriptive for this corpus and threshold only; do not generalize without a representative held-out test set.",
         ],
         metrics,
+        distributions,
         samples: results,
     })
 }
@@ -363,6 +382,60 @@ fn evaluate_sample(
         findings,
         error: None,
     })
+}
+
+pub fn calculate_distributions(
+    samples: &[CorpusSample],
+    results: &[SampleResult],
+    score_kind: ScoreKind,
+) -> Vec<ScoreDistribution> {
+    let mut groups: BTreeMap<(String, SampleLabel), Vec<f64>> = BTreeMap::new();
+    for (sample, result) in samples.iter().zip(results) {
+        if result.error.is_some() {
+            continue;
+        }
+        let score = match score_kind {
+            ScoreKind::Raw => result.raw_score,
+            ScoreKind::Per100Lines => result.score_per_100_lines,
+        };
+        groups
+            .entry((sample.language.clone(), sample.label))
+            .or_default()
+            .push(score);
+    }
+
+    groups
+        .into_iter()
+        .map(|((language, label), mut scores)| {
+            scores.sort_by(f64::total_cmp);
+            let samples = scores.len();
+            ScoreDistribution {
+                language,
+                label,
+                samples,
+                zero_scores: scores.iter().filter(|score| **score == 0.0).count(),
+                min: scores[0],
+                p25: percentile(&scores, 0.25),
+                median: percentile(&scores, 0.5),
+                p75: percentile(&scores, 0.75),
+                p95: percentile(&scores, 0.95),
+                max: scores[samples - 1],
+                mean: scores.iter().sum::<f64>() / samples as f64,
+            }
+        })
+        .collect()
+}
+
+fn percentile(sorted: &[f64], quantile: f64) -> f64 {
+    let rank = quantile * (sorted.len() - 1) as f64;
+    let lower = rank.floor() as usize;
+    let upper = rank.ceil() as usize;
+    if lower == upper {
+        sorted[lower]
+    } else {
+        let fraction = rank - lower as f64;
+        sorted[lower] + (sorted[upper] - sorted[lower]) * fraction
+    }
 }
 
 pub fn calculate_metrics(results: &[SampleResult]) -> BinaryMetrics {

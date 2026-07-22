@@ -4,15 +4,15 @@
   "dataset": "AICD-bench/AICD-Bench",
   "revision": "b7dc6d82257de6e0146d1e7b0831abd7088633af",
   "config": "T2",
-  "split": "validation",
+  "split": "train",
   "rows_url": null,
   "corpus": {
-    "id": "aicd-t2-validation-slice",
-    "description": "Pinned deterministic AICD-Bench T2 validation slice for continuity testing; language is inferred because AICD-Bench exposes only code and label.",
+    "id": "aicd-t2-calibration-v1",
+    "description": "Pinned deterministic AICD-Bench T2 training subset for Lipstyk calibration research; balanced by inferred language and binary human/agent label.",
     "license": "upstream-per-sample-unknown",
     "collected_at": "2026-07-21",
-    "output": "aicd-t2-validation",
-    "dataset_split": "validation"
+    "output": "aicd-t2-calibration",
+    "dataset_split": "calibration"
   },
   "evaluation": {
     "score": "per_100_lines",
@@ -41,13 +41,13 @@
   },
   "languages": {},
   "selection": {
-    "seed": "lipstyk-aicd-v1",
-    "scan_rows": 100,
+    "seed": "lipstyk-aicd-calibration-v1",
+    "scan_rows": 1000,
     "strata": [
-      { "label": "human", "language": "python", "limit": 3 },
-      { "label": "agent", "language": "python", "limit": 2 },
-      { "label": "human", "language": "java", "limit": 2 },
-      { "label": "agent", "language": "java", "limit": 2 }
+      { "label": "human", "language": "python", "limit": 25 },
+      { "label": "agent", "language": "python", "limit": 25 },
+      { "label": "human", "language": "java", "limit": 25 },
+      { "label": "agent", "language": "java", "limit": 25 }
     ]
   }
 }

@@ -65,6 +65,38 @@ Artifact paths resolve relative to the manifest and may not escape that
 directory. This keeps a corpus portable and prevents a manifest from reading
 arbitrary host files.
 
+Evaluation reports include score distributions grouped by language and label:
+`samples`, `zero_scores`, minimum, p25, median, p75, p95, maximum, and mean.
+These distributions expose detector coverage and overlap that aggregate accuracy
+hides.
+
+### Current pinned calibration evidence
+
+`evaluation/sources/aicd-t2-calibration.source.json` deterministically selects
+100 AICD-Bench T2 training samples: 25 human and 25 agent samples for each of
+Python and Java. Rebuild it with:
+
+```bash
+cargo run --bin lipstyk-eval -- import \
+  evaluation/sources/aicd-t2-calibration.source.json
+cargo run --bin lipstyk-eval -- \
+  evaluation/sources/aicd-t2-calibration/corpus.json
+```
+
+At the existing `1.0/100 lines` threshold, this calibration slice produced 5
+true positives, 8 false positives, 42 true negatives, and 45 false negatives
+(10% recall, 84% specificity). More importantly, every group had a median score
+of zero; 24/25 Java agent samples and 21/25 Python agent samples had no findings.
+Human mean scores exceeded agent mean scores in both languages. Threshold tuning
+cannot repair missing or inverted signal, so detector defaults remain unchanged.
+The next detector work should improve language-specific rule coverage and be
+measured on this calibration split before one-time evaluation on a disjoint test
+split.
+
+The generated `aicd-t2-calibration/` directory is intentionally untracked; the
+pinned source specification and import lock make regeneration deterministic
+without redistributing upstream samples.
+
 The current evidence requires a conservative interpretation of these reports:
 
 - `predicted_agent` is retained as a version-1 compatibility field. It means

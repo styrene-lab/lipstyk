@@ -1,4 +1,7 @@
-use lipstyk::eval::{SampleLabel, SampleResult, calculate_metrics, evaluate_manifest};
+use lipstyk::eval::{
+    CorpusArtifact, CorpusSample, DatasetSplit, Provenance, SampleLabel, SampleResult, SampleUnit,
+    ScoreKind, calculate_distributions, calculate_metrics, evaluate_manifest,
+};
 
 fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
     SampleResult {
@@ -13,6 +16,62 @@ fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
         findings: Vec::new(),
         error: None,
     }
+}
+
+fn sample(id: &str, label: SampleLabel, language: &str) -> CorpusSample {
+    CorpusSample {
+        id: id.to_string(),
+        label,
+        unit: SampleUnit::File,
+        split: DatasetSplit::Calibration,
+        language: language.to_string(),
+        artifacts: vec![CorpusArtifact {
+            path: "sample.rs".into(),
+            role: lipstyk::eval::ArtifactRole::Source,
+        }],
+        provenance: Provenance {
+            source: "fixture".to_string(),
+            source_revision: "1".to_string(),
+            license: "MIT".to_string(),
+            collected_at: "2026-07-21".to_string(),
+            generator: None,
+            generator_version: None,
+            prompt_record: None,
+            notes: None,
+        },
+    }
+}
+
+#[test]
+fn reports_score_distributions_by_language_and_label() {
+    let samples = vec![
+        sample("h1", SampleLabel::Human, "rust"),
+        sample("h2", SampleLabel::Human, "rust"),
+        sample("a1", SampleLabel::Agent, "python"),
+    ];
+    let mut results = vec![
+        result(SampleLabel::Human, false),
+        result(SampleLabel::Human, false),
+        result(SampleLabel::Agent, true),
+    ];
+    results[0].score_per_100_lines = 0.0;
+    results[1].score_per_100_lines = 10.0;
+    results[2].score_per_100_lines = 4.0;
+
+    let distributions = calculate_distributions(&samples, &results, ScoreKind::Per100Lines);
+
+    assert_eq!(distributions.len(), 2);
+    assert_eq!(distributions[0].language, "python");
+    assert_eq!(distributions[0].label, SampleLabel::Agent);
+    assert_eq!(distributions[0].median, 4.0);
+    assert_eq!(distributions[1].language, "rust");
+    assert_eq!(distributions[1].label, SampleLabel::Human);
+    assert_eq!(distributions[1].samples, 2);
+    assert_eq!(distributions[1].zero_scores, 1);
+    assert_eq!(distributions[1].p25, 2.5);
+    assert_eq!(distributions[1].median, 5.0);
+    assert_eq!(distributions[1].p75, 7.5);
+    assert_eq!(distributions[1].mean, 5.0);
 }
 
 #[test]

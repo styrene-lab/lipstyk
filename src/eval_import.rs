@@ -41,6 +41,7 @@ pub struct ImportCorpus {
     pub license: String,
     pub collected_at: String,
     pub output: PathBuf,
+    pub dataset_split: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -137,6 +138,8 @@ pub enum ImportError {
     InvalidScore(String),
     #[error("invalid label {0}; expected human, agent, mixed, or unknown")]
     InvalidLabel(String),
+    #[error("invalid dataset split {0}; expected calibration, validation, or test")]
+    InvalidDatasetSplit(String),
     #[error("selection must contain at least one positive-size stratum")]
     EmptySelection,
     #[error("duplicate selection stratum for label {label} and language {language}")]
@@ -182,14 +185,11 @@ pub fn import_source(path: &Path) -> Result<ImportSummary, ImportError> {
 
     let base = path.parent().unwrap_or_else(|| Path::new("."));
     let output_root = base.join(&source.corpus.output);
-    let rows_url = source.rows_url.clone().unwrap_or_else(|| {
-        format!(
-            "https://datasets-server.huggingface.co/rows?dataset={}&config={}&split={}&offset=0&length={}",
-            percent_encode(&source.dataset), percent_encode(&source.config),
-            percent_encode(&source.split), source.selection.scan_rows
-        )
-    });
-    let response = fetch_rows(&rows_url)?;
+    let response = if let Some(rows_url) = &source.rows_url {
+        fetch_rows(rows_url)?
+    } else {
+        fetch_dataset_rows(&source)?
+    };
     let selected = select_rows(&source, &response)?;
     write_import(&source, &source_bytes, &output_root, selected)
 }
@@ -222,6 +222,14 @@ fn validate_source(source: &ImportSource) -> Result<(), ImportError> {
     if !matches!(source.evaluation.score.as_str(), "raw" | "per_100_lines") {
         return Err(ImportError::InvalidScore(source.evaluation.score.clone()));
     }
+    if !matches!(
+        source.corpus.dataset_split.as_str(),
+        "calibration" | "validation" | "test"
+    ) {
+        return Err(ImportError::InvalidDatasetSplit(
+            source.corpus.dataset_split.clone(),
+        ));
+    }
     if source.selection.strata.is_empty()
         || source
             .selection
@@ -253,6 +261,31 @@ fn validate_label(label: &str) -> Result<(), ImportError> {
     } else {
         Err(ImportError::InvalidLabel(label.to_string()))
     }
+}
+
+fn fetch_dataset_rows(source: &ImportSource) -> Result<Value, ImportError> {
+    const PAGE_SIZE: usize = 100;
+    let mut rows = Vec::with_capacity(source.selection.scan_rows);
+    for offset in (0..source.selection.scan_rows).step_by(PAGE_SIZE) {
+        let length = PAGE_SIZE.min(source.selection.scan_rows - offset);
+        let url = format!(
+            "https://datasets-server.huggingface.co/rows?dataset={}&config={}&split={}&offset={offset}&length={length}",
+            percent_encode(&source.dataset),
+            percent_encode(&source.config),
+            percent_encode(&source.split),
+        );
+        let response = fetch_rows(&url)?;
+        let page = response
+            .get("rows")
+            .and_then(Value::as_array)
+            .cloned()
+            .unwrap_or_default();
+        if page.is_empty() {
+            break;
+        }
+        rows.extend(page);
+    }
+    Ok(json!({"rows": rows}))
 }
 
 fn fetch_rows(url: &str) -> Result<Value, ImportError> {
@@ -387,7 +420,7 @@ fn write_import(
             "id": candidate.sample_id,
             "label": candidate.label,
             "unit": "file",
-            "split": "validation",
+            "split": source.corpus.dataset_split,
             "language": candidate.language,
             "artifacts": [{"path": relative, "role": "source"}],
             "provenance": {
