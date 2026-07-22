@@ -11,6 +11,9 @@ fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
         lines: 10,
         raw_score: 1.0,
         score_per_100_lines: 10.0,
+        quality_score: 0.0,
+        generation_score: 1.0,
+        generation_score_per_100_lines: 10.0,
         predicted_agent,
         diagnostics: 1,
         findings: Vec::new(),
@@ -119,10 +122,10 @@ fn smoke_corpus_separates_constructed_samples() {
 
     assert_eq!(report.samples.len(), 2);
     assert_eq!(report.metrics.evaluated, 2);
-    assert_eq!(report.metrics.true_positive, 1);
+    assert_eq!(report.metrics.true_positive, 0);
     assert_eq!(report.metrics.true_negative, 1);
     assert_eq!(report.metrics.false_positive, 0);
-    assert_eq!(report.metrics.false_negative, 0);
+    assert_eq!(report.metrics.false_negative, 1);
     assert_eq!(report.caveats.len(), 2);
     assert!(!report.samples[1].findings.is_empty());
     let finding = &report.samples[1].findings[0];
@@ -130,6 +133,8 @@ fn smoke_corpus_separates_constructed_samples() {
     assert!(!finding.rule.is_empty());
     assert!(finding.line > 0);
     assert!(finding.weight > 0.0);
+    assert_eq!(finding.channel, lipstyk::report::ScoreChannel::Quality);
+    assert_eq!(report.samples[1].generation_score, 0.0);
 }
 
 #[test]

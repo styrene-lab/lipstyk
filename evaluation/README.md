@@ -181,8 +181,8 @@ Lipstyk's intended use.
 [`corpus/python-human-precision-v1/`](corpus/python-human-precision-v1/) contains
 24 licensed files from immutable CPython, Flask, Click, Requests, pytest, and
 NumPy revisions released by May 2021. It exists to measure false positives on
-diverse, established human code. At `1.0/100 lines`, 12/24 files crossed the
-compatibility threshold (50% specificity); `py-trivial-wrapper` and
-`py-structural-repetition` produced 58 of 78 diagnostics. See the corpus README
-for complete provenance, attribution, and consequences. The result reinforces
-that general quality smells must not be interpreted as authorship evidence.
+diverse, established human code. The legacy all-diagnostic aggregate crosses
+`1.0/100 lines` for 12/24 files, but the separated generation channel produces
+0/24 predictions; `py-trivial-wrapper` and `py-structural-repetition` account
+for 58 of 78 quality diagnostics. See the corpus README for complete provenance,
+attribution, and consequences.

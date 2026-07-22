@@ -161,6 +161,9 @@ pub struct SampleResult {
     pub lines: usize,
     pub raw_score: f64,
     pub score_per_100_lines: f64,
+    pub quality_score: f64,
+    pub generation_score: f64,
+    pub generation_score_per_100_lines: f64,
     pub predicted_agent: bool,
     pub diagnostics: usize,
     pub findings: Vec<FindingSummary>,
@@ -173,6 +176,7 @@ pub struct FindingSummary {
     pub rule: &'static str,
     pub line: usize,
     pub weight: f64,
+    pub channel: crate::report::ScoreChannel,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -337,6 +341,9 @@ fn evaluate_sample(
                     lines,
                     raw_score: 0.0,
                     score_per_100_lines: 0.0,
+                    quality_score: 0.0,
+                    generation_score: 0.0,
+                    generation_score_per_100_lines: 0.0,
                     predicted_agent: false,
                     diagnostics: 0,
                     findings: Vec::new(),
@@ -354,9 +361,24 @@ fn evaluate_sample(
     } else {
         raw_score * 100.0 / lines as f64
     };
+    let quality_score = scores
+        .iter()
+        .flat_map(|score| &score.diagnostics)
+        .filter(|diagnostic| {
+            crate::report::diagnostic_channel(diagnostic) == crate::report::ScoreChannel::Quality
+        })
+        .map(|diagnostic| diagnostic.weight)
+        .sum::<f64>();
+    let generation_score = raw_score - quality_score;
+    let generation_score_per_100_lines = if lines == 0 {
+        0.0
+    } else {
+        generation_score * 100.0 / lines as f64
+    };
+    // Evaluation classification now uses generation-associated evidence only.
     let selected_score = match score_kind {
-        ScoreKind::Raw => raw_score,
-        ScoreKind::Per100Lines => score_per_100_lines,
+        ScoreKind::Raw => generation_score,
+        ScoreKind::Per100Lines => generation_score_per_100_lines,
     };
     let findings = scores
         .iter()
@@ -366,6 +388,7 @@ fn evaluate_sample(
                 rule: diagnostic.rule,
                 line: diagnostic.line,
                 weight: diagnostic.weight,
+                channel: crate::report::diagnostic_channel(diagnostic),
             })
         })
         .collect();
@@ -377,6 +400,9 @@ fn evaluate_sample(
         lines,
         raw_score,
         score_per_100_lines,
+        quality_score,
+        generation_score,
+        generation_score_per_100_lines,
         predicted_agent: selected_score >= threshold,
         diagnostics: scores.iter().map(|score| score.diagnostics.len()).sum(),
         findings,

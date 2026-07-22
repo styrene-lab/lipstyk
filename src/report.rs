@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use serde::Serialize;
 
-use crate::diagnostic::{Severity, SlopScore};
+use crate::diagnostic::{Diagnostic, Severity, SlopScore};
 
 /// Top-level report — the single artifact that drives dashboards, CI, and integrations.
 #[derive(Debug, Clone, Serialize)]
@@ -30,11 +30,26 @@ pub struct GitInfo {
     pub dirty: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ScoreChannel {
+    Quality,
+    Generation,
+}
+
+#[derive(Debug, Clone, Default, Serialize)]
+pub struct ChannelScores {
+    pub quality: f64,
+    pub generation: f64,
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct Summary {
     pub files_scanned: usize,
     pub files_with_findings: usize,
+    /// Compatibility aggregate across every diagnostic channel.
     pub total_score: f64,
+    pub channel_scores: ChannelScores,
     pub total_diagnostics: usize,
     pub by_severity: SeverityCounts,
     pub by_rule: BTreeMap<String, RuleStats>,
@@ -65,9 +80,12 @@ pub struct CategoryStats {
 #[derive(Debug, Clone, Serialize)]
 pub struct FileResult {
     pub file: String,
+    /// Compatibility aggregate across every diagnostic channel.
     pub score: f64,
+    pub channel_scores: ChannelScores,
     pub lines: usize,
     pub score_per_100_lines: f64,
+    pub generation_score_per_100_lines: f64,
     pub diagnostics: Vec<FileDiagnostic>,
 }
 
@@ -76,6 +94,7 @@ pub struct FileResult {
 pub struct FileDiagnostic {
     pub rule: String,
     pub category: String,
+    pub channel: ScoreChannel,
     pub message: String,
     pub line: usize,
     pub severity: Severity,
@@ -177,6 +196,36 @@ pub fn rule_category(rule: &str) -> &'static str {
         .unwrap_or("other")
 }
 
+/// Classify diagnostics into independent score channels. Only rules with
+/// calibration evidence of generation-associated behavior enter the generation
+/// channel; all other findings remain code-quality signals.
+pub fn rule_channel(rule: &str) -> ScoreChannel {
+    match rule {
+        "py-demo-scaffolding" | "py-placeholder-scaffolding" => ScoreChannel::Generation,
+        _ => ScoreChannel::Quality,
+    }
+}
+
+pub fn diagnostic_channel(diagnostic: &Diagnostic) -> ScoreChannel {
+    match diagnostic.rule {
+        "py-comment-depth"
+            if diagnostic
+                .message
+                .contains("imperative comments narrate routine operations") =>
+        {
+            ScoreChannel::Generation
+        }
+        "py-restating-comment"
+            if diagnostic
+                .message
+                .contains("trailing comments narrate obvious operations") =>
+        {
+            ScoreChannel::Generation
+        }
+        rule => rule_channel(rule),
+    }
+}
+
 impl Report {
     /// Build a report from a set of file scores and run metadata.
     pub fn build(
@@ -194,6 +243,7 @@ impl Report {
         let mut by_category: BTreeMap<String, CategoryStats> = BTreeMap::new();
         let mut total_diagnostics = 0;
         let mut total_score = 0.0;
+        let mut channel_scores = ChannelScores::default();
         let mut files_with_findings = 0;
 
         let mut file_results = Vec::new();
@@ -215,10 +265,22 @@ impl Report {
             } else {
                 0.0
             };
+            let mut file_channels = ChannelScores::default();
 
             let mut file_diagnostics = Vec::new();
 
             for d in &score.diagnostics {
+                let channel = diagnostic_channel(d);
+                match channel {
+                    ScoreChannel::Quality => {
+                        channel_scores.quality += d.weight;
+                        file_channels.quality += d.weight;
+                    }
+                    ScoreChannel::Generation => {
+                        channel_scores.generation += d.weight;
+                        file_channels.generation += d.weight;
+                    }
+                }
                 // Severity counts.
                 match d.severity {
                     Severity::Hint => by_severity.hint += 1,
@@ -243,6 +305,7 @@ impl Report {
                 file_diagnostics.push(FileDiagnostic {
                     rule: d.rule.to_string(),
                     category: cat.to_string(),
+                    channel,
                     message: d.message.clone(),
                     line: d.line,
                     severity: d.severity,
@@ -250,11 +313,18 @@ impl Report {
                 });
             }
 
+            let generation_per_100 = if line_count > 0 {
+                (file_channels.generation / line_count as f64) * 100.0
+            } else {
+                0.0
+            };
             file_results.push(FileResult {
                 file: score.file.clone(),
                 score: score.total,
+                channel_scores: file_channels,
                 lines: line_count,
                 score_per_100_lines: (score_per_100 * 10.0).round() / 10.0,
+                generation_score_per_100_lines: (generation_per_100 * 10.0).round() / 10.0,
                 diagnostics: file_diagnostics,
             });
         }
@@ -275,6 +345,7 @@ impl Report {
                 files_scanned,
                 files_with_findings,
                 total_score: (total_score * 10.0).round() / 10.0,
+                channel_scores,
                 total_diagnostics,
                 by_severity,
                 by_rule,

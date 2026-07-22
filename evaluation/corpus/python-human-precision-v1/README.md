@@ -26,17 +26,12 @@ cargo run --bin lipstyk-eval -- \
 
 ## Current results
 
-At the unchanged threshold of `1.0/100 lines`, detector version 0.2.1 produced:
-
-- 24 evaluated files, 0 errors;
-- 11 files with zero findings;
-- 12/24 files crossing the compatibility `predicted_agent` threshold;
-- median score 1.09, mean 2.55, p95 12.77, maximum 16.88 per 100 lines;
-- 78 total diagnostics across 13 files.
-
-The threshold specificity is therefore 50% on this corpus. This confirms that
-the aggregate score is not an authorship classifier and that the existing
-`1.0/100 lines` threshold is unsuitable as a universal Python gate.
+At the unchanged threshold of `1.0/100 lines`, detector version 0.2.1 produced
+78 quality diagnostics across 13 files, but **0 generation-channel diagnostics**
+and therefore 0/24 agent predictions under the separated scoring model. The
+legacy all-diagnostic aggregate still has median 1.09, mean 2.55, p95 12.77,
+and maximum 16.88 per 100 lines; it is retained for compatibility and quality
+reporting, not authorship classification.
 
 ### Per-rule attribution
 
@@ -63,6 +58,16 @@ The imperative-comment addition to `py-comment-depth` also produced no finding;
 the sole `py-comment-depth` hit came from its older function-density logic.
 
 ## Consequences
+
+`total_score` / `score` remain compatibility aggregates across all diagnostics.
+Machine-readable reports now also expose independent `channel_scores.quality`
+and `channel_scores.generation` values, each diagnostic's `channel`, and a
+per-file `generation_score_per_100_lines`. Evaluation classification uses only
+the generation channel; quality findings remain visible but cannot produce an
+agent prediction. Generation-channel admission is deliberately narrow and
+currently limited to the calibrated Python demo scaffolding, placeholder
+scaffolding, imperative-comment narration, and repeated inline narration
+signals.
 
 Do not tune the global threshold to this corpus: doing so would hide useful
 quality findings while preserving category confusion. The next detector design
