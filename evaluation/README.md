@@ -105,8 +105,14 @@ least three trailing comments that mechanically narrate inputs, parity branches,
 or returns. It added a finding to 1 previously uncovered agent sample and 0 human
 samples: Python agent zero-finding samples fell from 13/25 to 12/25 and the agent
 mean rose from 4.12 to 4.59 per 100 lines, with no human-distribution change.
-This is calibration evidence, not held-out validation; further detector work
-should use this split before one-time evaluation on a disjoint test split.
+A fourth pass added `py-placeholder-scaffolding`, requiring at least two
+independent unresolved template signals such as a `yourapp` import and an
+"Assuming there's a function" comment. It added a finding to 1 previously
+uncovered agent sample and 0 human samples: Python agent zero-finding samples
+fell from 12/25 to 11/25 and the agent mean rose from 4.59 to 5.05 per 100 lines,
+with the human distribution unchanged. This is calibration evidence, not
+held-out validation; further detector work should use this split before
+one-time evaluation on a disjoint test split.
 
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic

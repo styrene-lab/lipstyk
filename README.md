@@ -86,7 +86,7 @@ lipstyk --summary src/                # one line per file
 |----------|-----------|-------|----------|
 | Rust | `.rs` | 21 | AST via `syn` |
 | TypeScript / JavaScript | `.ts` `.tsx` `.js` `.jsx` | 14 | AST via `oxc` + text |
-| Python | `.py` | 16 | AST via `tree-sitter` + text |
+| Python | `.py` | 17 | AST via `tree-sitter` + text |
 | Go | `.go` | 8 | AST via `tree-sitter` + text |
 | HTML / CSS | `.html` `.htm` `.css` `.vue` `.svelte` | 6 | tag parser |
 | Java | `.java` | 4 | text (legacy) |
@@ -97,7 +97,7 @@ lipstyk --summary src/                # one line per file
 | CI/CD YAML | `.yml` `.yaml` | 1 | content-sniffed (5 checks) |
 | Markdown | `.md` `.mdx` | 3 | text |
 
-83 rules. Full reference in [RULES.md](RULES.md).
+84 rules. Full reference in [RULES.md](RULES.md).
 
 ## What it catches
 

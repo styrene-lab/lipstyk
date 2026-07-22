@@ -1,6 +1,6 @@
 # Lipstyk Rule Reference
 
-83 rules across 11 file types. Every finding is deterministic — no ML,
+84 rules across 11 file types. Every finding is deterministic — no ML,
 no classifiers.
 
 Severity levels:
@@ -68,7 +68,7 @@ to find await expressions.
 
 ---
 
-## Python (16 rules, AST via `tree-sitter`)
+## Python (17 rules, AST via `tree-sitter`)
 
 | Rule | What It Catches | Sev | Weight |
 |------|----------------|-----|--------|
@@ -87,6 +87,7 @@ to find await expressions.
 | `py-restating-comment` | Comments restating code | W | 1.5 |
 | `py-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
 | `py-demo-scaffolding` | Executable example/demo code appended to implementation modules | W | 1.5 |
+| `py-placeholder-scaffolding` | Multiple unresolved template imports, assumptions, or credentials | W | 1.5 |
 | `py-whitespace-uniformity` | Uniform blank lines and line lengths | H | 1.0 |
 
 ---

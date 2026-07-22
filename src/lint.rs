@@ -120,6 +120,9 @@ impl Linter {
         ));
         linter.add_source_rule(Box::new(crate::python::index_loop::IndexLoop));
         linter.add_source_rule(Box::new(crate::python::mutable_default::MutableDefault));
+        linter.add_source_rule(Box::new(
+            crate::python::placeholder_scaffolding::PlaceholderScaffolding,
+        ));
         linter.add_source_rule(Box::new(crate::python::trivial_wrapper::TrivialWrapper));
         linter.add_source_rule(Box::new(crate::java::restating_comments::RestatingComments));
         linter.add_source_rule(Box::new(crate::java::generic_naming::GenericNaming));

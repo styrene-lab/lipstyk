@@ -761,6 +761,24 @@ fn py_demo_heading_without_executable_code_clean() {
 }
 
 #[test]
+fn py_placeholder_scaffolding_fires() {
+    let src = "from yourapp.decorators import role_required\n\ndef dashboard():\n    # Assuming there's a function to fetch dashboard data\n    return fetch_dashboard_data()\n";
+    assert!(has_rule(src, "service.py", "py-placeholder-scaffolding"));
+}
+
+#[test]
+fn py_single_placeholder_signal_clean() {
+    let src = "def client():\n    return ApiClient(token='replace-me')\n";
+    assert!(no_rule(src, "service.py", "py-placeholder-scaffolding"));
+}
+
+#[test]
+fn py_real_project_import_and_assumption_clean() {
+    let src = "from acme.decorators import role_required\n\ndef estimate(samples):\n    # Assumes samples were normalized by the ingestion boundary.\n    return calculate(samples)\n";
+    assert!(no_rule(src, "service.py", "py-placeholder-scaffolding"));
+}
+
+#[test]
 fn java_step_narration_fires() {
     let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
     assert!(has_rule(src, "t.java", "java-comment-depth"));
