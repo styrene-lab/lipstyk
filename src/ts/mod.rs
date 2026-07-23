@@ -1,6 +1,7 @@
 pub mod any_abuse;
 pub mod comment_depth;
 pub mod console_dump;
+pub mod placeholder_scaffolding;
 pub mod error_handling;
 pub mod fixed_delay_sync;
 pub mod generic_naming;

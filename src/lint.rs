@@ -91,6 +91,9 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::ts::error_handling::ErrorHandling));
         linter.add_source_rule(Box::new(crate::ts::comment_depth::CommentDepth));
         linter.add_source_rule(Box::new(
+            crate::ts::placeholder_scaffolding::PlaceholderScaffolding,
+        ));
+        linter.add_source_rule(Box::new(
             crate::ts::structural_repetition::StructuralRepetition,
         ));
         linter.add_source_rule(Box::new(

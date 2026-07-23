@@ -60,6 +60,7 @@ Escalation: `redundant-clone` at >15 = Warning, >30 = Slop.
 | `ts-generic-naming` | `processData`, `handleRequest`, `fetchData` | W | 1.5 |
 | `ts-restating-comment` | Comments restating code | W | 1.5 |
 | `ts-comment-depth` | Per-function density, step narration | W→S | 1.5→3.0 |
+| `ts-placeholder-scaffolding` | Multiple unresolved implementation/template assumptions | W | 1.5 |
 | `ts-whitespace-uniformity` | Uniform blank lines and line lengths | H | 1.0 |
 
 `ts-error-handling` uses oxc's typed `CatchClause` to detect empty bodies

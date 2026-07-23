@@ -791,6 +791,30 @@ fn py_real_project_import_and_assumption_clean() {
 }
 
 #[test]
+fn ts_placeholder_scaffolding_comments_fire() {
+    let src = "const store = (() => {\n  // Add more mappings as needed\n  const map = {};\n  // Add more validation rules as needed\n  const rules = [];\n  // Simulate a database query\n  return { map, rules };\n})();\n";
+    assert!(has_rule(src, "store.ts", "ts-placeholder-scaffolding"));
+}
+
+#[test]
+fn ts_placeholder_scaffolding_stub_bodies_fire() {
+    let src = "class CacheFilter {\n  read() {\n    // Implementation for retrieving cache configuration\n  }\n  enabled() {\n    // Implementation to check if caching is enabled\n  }\n  open() {\n    // Implementation to open the cache\n  }\n}\n";
+    assert!(has_rule(src, "cache.ts", "ts-placeholder-scaffolding"));
+}
+
+#[test]
+fn ts_single_placeholder_comment_clean() {
+    let src = "function mapType(value: string) {\n  // Add more mappings as needed\n  return value;\n}\n";
+    assert!(no_rule(src, "mapping.ts", "ts-placeholder-scaffolding"));
+}
+
+#[test]
+fn ts_intent_comment_clean() {
+    let src = "function load() {\n  // Keep this synchronous because startup must finish before requests arrive.\n  return readConfig();\n}\n";
+    assert!(no_rule(src, "config.ts", "ts-placeholder-scaffolding"));
+}
+
+#[test]
 fn java_step_narration_fires() {
     let src = "void f() {\n  // Step 1: Init\n  x();\n  // Step 2: Process\n  y();\n  // Step 3: Finish\n  z();\n}\n";
     assert!(has_rule(src, "t.java", "java-comment-depth"));

@@ -201,7 +201,9 @@ pub fn rule_category(rule: &str) -> &'static str {
 /// channel; all other findings remain code-quality signals.
 pub fn rule_channel(rule: &str) -> ScoreChannel {
     match rule {
-        "py-demo-scaffolding" | "py-placeholder-scaffolding" => ScoreChannel::Generation,
+        "py-demo-scaffolding"
+        | "py-placeholder-scaffolding"
+        | "ts-placeholder-scaffolding" => ScoreChannel::Generation,
         _ => ScoreChannel::Quality,
     }
 }
