@@ -90,7 +90,7 @@ fn main() -> ExitCode {
         files_scanned = report.summary.files_scanned,
         files_with_findings = report.summary.files_with_findings,
         quality_score = report.summary.channel_scores.quality,
-        generation_score = report.summary.channel_scores.generation,
+        slop_score = report.summary.channel_scores.slop,
         total_diagnostics = report.summary.total_diagnostics,
         duration_ms = report.duration_ms,
         "analysis complete"
@@ -165,9 +165,9 @@ fn main() -> ExitCode {
                 report.summary.by_severity.slop,
             );
             println!(
-                "quality score: {:.1}; generation evidence: {:.1}",
+                "quality score: {:.1}; slop evidence: {:.1}",
                 report.summary.channel_scores.quality,
-                report.summary.channel_scores.generation
+                report.summary.channel_scores.slop
             );
             if options.diff_mode {
                 println!("mode: diff (changed lines only)");

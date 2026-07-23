@@ -181,7 +181,7 @@ impl LipstykExtension {
             "markdown": markdown,
             "summary": summary,
             "quality_score": report.summary.channel_scores.quality,
-            "generation_score": report.summary.channel_scores.generation,
+            "slop_score": report.summary.channel_scores.slop,
             "verdict": verdict_label(report.summary.channel_scores.quality),
             "pass": report.summary.channel_scores.quality < 15.0,
         }))
@@ -216,7 +216,7 @@ impl LipstykExtension {
 /// - Per-category breakdown
 fn format_agent_response(report: &Report) -> Value {
     let quality = report.summary.channel_scores.quality;
-    let generation = report.summary.channel_scores.generation;
+    let slop = report.summary.channel_scores.slop;
     let verdict = verdict_label(quality);
 
     let pass = quality < 15.0;
@@ -269,7 +269,7 @@ fn format_agent_response(report: &Report) -> Value {
         "pass": pass,
         "verdict": verdict,
         "quality_score": quality,
-        "generation_score": generation,
+        "slop_score": slop,
         "files_scanned": report.summary.files_scanned,
         "files_with_findings": report.summary.files_with_findings,
         "total_findings": report.summary.total_diagnostics,

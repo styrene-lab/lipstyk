@@ -34,13 +34,13 @@ pub struct GitInfo {
 #[serde(rename_all = "snake_case")]
 pub enum ScoreChannel {
     Quality,
-    Generation,
+    Slop,
 }
 
 #[derive(Debug, Clone, Default, Serialize)]
 pub struct ChannelScores {
     pub quality: f64,
-    pub generation: f64,
+    pub slop: f64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -85,7 +85,7 @@ pub struct FileResult {
     pub channel_scores: ChannelScores,
     pub lines: usize,
     pub score_per_100_lines: f64,
-    pub generation_score_per_100_lines: f64,
+    pub slop_score_per_100_lines: f64,
     pub diagnostics: Vec<FileDiagnostic>,
 }
 
@@ -197,13 +197,13 @@ pub fn rule_category(rule: &str) -> &'static str {
 }
 
 /// Classify diagnostics into independent score channels. Only rules with
-/// calibration evidence of generation-associated behavior enter the generation
-/// channel; all other findings remain code-quality signals.
+/// calibration evidence of stronger slop behavior enter the slop channel; all
+/// other findings remain general code-quality signals.
 pub fn rule_channel(rule: &str) -> ScoreChannel {
     match rule {
         "py-demo-scaffolding"
         | "py-placeholder-scaffolding"
-        | "ts-placeholder-scaffolding" => ScoreChannel::Generation,
+        | "ts-placeholder-scaffolding" => ScoreChannel::Slop,
         _ => ScoreChannel::Quality,
     }
 }
@@ -215,21 +215,21 @@ pub fn diagnostic_channel(diagnostic: &Diagnostic) -> ScoreChannel {
                 .message
                 .contains("repeated comments narrate declarations") =>
         {
-            ScoreChannel::Generation
+            ScoreChannel::Slop
         }
         "py-comment-depth"
             if diagnostic
                 .message
                 .contains("imperative comments narrate routine operations") =>
         {
-            ScoreChannel::Generation
+            ScoreChannel::Slop
         }
         "py-restating-comment"
             if diagnostic
                 .message
                 .contains("trailing comments narrate obvious operations") =>
         {
-            ScoreChannel::Generation
+            ScoreChannel::Slop
         }
         rule => rule_channel(rule),
     }
@@ -285,9 +285,9 @@ impl Report {
                         channel_scores.quality += d.weight;
                         file_channels.quality += d.weight;
                     }
-                    ScoreChannel::Generation => {
-                        channel_scores.generation += d.weight;
-                        file_channels.generation += d.weight;
+                    ScoreChannel::Slop => {
+                        channel_scores.slop += d.weight;
+                        file_channels.slop += d.weight;
                     }
                 }
                 // Severity counts.
@@ -322,8 +322,8 @@ impl Report {
                 });
             }
 
-            let generation_per_100 = if line_count > 0 {
-                (file_channels.generation / line_count as f64) * 100.0
+            let slop_per_100 = if line_count > 0 {
+                (file_channels.slop / line_count as f64) * 100.0
             } else {
                 0.0
             };
@@ -333,7 +333,7 @@ impl Report {
                 channel_scores: file_channels,
                 lines: line_count,
                 score_per_100_lines: (score_per_100 * 10.0).round() / 10.0,
-                generation_score_per_100_lines: (generation_per_100 * 10.0).round() / 10.0,
+                slop_score_per_100_lines: (slop_per_100 * 10.0).round() / 10.0,
                 diagnostics: file_diagnostics,
             });
         }

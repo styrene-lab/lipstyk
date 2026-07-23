@@ -27,11 +27,11 @@ cargo run --bin lipstyk-eval -- \
 ## Current results
 
 At the unchanged threshold of `1.0/100 lines`, detector version 0.2.1 produced
-78 quality diagnostics across 13 files, but **0 generation-channel diagnostics**
-and therefore 0/24 agent predictions under the separated scoring model. The
+78 quality diagnostics across 13 files, but **0 slop-channel diagnostics**
+and therefore 0/24 slop-threshold exceedances under the separated scoring model. The
 legacy all-diagnostic aggregate still has median 1.09, mean 2.55, p95 12.77,
 and maximum 16.88 per 100 lines; it is retained for compatibility and quality
-reporting, not authorship classification.
+reporting, not strong-slop thresholding.
 
 ### Per-rule attribution
 
@@ -39,10 +39,10 @@ reporting, not authorship classification.
 |---|---:|---|
 | `py-trivial-wrapper` | 44 | Dominant false-positive source. Protocol adapters, decorators, tests, and benchmark methods legitimately contain many one-statement functions. |
 | `py-structural-repetition` | 14 | Frequently legitimate in protocol families, tests, and homogeneous benchmark classes. |
-| `py-nesting-depth` | 8 | General maintainability signal, not generation-specific evidence. |
+| `py-nesting-depth` | 8 | General maintainability signal, not strong slop evidence. |
 | `py-restating-comment` | 4 | All four are false positives on intent/context comments; none came from the new repeated-inline-narration branch. |
-| `bare-except` | 2 | Intentional compatibility behavior in CPython's completer; quality warning, not authorship evidence. |
-| `type-hint-gaps` | 2 | Expected during gradual typing and therefore weak authorship evidence. |
+| `bare-except` | 2 | Intentional compatibility behavior in CPython's completer; quality warning, not strong slop evidence. |
+| `type-hint-gaps` | 2 | Expected during gradual typing and therefore weak slop evidence. |
 | `py-naming-entropy` | 1 | False positive on CPython's queue implementation and repeated protocol method vocabulary. |
 | `py-comment-depth` | 1 | False positive on dense synchronization-invariant comments in CPython queue initialization. The new imperative-narration branch did not fire. |
 | `import-star` | 1 | Intentional public terminal API import in CPython. |
@@ -61,18 +61,18 @@ the sole `py-comment-depth` hit came from its older function-density logic.
 
 `total_score` / `score` remain compatibility aggregates across all diagnostics.
 Machine-readable reports now also expose independent `channel_scores.quality`
-and `channel_scores.generation` values, each diagnostic's `channel`, and a
-per-file `generation_score_per_100_lines`. Evaluation classification uses only
-the generation channel; quality findings remain visible but cannot produce an
-agent prediction. Generation-channel admission is deliberately narrow and
+and `channel_scores.slop` values, each diagnostic's `channel`, and a
+per-file `slop_score_per_100_lines`. Evaluation classification uses only
+the slop channel; quality findings remain visible but cannot produce an
+slop-threshold exceedance. Slop-channel admission is deliberately narrow and
 currently limited to the calibrated Python demo scaffolding, placeholder
 scaffolding, imperative-comment narration, and repeated inline narration
 signals.
 
 Do not tune the global threshold to this corpus: doing so would hide useful
 quality findings while preserving category confusion. The next detector design
-step should separate general quality rules from generation-associated evidence
-and report both channels independently. In particular, trivial wrappers,
+step should separate general quality rules from stronger slop evidence and
+report both channels independently. In particular, trivial wrappers,
 structural repetition, nesting, broad exceptions, and type-hint consistency
-should not contribute to an authorship-like aggregate without independent
+should not contribute to a strong-slop aggregate without independent
 validation.

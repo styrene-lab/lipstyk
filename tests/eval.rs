@@ -3,7 +3,7 @@ use lipstyk::eval::{
     ScoreKind, calculate_distributions, calculate_metrics, evaluate_manifest,
 };
 
-fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
+fn result(label: SampleLabel, exceeds_slop_threshold: bool) -> SampleResult {
     SampleResult {
         id: "sample".to_string(),
         label,
@@ -12,9 +12,9 @@ fn result(label: SampleLabel, predicted_agent: bool) -> SampleResult {
         raw_score: 1.0,
         score_per_100_lines: 10.0,
         quality_score: 0.0,
-        generation_score: 1.0,
-        generation_score_per_100_lines: 10.0,
-        predicted_agent,
+        slop_score: 1.0,
+        slop_score_per_100_lines: 10.0,
+        exceeds_slop_threshold,
         diagnostics: 1,
         findings: Vec::new(),
         error: None,
@@ -134,7 +134,7 @@ fn smoke_corpus_separates_constructed_samples() {
     assert!(finding.line > 0);
     assert!(finding.weight > 0.0);
     assert_eq!(finding.channel, lipstyk::report::ScoreChannel::Quality);
-    assert_eq!(report.samples[1].generation_score, 0.0);
+    assert_eq!(report.samples[1].slop_score, 0.0);
 }
 
 #[test]

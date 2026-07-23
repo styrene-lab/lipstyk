@@ -120,9 +120,9 @@ without redistributing upstream samples.
 
 The current evidence requires a conservative interpretation of these reports:
 
-- `predicted_agent` is retained as a version-1 compatibility field. It means
-  only that the configured pattern-score threshold was crossed; it is **not**
-  a verified authorship determination or probability.
+- `exceeds_slop_threshold` means only that calibrated strong slop evidence crossed
+  the configured threshold. It is not an authorship determination: human and
+  agent-authored code can both be slop, and either can remain below the threshold.
 - Every report includes explicit caveats and per-finding rule, file, line, and
   weight data so aggregate errors can be traced back to detector behavior.
 - A pinned nine-sample AICD-Bench integration slice at `1.0/100 lines` produced
@@ -182,7 +182,7 @@ Lipstyk's intended use.
 24 licensed files from immutable CPython, Flask, Click, Requests, pytest, and
 NumPy revisions released by May 2021. It exists to measure false positives on
 diverse, established human code. The legacy all-diagnostic aggregate crosses
-`1.0/100 lines` for 12/24 files, but the separated generation channel produces
+`1.0/100 lines` for 12/24 files, but the separated slop channel produces
 0/24 predictions; `py-trivial-wrapper` and `py-structural-repetition` account
 for 58 of 78 quality diagnostics. See the corpus README for complete provenance,
 attribution, and consequences.

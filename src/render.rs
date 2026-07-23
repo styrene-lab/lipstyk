@@ -8,16 +8,16 @@ pub fn to_markdown(report: &Report) -> String {
 
     // Header with quality verdict badge.
     let quality = report.summary.channel_scores.quality;
-    let generation = report.summary.channel_scores.generation;
+    let slop = report.summary.channel_scores.slop;
     let verdict = verdict_label(quality);
     let emoji = verdict_emoji(quality);
     out.push_str(&format!("## {emoji} Lipstyk Report — {verdict}\n\n"));
 
     // Score line.
     out.push_str(&format!(
-        "**Quality score:** {:.1} | **Generation evidence:** {:.1} | **Files:** {}/{} with findings | **Diagnostics:** {} ({} slop, {} warn, {} hint)\n\n",
+        "**Quality score:** {:.1} | **Slop evidence:** {:.1} | **Files:** {}/{} with findings | **Diagnostics:** {} ({} slop, {} warn, {} hint)\n\n",
         quality,
-        generation,
+        slop,
         report.summary.files_with_findings,
         report.summary.files_scanned,
         report.summary.total_diagnostics,
@@ -136,12 +136,12 @@ pub fn to_markdown(report: &Report) -> String {
 /// Render a compact one-line summary for GH Action step summaries.
 pub fn to_summary_line(report: &Report) -> String {
     let quality = report.summary.channel_scores.quality;
-    let generation = report.summary.channel_scores.generation;
+    let slop = report.summary.channel_scores.slop;
     let emoji = verdict_emoji(quality);
     let verdict = verdict_label(quality);
     format!(
-        "{emoji} lipstyk: {verdict} (quality {:.1}, generation {:.1}, {} findings across {} files)",
-        quality, generation, report.summary.total_diagnostics, report.summary.files_scanned,
+        "{emoji} lipstyk: {verdict} (quality {:.1}, slop {:.1}, {} findings across {} files)",
+        quality, slop, report.summary.total_diagnostics, report.summary.files_scanned,
     )
 }
 
