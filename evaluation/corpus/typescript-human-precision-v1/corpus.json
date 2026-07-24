@@ -1,0 +1,568 @@
+{
+  "$schema": "../../schema/corpus-v1.schema.json",
+  "schema_version": 1,
+  "corpus": {
+    "id": "typescript-human-precision-v1",
+    "revision": "1",
+    "description": "Pre-LLM human-authored TypeScript precision corpus from six established projects.",
+    "license": "Mixed; see per-sample provenance and import.lock.json"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "samples": [
+    {
+      "id": "typescript-scanner-13ccc81c",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typescript-13ccc81c43555803.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/TypeScript/663b19fe4a7c4d4ddaa61aedadd28da06acd27b6/src/compiler/scanner.ts",
+        "source_revision": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=compiler; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "typescript-parser-7fec8643",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typescript-7fec86436921b212.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/TypeScript/663b19fe4a7c4d4ddaa61aedadd28da06acd27b6/src/compiler/parser.ts",
+        "source_revision": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=compiler; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "typescript-services-42a0c3a0",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typescript-42a0c3a02e932b57.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/TypeScript/663b19fe4a7c4d4ddaa61aedadd28da06acd27b6/src/services/services.ts",
+        "source_revision": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=language-service; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "typescript-buildProtocol-9476a3e1",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typescript-9476a3e10468f4b3.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/TypeScript/663b19fe4a7c4d4ddaa61aedadd28da06acd27b6/scripts/buildProtocol.ts",
+        "source_revision": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=tooling; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "vscode-arrays-2c0d4aef",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/vscode-2c0d4aef8d2c2b66.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/vscode/d776f0c1ebab688e57e9f2bddf826df20451471a/src/vs/base/common/arrays.ts",
+        "source_revision": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=utility; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "vscode-async-ee04a09e",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/vscode-ee04a09e10caec7b.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/vscode/d776f0c1ebab688e57e9f2bddf826df20451471a/src/vs/base/common/async.ts",
+        "source_revision": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=async; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "vscode-configuration-52a71bed",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/vscode-52a71bed7672afd9.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/vscode/d776f0c1ebab688e57e9f2bddf826df20451471a/src/vs/platform/configuration/common/configuration.ts",
+        "source_revision": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=configuration; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "vscode-editorCommands-08224b2c",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/vscode-08224b2ceea416bd.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/microsoft/vscode/d776f0c1ebab688e57e9f2bddf826df20451471a/src/vs/workbench/browser/parts/editor/editorCommands.ts",
+        "source_revision": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=application; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "angular-directive-explorer.component-8b97fb33",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/angular-8b97fb3367832a03.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/angular/angular/d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e/projects/ng-devtools/src/lib/devtools-tabs/directive-explorer/directive-explorer.component.ts",
+        "source_revision": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=frontend; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "angular-state-serializer-1fccaa97",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/angular-1fccaa97f1da50a4.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/angular/angular/d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e/projects/ng-devtools-backend/src/lib/state-serializer/state-serializer.ts",
+        "source_revision": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=serialization; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "angular-profiler.component-4a20ef7f",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/angular-4a20ef7fbc5d3bb0.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/angular/angular/d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e/projects/ng-devtools/src/lib/devtools-tabs/profiler/profiler.component.ts",
+        "source_revision": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=frontend; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "angular-app-todo.component-e3fcc6ad",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/angular-e3fcc6ad34154f4d.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/angular/angular/d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e/src/app/demo-app/todo/app-todo.component.ts",
+        "source_revision": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=example; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "nest-router-execution-context-13949e0b",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/nest-13949e0bdc9e9560.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/nestjs/nest/b621a614955f5838b12a184b59b868d07b2b9b5c/packages/core/router/router-execution-context.ts",
+        "source_revision": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=framework; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "nest-route-params.decorator-cc44adad",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/nest-cc44adada2d67896.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/nestjs/nest/b621a614955f5838b12a184b59b868d07b2b9b5c/packages/common/decorators/http/route-params.decorator.ts",
+        "source_revision": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=decorators; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "nest-injector-e8a30371",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/nest-e8a303714fd15966.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/nestjs/nest/b621a614955f5838b12a184b59b868d07b2b9b5c/packages/core/injector/injector.ts",
+        "source_revision": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=dependency-injection; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "nest-date.scalar-6a3415b5",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/nest-6a3415b52abf4ad9.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/nestjs/nest/b621a614955f5838b12a184b59b868d07b2b9b5c/integration/graphql-code-first/src/common/scalars/date.scalar.ts",
+        "source_revision": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=integration; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "redux-applyMiddleware-4ab8c467",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/redux-4ab8c467e9518967.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/reduxjs/redux/c21ac204e8ef1d6d428ee3b906b3646c73aa9441/src/applyMiddleware.ts",
+        "source_revision": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=middleware; upstream license=LICENSE.md"
+      }
+    },
+    {
+      "id": "redux-bindActionCreators-dfa41d97",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/redux-dfa41d970aee9bee.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/reduxjs/redux/c21ac204e8ef1d6d428ee3b906b3646c73aa9441/src/bindActionCreators.ts",
+        "source_revision": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=utility; upstream license=LICENSE.md"
+      }
+    },
+    {
+      "id": "redux-combineReducers-223dd399",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/redux-223dd399e0ce0b66.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/reduxjs/redux/c21ac204e8ef1d6d428ee3b906b3646c73aa9441/src/combineReducers.ts",
+        "source_revision": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=state; upstream license=LICENSE.md"
+      }
+    },
+    {
+      "id": "redux-createStore-d754517c",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/redux-d754517cd9018772.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/reduxjs/redux/c21ac204e8ef1d6d428ee3b906b3646c73aa9441/src/createStore.ts",
+        "source_revision": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=state; upstream license=LICENSE.md"
+      }
+    },
+    {
+      "id": "typeorm-SelectQueryBuilder-9f74e37d",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typeorm-9f74e37db9ca90f3.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/typeorm/typeorm/069b8b6888c389d93ff44ca6ed964fb5913d9840/src/query-builder/SelectQueryBuilder.ts",
+        "source_revision": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=query-builder; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "typeorm-EntityManager-cafb6f67",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typeorm-cafb6f6761f8d116.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/typeorm/typeorm/069b8b6888c389d93ff44ca6ed964fb5913d9840/src/entity-manager/EntityManager.ts",
+        "source_revision": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=data-access; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "typeorm-PostgresDriver-d9c2ef83",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typeorm-d9c2ef83b246ae81.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/typeorm/typeorm/069b8b6888c389d93ff44ca6ed964fb5913d9840/src/driver/postgres/PostgresDriver.ts",
+        "source_revision": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=driver; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "typeorm-Repository-2cad787f",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "typescript",
+      "artifacts": [
+        {
+          "path": "objects/typeorm-2cad787f467c4925.ts",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/typeorm/typeorm/069b8b6888c389d93ff44ca6ed964fb5913d9840/src/repository/Repository.ts",
+        "source_revision": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+        "license": "MIT",
+        "collected_at": "2026-07-22",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established project; category=repository; upstream license=LICENSE"
+      }
+    }
+  ]
+}

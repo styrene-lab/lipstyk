@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-22",
+  "selection": "Four manually stratified TypeScript files from each of six established projects, pinned before June 2021.",
+  "samples": [
+    {
+      "id": "typescript-scanner-13ccc81c",
+      "repository": "https://github.com/microsoft/TypeScript",
+      "commit": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+      "path": "src/compiler/scanner.ts",
+      "category": "compiler",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "13ccc81c435558038dd6d5443ab98f30ef652cef6993d68bc33b68f42196dab4",
+      "object": "typescript-13ccc81c43555803.ts"
+    },
+    {
+      "id": "typescript-parser-7fec8643",
+      "repository": "https://github.com/microsoft/TypeScript",
+      "commit": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+      "path": "src/compiler/parser.ts",
+      "category": "compiler",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "7fec86436921b212e7a4e84b9fcdb473a8e377bdd36afed62c6be1904753a9fd",
+      "object": "typescript-7fec86436921b212.ts"
+    },
+    {
+      "id": "typescript-services-42a0c3a0",
+      "repository": "https://github.com/microsoft/TypeScript",
+      "commit": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+      "path": "src/services/services.ts",
+      "category": "language-service",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "42a0c3a02e932b57711480adfb003ae8219208104048ff4cfb490ecd75655825",
+      "object": "typescript-42a0c3a02e932b57.ts"
+    },
+    {
+      "id": "typescript-buildProtocol-9476a3e1",
+      "repository": "https://github.com/microsoft/TypeScript",
+      "commit": "663b19fe4a7c4d4ddaa61aedadd28da06acd27b6",
+      "path": "scripts/buildProtocol.ts",
+      "category": "tooling",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "9476a3e10468f4b3cb1c10b857c8c732b7aa178a2be5a18ee596a8676c95259f",
+      "object": "typescript-9476a3e10468f4b3.ts"
+    },
+    {
+      "id": "vscode-arrays-2c0d4aef",
+      "repository": "https://github.com/microsoft/vscode",
+      "commit": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+      "path": "src/vs/base/common/arrays.ts",
+      "category": "utility",
+      "license": "MIT",
+      "license_path": "LICENSE.txt",
+      "sha256": "2c0d4aef8d2c2b666e43f6365ada4ecdddae72e5eaf62a57f3fbc3adbd609ee4",
+      "object": "vscode-2c0d4aef8d2c2b66.ts"
+    },
+    {
+      "id": "vscode-async-ee04a09e",
+      "repository": "https://github.com/microsoft/vscode",
+      "commit": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+      "path": "src/vs/base/common/async.ts",
+      "category": "async",
+      "license": "MIT",
+      "license_path": "LICENSE.txt",
+      "sha256": "ee04a09e10caec7b597e8542ed9d16c2bb4804dc63229f52d6cd712a12e51c3b",
+      "object": "vscode-ee04a09e10caec7b.ts"
+    },
+    {
+      "id": "vscode-configuration-52a71bed",
+      "repository": "https://github.com/microsoft/vscode",
+      "commit": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+      "path": "src/vs/platform/configuration/common/configuration.ts",
+      "category": "configuration",
+      "license": "MIT",
+      "license_path": "LICENSE.txt",
+      "sha256": "52a71bed7672afd9fd2359dd53bcd0cf0578e7cf398c37aaa5816c1d0859bc3f",
+      "object": "vscode-52a71bed7672afd9.ts"
+    },
+    {
+      "id": "vscode-editorCommands-08224b2c",
+      "repository": "https://github.com/microsoft/vscode",
+      "commit": "d776f0c1ebab688e57e9f2bddf826df20451471a",
+      "path": "src/vs/workbench/browser/parts/editor/editorCommands.ts",
+      "category": "application",
+      "license": "MIT",
+      "license_path": "LICENSE.txt",
+      "sha256": "08224b2ceea416bdbe737b335fbce40e8061bea341e2fb70e35c30e9e6f04388",
+      "object": "vscode-08224b2ceea416bd.ts"
+    },
+    {
+      "id": "angular-directive-explorer.component-8b97fb33",
+      "repository": "https://github.com/angular/angular",
+      "commit": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+      "path": "projects/ng-devtools/src/lib/devtools-tabs/directive-explorer/directive-explorer.component.ts",
+      "category": "frontend",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "8b97fb3367832a035799ab1e1c69da450ba4059a268704583cd0c619b6b9bb43",
+      "object": "angular-8b97fb3367832a03.ts"
+    },
+    {
+      "id": "angular-state-serializer-1fccaa97",
+      "repository": "https://github.com/angular/angular",
+      "commit": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+      "path": "projects/ng-devtools-backend/src/lib/state-serializer/state-serializer.ts",
+      "category": "serialization",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "1fccaa97f1da50a434d3ff5d76b406dbe49ae04314a7e0685c814991d090c54e",
+      "object": "angular-1fccaa97f1da50a4.ts"
+    },
+    {
+      "id": "angular-profiler.component-4a20ef7f",
+      "repository": "https://github.com/angular/angular",
+      "commit": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+      "path": "projects/ng-devtools/src/lib/devtools-tabs/profiler/profiler.component.ts",
+      "category": "frontend",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "4a20ef7fbc5d3bb0ba9fda466b09388f4c93cbb69c96a88835c59dc0ab890d23",
+      "object": "angular-4a20ef7fbc5d3bb0.ts"
+    },
+    {
+      "id": "angular-app-todo.component-e3fcc6ad",
+      "repository": "https://github.com/angular/angular",
+      "commit": "d79e0fb5aa7aecefc8c652c3abf7c1654db76e1e",
+      "path": "src/app/demo-app/todo/app-todo.component.ts",
+      "category": "example",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "e3fcc6ad34154f4d7300b33d49a3755fc5351d9c44fe355501acd29abba32443",
+      "object": "angular-e3fcc6ad34154f4d.ts"
+    },
+    {
+      "id": "nest-router-execution-context-13949e0b",
+      "repository": "https://github.com/nestjs/nest",
+      "commit": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+      "path": "packages/core/router/router-execution-context.ts",
+      "category": "framework",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "13949e0bdc9e9560a9b4d490aaa1ec2362f8b35314fc0a5146c8e273d2ad2396",
+      "object": "nest-13949e0bdc9e9560.ts"
+    },
+    {
+      "id": "nest-route-params.decorator-cc44adad",
+      "repository": "https://github.com/nestjs/nest",
+      "commit": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+      "path": "packages/common/decorators/http/route-params.decorator.ts",
+      "category": "decorators",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "cc44adada2d6789658c2b403ccb4931c3bc8afec7e72b234886c7faf455af6e8",
+      "object": "nest-cc44adada2d67896.ts"
+    },
+    {
+      "id": "nest-injector-e8a30371",
+      "repository": "https://github.com/nestjs/nest",
+      "commit": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+      "path": "packages/core/injector/injector.ts",
+      "category": "dependency-injection",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "e8a303714fd15966e78f97a06aed2d9803ab9b1260965436e4755574fc641497",
+      "object": "nest-e8a303714fd15966.ts"
+    },
+    {
+      "id": "nest-date.scalar-6a3415b5",
+      "repository": "https://github.com/nestjs/nest",
+      "commit": "b621a614955f5838b12a184b59b868d07b2b9b5c",
+      "path": "integration/graphql-code-first/src/common/scalars/date.scalar.ts",
+      "category": "integration",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "6a3415b52abf4ad9ea6d0d9a4f56269c90ff71cd7694a3a5a36110a62e44129a",
+      "object": "nest-6a3415b52abf4ad9.ts"
+    },
+    {
+      "id": "redux-applyMiddleware-4ab8c467",
+      "repository": "https://github.com/reduxjs/redux",
+      "commit": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+      "path": "src/applyMiddleware.ts",
+      "category": "middleware",
+      "license": "MIT",
+      "license_path": "LICENSE.md",
+      "sha256": "4ab8c467e9518967adcf456580e5f22a9362a40dacaa9de230842b5b075ad30d",
+      "object": "redux-4ab8c467e9518967.ts"
+    },
+    {
+      "id": "redux-bindActionCreators-dfa41d97",
+      "repository": "https://github.com/reduxjs/redux",
+      "commit": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+      "path": "src/bindActionCreators.ts",
+      "category": "utility",
+      "license": "MIT",
+      "license_path": "LICENSE.md",
+      "sha256": "dfa41d970aee9bee7525d3171cefa18b592080af93b2919c067e585b4aa3227d",
+      "object": "redux-dfa41d970aee9bee.ts"
+    },
+    {
+      "id": "redux-combineReducers-223dd399",
+      "repository": "https://github.com/reduxjs/redux",
+      "commit": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+      "path": "src/combineReducers.ts",
+      "category": "state",
+      "license": "MIT",
+      "license_path": "LICENSE.md",
+      "sha256": "223dd399e0ce0b66202aac03df02bc336508056093039a88d390b5ead05ac364",
+      "object": "redux-223dd399e0ce0b66.ts"
+    },
+    {
+      "id": "redux-createStore-d754517c",
+      "repository": "https://github.com/reduxjs/redux",
+      "commit": "c21ac204e8ef1d6d428ee3b906b3646c73aa9441",
+      "path": "src/createStore.ts",
+      "category": "state",
+      "license": "MIT",
+      "license_path": "LICENSE.md",
+      "sha256": "d754517cd901877239f85ed23264bb25b5859a711077a65fd227a251aca2caef",
+      "object": "redux-d754517cd9018772.ts"
+    },
+    {
+      "id": "typeorm-SelectQueryBuilder-9f74e37d",
+      "repository": "https://github.com/typeorm/typeorm",
+      "commit": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+      "path": "src/query-builder/SelectQueryBuilder.ts",
+      "category": "query-builder",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "9f74e37db9ca90f3e8b9be9637a5a5a58e6aeb48cceb3fbe762a98f5837546d0",
+      "object": "typeorm-9f74e37db9ca90f3.ts"
+    },
+    {
+      "id": "typeorm-EntityManager-cafb6f67",
+      "repository": "https://github.com/typeorm/typeorm",
+      "commit": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+      "path": "src/entity-manager/EntityManager.ts",
+      "category": "data-access",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "cafb6f6761f8d11609bd9e3047359f26e9f6a9130d5655a37d567428c46cbe85",
+      "object": "typeorm-cafb6f6761f8d116.ts"
+    },
+    {
+      "id": "typeorm-PostgresDriver-d9c2ef83",
+      "repository": "https://github.com/typeorm/typeorm",
+      "commit": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+      "path": "src/driver/postgres/PostgresDriver.ts",
+      "category": "driver",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "d9c2ef83b246ae8178b4a5d898b1edfdb7f040c89de3881cb906b29355e6d99c",
+      "object": "typeorm-d9c2ef83b246ae81.ts"
+    },
+    {
+      "id": "typeorm-Repository-2cad787f",
+      "repository": "https://github.com/typeorm/typeorm",
+      "commit": "069b8b6888c389d93ff44ca6ed964fb5913d9840",
+      "path": "src/repository/Repository.ts",
+      "category": "repository",
+      "license": "MIT",
+      "license_path": "LICENSE",
+      "sha256": "2cad787f467c4925f8b3e3a758de88eec19ff6337c6cf11121a36f5b70f19272",
+      "object": "typeorm-2cad787f467c4925.ts"
+    }
+  ]
+}

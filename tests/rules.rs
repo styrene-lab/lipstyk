@@ -511,6 +511,12 @@ fn ts_isolated_declaration_heading_clean() {
 }
 
 #[test]
+fn ts_repeated_branch_explanations_clean() {
+    let src = "// Check if the cache exists\nif (cache.has(key)) { return cache.get(key); }\n// Check if the request is valid\nif (request.valid()) { return request.run(); }\n// Check if retries remain\nif (retries > 0) { retry(); }\n";
+    assert!(no_rule(src, "t.ts", "ts-restating-comment"));
+}
+
+#[test]
 fn ts_generic_naming_fires() {
     let src = "function processData(x) { return x; }\n";
     assert!(has_rule(src, "t.ts", "ts-generic-naming"));

@@ -77,6 +77,12 @@ fn is_declaration_narration(comment: &str, code: &str) -> bool {
         "return the ",
     ];
     let is_declaration = code.contains('(')
+        && !code.starts_with("if ")
+        && !code.starts_with("if(")
+        && !code.starts_with("for ")
+        && !code.starts_with("for(")
+        && !code.starts_with("while ")
+        && !code.starts_with("while(")
         && (code.ends_with('{')
             || code.contains(" =>")
             || code.starts_with("function ")

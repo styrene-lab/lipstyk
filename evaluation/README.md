@@ -138,6 +138,18 @@ metrics. A parse or unsupported-language failure remains visible on the sample
 result and is counted in `excluded_errors`; it is never treated as a correct
 human prediction or a false negative.
 
+## TypeScript human precision corpus
+
+[`corpus/typescript-human-precision-v1/`](corpus/typescript-human-precision-v1/)
+contains 24 licensed files from immutable TypeScript, VS Code, Angular, NestJS,
+Redux, and TypeORM revisions released by May 2021. Its first sweep exposed a
+false positive in repeated declaration narration: `// Check if ...` comments
+before `if` branches were being treated as declaration headings. Excluding
+control flow reduced the corpus from one to zero slop findings while preserving
+the two existing TypeScript calibration hits. The compatibility quality
+aggregate remains noisy, led by nested ternaries and trivial wrappers; see the
+corpus README for provenance and per-rule attribution.
+
 ## Dataset policy
 
 A corpus used for release claims must satisfy all of the following:
