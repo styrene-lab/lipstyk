@@ -522,8 +522,39 @@ fn language_conflicts_with_content(language: &str, code: &str) -> bool {
         + usize::from(cpp_std >= 2)
         + usize::from(cpp_access_labels >= 1)
         + usize::from(code.contains("using namespace std"));
+    let trimmed = code.trim_start();
+    let is_php = trimmed.starts_with("<?php") || trimmed.starts_with("<?=");
+    let csharp_signals = usize::from(code.lines().any(|line| line.starts_with("using System")))
+        + usize::from(code.lines().any(|line| line.trim_start().starts_with("namespace ")))
+        + usize::from(code.contains("Task<IList<"))
+        + usize::from(code.contains("Guid "));
 
-    cpp_signals >= 2
+    cpp_signals >= 2 || is_php || csharp_signals >= 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::language_conflicts_with_content;
+
+    #[test]
+    fn rejects_php_and_csharp_labeled_as_typescript() {
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "<?php\nnamespace App;\nclass Service {}\n?>"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "using System;\nusing System.Threading.Tasks;\nnamespace App { interface Repo { Task<IList<Item>> Get(Guid id); } }"
+        ));
+    }
+
+    #[test]
+    fn retains_typescript_with_namespaces_and_guid_names() {
+        assert!(!language_conflicts_with_content(
+            "typescript",
+            "namespace App { export interface Repo { get(guid: string): Promise<Item>; } }"
+        ));
+    }
 }
 
 fn detect_language(code: &str) -> &'static str {
