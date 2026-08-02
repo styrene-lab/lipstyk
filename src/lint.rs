@@ -131,6 +131,9 @@ impl Linter {
         linter.add_source_rule(Box::new(crate::java::generic_naming::GenericNaming));
         linter.add_source_rule(Box::new(crate::java::bare_catch::BareCatch));
         linter.add_source_rule(Box::new(crate::java::comment_depth::CommentDepth));
+        linter.add_source_rule(Box::new(
+            crate::java::placeholder_scaffolding::PlaceholderScaffolding,
+        ));
 
         // Elixir rules
         linter.add_source_rule(Box::new(crate::elixir::bang_overuse::BangOveruse));

@@ -612,6 +612,46 @@ fn java_restating_comment_fires() {
     assert!(has_rule(src, "t.java", "java-restating-comment"));
 }
 
+#[test]
+fn java_placeholder_scaffolding_fires_on_unresolved_method() {
+    let src = r#"
+private void updateWidget(Item item) {
+    // Assuming this method updates the SWT Widget or Item
+    // This is a placeholder for actual update logic
+}
+"#;
+    assert!(has_rule(src, "t.java", "java-placeholder-scaffolding"));
+}
+
+#[test]
+fn java_placeholder_scaffolding_spares_extensibility_comments() {
+    let src = r#"
+public void applyCustomizations(String value) {
+    // Apply customizations, if available
+    customization.apply(value);
+}
+// Additional methods, if necessary...
+"#;
+    assert!(no_rule(src, "t.java", "java-placeholder-scaffolding"));
+}
+
+#[test]
+fn java_placeholder_scaffolding_spares_single_assumption() {
+    let src = "// Assuming UTC because the wire protocol does not carry an offset\nreturn instant;\n";
+    assert!(no_rule(src, "t.java", "java-placeholder-scaffolding"));
+}
+
+#[test]
+fn java_placeholder_scaffolding_spares_spring_extension_comments() {
+    let src = r#"
+// Additional resolvers may be registered by application configuration.
+registry.add(defaultResolver);
+// Simulating failures is supported only by the test implementation.
+return registry;
+"#;
+    assert!(no_rule(src, "t.java", "java-placeholder-scaffolding"));
+}
+
 // ── Elixir rules ────────────────────────────────────────────────
 
 #[test]

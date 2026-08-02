@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-29",
+  "selection": "Four manually stratified Java files from each of five established Spring projects, pinned no later than May 2021.",
+  "samples": [
+    {
+      "id": "framework-defaultconversionservice-a1c6f25b",
+      "repository": "https://github.com/spring-projects/spring-framework",
+      "commit": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+      "path": "spring-core/src/main/java/org/springframework/core/convert/support/DefaultConversionService.java",
+      "category": "framework-core",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "a1c6f25bb76b43783e813a4a2fc863f83ff8b8d33453beef472a5663a1f5bd95",
+      "object": "framework-a1c6f25bb76b4378.java"
+    },
+    {
+      "id": "framework-standardservletmultipartresolver-dccdf762",
+      "repository": "https://github.com/spring-projects/spring-framework",
+      "commit": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+      "path": "spring-web/src/main/java/org/springframework/web/multipart/support/StandardServletMultipartResolver.java",
+      "category": "framework-web",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "dccdf7620c7236f3012fc2d725cb3f088c0f593c555a7f9687d55a5642521fbe",
+      "object": "framework-dccdf7620c7236f3.java"
+    },
+    {
+      "id": "framework-responseentityexceptionhandler-5238ef6f",
+      "repository": "https://github.com/spring-projects/spring-framework",
+      "commit": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+      "path": "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.java",
+      "category": "framework-mvc",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "5238ef6f43058750bf06c3724ee5937511d6697a953ec3767dace0f0d28d92fa",
+      "object": "framework-5238ef6f43058750.java"
+    },
+    {
+      "id": "framework-testcontextmanager-3dade0d6",
+      "repository": "https://github.com/spring-projects/spring-framework",
+      "commit": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+      "path": "spring-test/src/main/java/org/springframework/test/context/TestContextManager.java",
+      "category": "framework-test",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "3dade0d64bc385aa48b4a8b8b0f4d72e7f6ee6d8a18a21baefaa729cc60cf129",
+      "object": "framework-3dade0d64bc385aa.java"
+    },
+    {
+      "id": "boot-defaulterrorattributes-95ed6feb",
+      "repository": "https://github.com/spring-projects/spring-boot",
+      "commit": "d34007879cc337444d4a8669453cb74db85bc375",
+      "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/reactive/error/DefaultErrorAttributes.java",
+      "category": "boot-error",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "95ed6febaa3457ae61df31f5ac3abb9285aa4c5a0a9fbee788b88b17e2c14943",
+      "object": "boot-95ed6febaa3457ae.java"
+    },
+    {
+      "id": "boot-undertowservletwebserver-9fa6b248",
+      "repository": "https://github.com/spring-projects/spring-boot",
+      "commit": "d34007879cc337444d4a8669453cb74db85bc375",
+      "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/embedded/undertow/UndertowServletWebServer.java",
+      "category": "boot-server",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "9fa6b248c513405169524aec44088ab5f80a4191591da3043842c3bbfa652fbc",
+      "object": "boot-9fa6b248c5134051.java"
+    },
+    {
+      "id": "boot-configurationpropertiesvalueobjectbeandefinition-e22dfb49",
+      "repository": "https://github.com/spring-projects/spring-boot",
+      "commit": "d34007879cc337444d4a8669453cb74db85bc375",
+      "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/context/properties/ConfigurationPropertiesValueObjectBeanDefinition.java",
+      "category": "boot-properties",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "e22dfb491e87a87dbc48aefe8aeca101dc0329842d904af5393094a2fa0a1933",
+      "object": "boot-e22dfb491e87a87d.java"
+    },
+    {
+      "id": "boot-mockitobeans-ec00d06b",
+      "repository": "https://github.com/spring-projects/spring-boot",
+      "commit": "d34007879cc337444d4a8669453cb74db85bc375",
+      "path": "spring-boot-project/spring-boot-test/src/main/java/org/springframework/boot/test/mock/mockito/MockitoBeans.java",
+      "category": "boot-test",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "ec00d06b265266afb4d0b7476d0ff4d3a0b9232b8f79688b951713eba2b1f026",
+      "object": "boot-ec00d06b265266af.java"
+    },
+    {
+      "id": "security-exceptionhandlingconfigurer-c51f51b5",
+      "repository": "https://github.com/spring-projects/spring-security",
+      "commit": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+      "path": "config/src/main/java/org/springframework/security/config/annotation/web/configurers/ExceptionHandlingConfigurer.java",
+      "category": "security-config",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "c51f51b5c6798864c02425bf4c02aad05a71e205494cbe719de0ad9e43c8a6a8",
+      "object": "security-c51f51b5c6798864.java"
+    },
+    {
+      "id": "security-providermanager-a868181b",
+      "repository": "https://github.com/spring-projects/spring-security",
+      "commit": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+      "path": "core/src/main/java/org/springframework/security/authentication/ProviderManager.java",
+      "category": "security-auth",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "a868181b062285811851ddb06825cdf1f7a52087d70168cb9c7dc6e0562e4b2c",
+      "object": "security-a868181b06228581.java"
+    },
+    {
+      "id": "security-simpleurllogoutsuccesshandler-db5d4bcd",
+      "repository": "https://github.com/spring-projects/spring-security",
+      "commit": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+      "path": "web/src/main/java/org/springframework/security/web/authentication/logout/SimpleUrlLogoutSuccessHandler.java",
+      "category": "security-web",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "db5d4bcd5c3b964d9a40b25a431806afe7594ec9e2012f9ac5aaca890b1031a8",
+      "object": "security-db5d4bcd5c3b964d.java"
+    },
+    {
+      "id": "security-defaultoauth2user-d3216582",
+      "repository": "https://github.com/spring-projects/spring-security",
+      "commit": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+      "path": "oauth2/oauth2-core/src/main/java/org/springframework/security/oauth2/core/user/DefaultOAuth2User.java",
+      "category": "security-oauth",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "d32165821b9200c8dbd651c6455f725ef95f899fba9618e93b1a24a03336d580",
+      "object": "security-d32165821b9200c8.java"
+    },
+    {
+      "id": "data-jpa-jpa21utils-806014c6",
+      "repository": "https://github.com/spring-projects/spring-data-jpa",
+      "commit": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+      "path": "src/main/java/org/springframework/data/jpa/repository/query/Jpa21Utils.java",
+      "category": "data-query",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "806014c60f18b0221abd975a59cb4d76b62c7dd0064c5c5b8407c3b3144749b1",
+      "object": "data-jpa-806014c60f18b022.java"
+    },
+    {
+      "id": "data-jpa-jpapersistentpropertyimpl-9917d9d8",
+      "repository": "https://github.com/spring-projects/spring-data-jpa",
+      "commit": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+      "path": "src/main/java/org/springframework/data/jpa/mapping/JpaPersistentPropertyImpl.java",
+      "category": "data-property",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "9917d9d862ce6eb739dcc77d36a713f297f3390b65c533594e117469610b14df",
+      "object": "data-jpa-9917d9d862ce6eb7.java"
+    },
+    {
+      "id": "data-jpa-simplejparepository-37f00914",
+      "repository": "https://github.com/spring-projects/spring-data-jpa",
+      "commit": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+      "path": "src/main/java/org/springframework/data/jpa/repository/support/SimpleJpaRepository.java",
+      "category": "data-repository",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "37f00914c2c508616fcb78a786ecf1cf03557866da351e6b7c3de00c57d489b0",
+      "object": "data-jpa-37f00914c2c50861.java"
+    },
+    {
+      "id": "data-jpa-jparepositorybean-b30b5eca",
+      "repository": "https://github.com/spring-projects/spring-data-jpa",
+      "commit": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+      "path": "src/main/java/org/springframework/data/jpa/repository/cdi/JpaRepositoryBean.java",
+      "category": "data-cdi",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "b30b5ecabf4d2f2bd6f8abfad1b8c3d0c3176b009cb61eed3a601a7307fde4ad",
+      "object": "data-jpa-b30b5ecabf4d2f2b.java"
+    },
+    {
+      "id": "restdocs-notescontroller-423648d8",
+      "repository": "https://github.com/spring-projects/spring-restdocs",
+      "commit": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+      "path": "samples/rest-notes-spring-hateoas/src/main/java/com/example/notes/NotesController.java",
+      "category": "restdocs-controller",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "423648d8b2ad53391ba50c3ea7653ae3ef9f401cadc2704a0bbed740d7197fa2",
+      "object": "restdocs-423648d8b2ad5339.java"
+    },
+    {
+      "id": "restdocs-restdocumentationresulthandler-48debb84",
+      "repository": "https://github.com/spring-projects/spring-restdocs",
+      "commit": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+      "path": "spring-restdocs-mockmvc/src/main/java/org/springframework/restdocs/mockmvc/RestDocumentationResultHandler.java",
+      "category": "restdocs-mockmvc",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "48debb841c81f6648f49cef72a5215b6e6633554fd50eb73085e09015c83b981",
+      "object": "restdocs-48debb841c81f664.java"
+    },
+    {
+      "id": "restdocs-responsebodysnippet-c31bdb5c",
+      "repository": "https://github.com/spring-projects/spring-restdocs",
+      "commit": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+      "path": "spring-restdocs-core/src/main/java/org/springframework/restdocs/payload/ResponseBodySnippet.java",
+      "category": "restdocs-payload",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "c31bdb5c59a0c5617e8bc5e359918aa3d5e9bd4772f1c622100f664c80b660af",
+      "object": "restdocs-c31bdb5c59a0c561.java"
+    },
+    {
+      "id": "restdocs-restdocumentationfilter-6fadbb79",
+      "repository": "https://github.com/spring-projects/spring-restdocs",
+      "commit": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+      "path": "spring-restdocs-restassured/src/main/java/org/springframework/restdocs/restassured3/RestDocumentationFilter.java",
+      "category": "restdocs-filter",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "sha256": "6fadbb79a017b8d1ee9d105f76392887dbe5c6ec0fbaffcafce9e9cb0fa791c9",
+      "object": "restdocs-6fadbb79a017b8d1.java"
+    }
+  ]
+}

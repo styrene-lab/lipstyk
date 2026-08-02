@@ -1,0 +1,476 @@
+{
+  "$schema": "../../schema/corpus-v1.schema.json",
+  "schema_version": 1,
+  "corpus": {
+    "id": "java-spring-human-precision-v1",
+    "revision": "1",
+    "description": "Pre-LLM human-authored Java precision corpus from five established Spring projects.",
+    "license": "Apache-2.0; see per-sample provenance and import.lock.json"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "samples": [
+    {
+      "id": "framework-defaultconversionservice-a1c6f25b",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/framework-a1c6f25bb76b4378.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-framework/b1280ffeaaa3d666606fbe92f34219303fa5bbd7/spring-core/src/main/java/org/springframework/core/convert/support/DefaultConversionService.java",
+        "source_revision": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=framework-core; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "framework-standardservletmultipartresolver-dccdf762",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/framework-dccdf7620c7236f3.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-framework/b1280ffeaaa3d666606fbe92f34219303fa5bbd7/spring-web/src/main/java/org/springframework/web/multipart/support/StandardServletMultipartResolver.java",
+        "source_revision": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=framework-web; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "framework-responseentityexceptionhandler-5238ef6f",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/framework-5238ef6f43058750.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-framework/b1280ffeaaa3d666606fbe92f34219303fa5bbd7/spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.java",
+        "source_revision": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=framework-mvc; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "framework-testcontextmanager-3dade0d6",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/framework-3dade0d64bc385aa.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-framework/b1280ffeaaa3d666606fbe92f34219303fa5bbd7/spring-test/src/main/java/org/springframework/test/context/TestContextManager.java",
+        "source_revision": "b1280ffeaaa3d666606fbe92f34219303fa5bbd7",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=framework-test; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "boot-defaulterrorattributes-95ed6feb",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/boot-95ed6febaa3457ae.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-boot/d34007879cc337444d4a8669453cb74db85bc375/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/reactive/error/DefaultErrorAttributes.java",
+        "source_revision": "d34007879cc337444d4a8669453cb74db85bc375",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=boot-error; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "boot-undertowservletwebserver-9fa6b248",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/boot-9fa6b248c5134051.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-boot/d34007879cc337444d4a8669453cb74db85bc375/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/embedded/undertow/UndertowServletWebServer.java",
+        "source_revision": "d34007879cc337444d4a8669453cb74db85bc375",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=boot-server; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "boot-configurationpropertiesvalueobjectbeandefinition-e22dfb49",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/boot-e22dfb491e87a87d.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-boot/d34007879cc337444d4a8669453cb74db85bc375/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/context/properties/ConfigurationPropertiesValueObjectBeanDefinition.java",
+        "source_revision": "d34007879cc337444d4a8669453cb74db85bc375",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=boot-properties; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "boot-mockitobeans-ec00d06b",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/boot-ec00d06b265266af.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-boot/d34007879cc337444d4a8669453cb74db85bc375/spring-boot-project/spring-boot-test/src/main/java/org/springframework/boot/test/mock/mockito/MockitoBeans.java",
+        "source_revision": "d34007879cc337444d4a8669453cb74db85bc375",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=boot-test; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "security-exceptionhandlingconfigurer-c51f51b5",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/security-c51f51b5c6798864.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-security/abd100122e54fa07c8b11c78808e56ba96521fa2/config/src/main/java/org/springframework/security/config/annotation/web/configurers/ExceptionHandlingConfigurer.java",
+        "source_revision": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=security-config; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "security-providermanager-a868181b",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/security-a868181b06228581.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-security/abd100122e54fa07c8b11c78808e56ba96521fa2/core/src/main/java/org/springframework/security/authentication/ProviderManager.java",
+        "source_revision": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=security-auth; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "security-simpleurllogoutsuccesshandler-db5d4bcd",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/security-db5d4bcd5c3b964d.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-security/abd100122e54fa07c8b11c78808e56ba96521fa2/web/src/main/java/org/springframework/security/web/authentication/logout/SimpleUrlLogoutSuccessHandler.java",
+        "source_revision": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=security-web; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "security-defaultoauth2user-d3216582",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/security-d32165821b9200c8.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-security/abd100122e54fa07c8b11c78808e56ba96521fa2/oauth2/oauth2-core/src/main/java/org/springframework/security/oauth2/core/user/DefaultOAuth2User.java",
+        "source_revision": "abd100122e54fa07c8b11c78808e56ba96521fa2",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=security-oauth; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "data-jpa-jpa21utils-806014c6",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/data-jpa-806014c60f18b022.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-data-jpa/e22f35ab7976087f98f800075dc3e2a36ffa9a45/src/main/java/org/springframework/data/jpa/repository/query/Jpa21Utils.java",
+        "source_revision": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=data-query; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "data-jpa-jpapersistentpropertyimpl-9917d9d8",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/data-jpa-9917d9d862ce6eb7.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-data-jpa/e22f35ab7976087f98f800075dc3e2a36ffa9a45/src/main/java/org/springframework/data/jpa/mapping/JpaPersistentPropertyImpl.java",
+        "source_revision": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=data-property; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "data-jpa-simplejparepository-37f00914",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/data-jpa-37f00914c2c50861.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-data-jpa/e22f35ab7976087f98f800075dc3e2a36ffa9a45/src/main/java/org/springframework/data/jpa/repository/support/SimpleJpaRepository.java",
+        "source_revision": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=data-repository; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "data-jpa-jparepositorybean-b30b5eca",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/data-jpa-b30b5ecabf4d2f2b.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-data-jpa/e22f35ab7976087f98f800075dc3e2a36ffa9a45/src/main/java/org/springframework/data/jpa/repository/cdi/JpaRepositoryBean.java",
+        "source_revision": "e22f35ab7976087f98f800075dc3e2a36ffa9a45",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=data-cdi; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "restdocs-notescontroller-423648d8",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/restdocs-423648d8b2ad5339.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-restdocs/5d61e75a3ecd6eb861e98458bad263998190fa32/samples/rest-notes-spring-hateoas/src/main/java/com/example/notes/NotesController.java",
+        "source_revision": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=restdocs-controller; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "restdocs-restdocumentationresulthandler-48debb84",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/restdocs-48debb841c81f664.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-restdocs/5d61e75a3ecd6eb861e98458bad263998190fa32/spring-restdocs-mockmvc/src/main/java/org/springframework/restdocs/mockmvc/RestDocumentationResultHandler.java",
+        "source_revision": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=restdocs-mockmvc; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "restdocs-responsebodysnippet-c31bdb5c",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/restdocs-c31bdb5c59a0c561.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-restdocs/5d61e75a3ecd6eb861e98458bad263998190fa32/spring-restdocs-core/src/main/java/org/springframework/restdocs/payload/ResponseBodySnippet.java",
+        "source_revision": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=restdocs-payload; upstream license=LICENSE.txt"
+      }
+    },
+    {
+      "id": "restdocs-restdocumentationfilter-6fadbb79",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "java",
+      "artifacts": [
+        {
+          "path": "objects/restdocs-6fadbb79a017b8d1.java",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spring-projects/spring-restdocs/5d61e75a3ecd6eb861e98458bad263998190fa32/spring-restdocs-restassured/src/main/java/org/springframework/restdocs/restassured3/RestDocumentationFilter.java",
+        "source_revision": "5d61e75a3ecd6eb861e98458bad263998190fa32",
+        "license": "Apache-2.0",
+        "collected_at": "2026-07-29",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Spring project; category=restdocs-filter; upstream license=LICENSE.txt"
+      }
+    }
+  ]
+}

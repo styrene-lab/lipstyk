@@ -114,6 +114,16 @@ with the human distribution unchanged. This is calibration evidence, not
 held-out validation; further detector work should use this split before
 one-time evaluation on a disjoint test split.
 
+A focused Java pass added a separate pre-LLM precision gate at
+`evaluation/corpus/java-spring-human-precision-v1/`: 20 pinned files from five
+established Spring projects. It then added `java-placeholder-scaffolding`, which
+requires at least two comments leaving implementation assumptions or placeholder
+logic unresolved. On the fixed AICD Java calibration cohort it added findings to
+1 previously uncovered agent sample and 0 human samples. On the Spring
+precision corpus it added no findings and no threshold-crossing false positives.
+Java agent zero-finding samples therefore fell from 24/25 to 23/25. This narrow
+result does not support broader Spring annotation or CRUD-boilerplate rules.
+
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic
 without redistributing upstream samples.
