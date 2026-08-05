@@ -500,8 +500,19 @@ fn field_string(value: Option<&Value>) -> Option<String> {
 }
 
 fn language_conflicts_with_content(language: &str, code: &str) -> bool {
-    if !matches!(language, "typescript" | "javascript") {
+    if !matches!(language, "typescript" | "javascript" | "java") {
         return false;
+    }
+
+    let csharp_signals = usize::from(code.lines().any(|line| line.starts_with("using System")))
+        + usize::from(code.lines().any(|line| line.trim_start().starts_with("namespace ")))
+        + usize::from(code.contains("Task<IList<"))
+        + usize::from(code.contains("Guid "))
+        + usize::from(code.contains("[TestFixture]"))
+        + usize::from(code.contains("Console.Write"));
+
+    if language == "java" {
+        return csharp_signals >= 2;
     }
 
     let cpp_includes = code
@@ -524,10 +535,6 @@ fn language_conflicts_with_content(language: &str, code: &str) -> bool {
         + usize::from(code.contains("using namespace std"));
     let trimmed = code.trim_start();
     let is_php = trimmed.starts_with("<?php") || trimmed.starts_with("<?=");
-    let csharp_signals = usize::from(code.lines().any(|line| line.starts_with("using System")))
-        + usize::from(code.lines().any(|line| line.trim_start().starts_with("namespace ")))
-        + usize::from(code.contains("Task<IList<"))
-        + usize::from(code.contains("Guid "));
 
     cpp_signals >= 2 || is_php || csharp_signals >= 2
 }
@@ -545,6 +552,26 @@ mod tests {
         assert!(language_conflicts_with_content(
             "typescript",
             "using System;\nusing System.Threading.Tasks;\nnamespace App { interface Repo { Task<IList<Item>> Get(Guid id); } }"
+        ));
+    }
+
+    #[test]
+    fn rejects_csharp_labeled_as_java() {
+        assert!(language_conflicts_with_content(
+            "java",
+            "using System;\nnamespace Demo { public class App { static void Main() { Console.WriteLine(\"hi\"); } } }"
+        ));
+        assert!(language_conflicts_with_content(
+            "java",
+            "using NUnit.Framework;\nnamespace Demo;\n[TestFixture]\npublic class AppTests { }"
+        ));
+    }
+
+    #[test]
+    fn retains_java_with_package_and_system_output() {
+        assert!(!language_conflicts_with_content(
+            "java",
+            "package demo;\npublic class App { public static void main(String[] args) { System.out.println(\"hi\"); } }"
         ));
     }
 
