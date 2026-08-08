@@ -23,7 +23,7 @@ fn serve_once(body: String) -> (String, thread::JoinHandle<()>) {
     (url, handle)
 }
 
-fn source_json(url: &str, output: &str) -> Value {
+fn source_json(url: Option<&str>, output: &str) -> Value {
     json!({
         "source_version": 1,
         "provider": "hugging_face",
@@ -32,6 +32,8 @@ fn source_json(url: &str, output: &str) -> Value {
         "config": "production",
         "split": "validation",
         "rows_url": url,
+        "parquet_urls": null,
+        "parquet_cache_dir": null,
         "corpus": {
             "id": "import-test",
             "description": "import integration test",
@@ -75,7 +77,7 @@ fn imports_pinned_rows_deterministically_and_emits_evaluable_corpus() {
     let (url, server) = serve_once(rows());
     std::fs::write(
         &source_path,
-        serde_json::to_vec_pretty(&source_json(&url, "generated")).unwrap(),
+        serde_json::to_vec_pretty(&source_json(Some(&url), "generated")).unwrap(),
     )
     .unwrap();
     let first = import_source(&source_path).unwrap();
@@ -85,7 +87,7 @@ fn imports_pinned_rows_deterministically_and_emits_evaluable_corpus() {
     let (url, server) = serve_once(rows());
     std::fs::write(
         &source_path,
-        serde_json::to_vec_pretty(&source_json(&url, "generated")).unwrap(),
+        serde_json::to_vec_pretty(&source_json(Some(&url), "generated")).unwrap(),
     )
     .unwrap();
     let second = import_source(&source_path).unwrap();
@@ -104,7 +106,7 @@ fn imports_pinned_rows_deterministically_and_emits_evaluable_corpus() {
 fn rejects_moving_revisions_before_fetching() {
     let dir = tempfile::tempdir().unwrap();
     let source_path = dir.path().join("source.json");
-    let mut source = source_json("http://127.0.0.1:1", "generated");
+    let mut source = source_json(Some("http://127.0.0.1:1"), "generated");
     source["revision"] = Value::String("main".to_string());
     std::fs::write(&source_path, serde_json::to_vec_pretty(&source).unwrap()).unwrap();
 
@@ -113,12 +115,24 @@ fn rejects_moving_revisions_before_fetching() {
 }
 
 #[test]
+fn rejects_conflicting_remote_sources() {
+    let dir = tempfile::tempdir().unwrap();
+    let source_path = dir.path().join("source.json");
+    let mut source = source_json(Some("http://127.0.0.1:1"), "generated");
+    source["parquet_urls"] = json!(["http://127.0.0.1:2/data.parquet"]);
+    std::fs::write(&source_path, serde_json::to_vec_pretty(&source).unwrap()).unwrap();
+
+    let error = import_source(&source_path).unwrap_err();
+    assert!(error.to_string().contains("mutually exclusive"));
+}
+
+#[test]
 fn rejects_output_path_escape_before_fetching() {
     let dir = tempfile::tempdir().unwrap();
     let source_path = dir.path().join("source.json");
     std::fs::write(
         &source_path,
-        serde_json::to_vec_pretty(&source_json("http://127.0.0.1:1", "../escape")).unwrap(),
+        serde_json::to_vec_pretty(&source_json(Some("http://127.0.0.1:1"), "../escape")).unwrap(),
     )
     .unwrap();
 

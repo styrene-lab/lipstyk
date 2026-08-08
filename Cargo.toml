@@ -28,6 +28,8 @@ toml = "0.8"
 globset = "0.4"
 sha2 = "0.10"
 ureq = { version = "2", default-features = true }
+parquet = { version = "55", default-features = false, features = ["snap"] }
+bytes = "1"
 
 # AST parsers
 oxc_allocator = "0.127"

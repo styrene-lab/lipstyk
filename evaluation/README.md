@@ -73,10 +73,12 @@ hides.
 ### Current pinned calibration evidence
 
 `evaluation/sources/aicd-t2-calibration.source.json` deterministically selects
-100 AICD-Bench T2 training samples: 25 human and 25 agent samples for each of
-Python and Java. The source specification also requests the nine Go rows found
-within its first 1,000 upstream records (4 human and 5 agent); regenerate after
-upstream rate limiting clears. Rebuild it with:
+109 AICD-Bench T2 training samples: 25 human and 25 agent samples for each of
+Python and Java, plus the nine Go rows available in the first 1,000 records
+(4 human and 5 agent). The importer reads the revision-pinned Parquet shards
+directly and caches them
+under `.cache/aicd-t2-parquet`, avoiding the paginated Hugging Face Dataset
+Server and its anonymous HTTP 429 limits. Rebuild the corpus with:
 
 ```bash
 cargo run --bin lipstyk-eval -- import \

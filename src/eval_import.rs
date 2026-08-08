@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, HashSet};
+use std::fs;
 use std::io::Read;
 use std::path::{Component, Path, PathBuf};
 
@@ -19,6 +20,8 @@ pub struct ImportSource {
     pub config: String,
     pub split: String,
     pub rows_url: Option<String>,
+    pub parquet_urls: Option<Vec<String>>,
+    pub parquet_cache_dir: Option<PathBuf>,
     pub corpus: ImportCorpus,
     pub evaluation: ImportEvaluation,
     pub fields: FieldMapping,
@@ -144,6 +147,10 @@ pub enum ImportError {
     EmptySelection,
     #[error("duplicate selection stratum for label {label} and language {language}")]
     DuplicateStratum { label: String, language: String },
+    #[error("rows_url and parquet_urls are mutually exclusive")]
+    ConflictingSources,
+    #[error("parquet_urls must contain at least one URL")]
+    EmptyParquetSources,
     #[error("failed to fetch dataset rows from {url}: {message}")]
     Fetch { url: String, message: String },
     #[error("invalid dataset response from {url}: {source}")]
@@ -187,6 +194,12 @@ pub fn import_source(path: &Path) -> Result<ImportSummary, ImportError> {
     let output_root = base.join(&source.corpus.output);
     let response = if let Some(rows_url) = &source.rows_url {
         fetch_rows(rows_url)?
+    } else if let Some(parquet_urls) = &source.parquet_urls {
+        fetch_parquet_rows(
+            parquet_urls,
+            source.parquet_cache_dir.as_deref(),
+            source.selection.scan_rows,
+        )?
     } else {
         fetch_dataset_rows(&source)?
     };
@@ -195,6 +208,12 @@ pub fn import_source(path: &Path) -> Result<ImportSummary, ImportError> {
 }
 
 fn validate_source(source: &ImportSource) -> Result<(), ImportError> {
+    if source.rows_url.is_some() && source.parquet_urls.is_some() {
+        return Err(ImportError::ConflictingSources);
+    }
+    if source.parquet_urls.as_ref().is_some_and(Vec::is_empty) {
+        return Err(ImportError::EmptyParquetSources);
+    }
     if source.source_version != SOURCE_SCHEMA_VERSION {
         return Err(ImportError::SchemaVersion {
             found: source.source_version,
@@ -261,6 +280,106 @@ fn validate_label(label: &str) -> Result<(), ImportError> {
     } else {
         Err(ImportError::InvalidLabel(label.to_string()))
     }
+}
+
+fn fetch_parquet_rows(
+    urls: &[String],
+    cache_dir: Option<&Path>,
+    scan_rows: usize,
+) -> Result<Value, ImportError> {
+    use parquet::file::reader::{FileReader, SerializedFileReader};
+
+    let mut rows = Vec::with_capacity(scan_rows);
+    let mut upstream_row = 0usize;
+    for url in urls {
+        if rows.len() >= scan_rows {
+            break;
+        }
+        let bytes = fetch_cached_bytes(url, cache_dir)?;
+        let reader = SerializedFileReader::new(bytes::Bytes::from(bytes)).map_err(|error| {
+            ImportError::Fetch {
+                url: url.clone(),
+                message: format!("failed to parse Parquet shard: {error}"),
+            }
+        })?;
+        let iter = reader.get_row_iter(None).map_err(|error| ImportError::Fetch {
+            url: url.clone(),
+            message: format!("failed to read Parquet rows: {error}"),
+        })?;
+        for row in iter {
+            let row = row.map_err(|error| ImportError::Fetch {
+                url: url.clone(),
+                message: format!("failed to decode Parquet row: {error}"),
+            })?;
+            let mut fields = serde_json::Map::new();
+            for field in ["code", "label", "language", "id", "generator"] {
+                if let Some((_, value)) = row.get_column_iter().find(|(name, _)| name == &field) {
+                    fields.insert(field.to_string(), parquet_field_value(value));
+                }
+            }
+            rows.push(json!({"row_idx": upstream_row, "row": fields}));
+            upstream_row += 1;
+            if rows.len() >= scan_rows {
+                break;
+            }
+        }
+    }
+    Ok(json!({"rows": rows}))
+}
+
+fn parquet_field_value(value: &parquet::record::Field) -> Value {
+    use parquet::record::Field;
+    match value {
+        Field::Str(value) => Value::String(value.clone()),
+        Field::Byte(value) => json!(value),
+        Field::Short(value) => json!(value),
+        Field::Int(value) => json!(value),
+        Field::Long(value) => json!(value),
+        Field::UByte(value) => json!(value),
+        Field::UShort(value) => json!(value),
+        Field::UInt(value) => json!(value),
+        Field::ULong(value) => json!(value),
+        Field::Bool(value) => json!(value),
+        _ => Value::Null,
+    }
+}
+
+fn fetch_cached_bytes(url: &str, cache_dir: Option<&Path>) -> Result<Vec<u8>, ImportError> {
+    let cache_path = cache_dir.map(|directory| {
+        let digest = Sha256::digest(url.as_bytes());
+        directory.join(format!("{digest:x}.parquet"))
+    });
+    if let Some(path) = &cache_path
+        && let Ok(bytes) = fs::read(path)
+    {
+        return Ok(bytes);
+    }
+
+    let bytes = fetch_bytes(url)?;
+    if let Some(path) = cache_path {
+        fs::create_dir_all(path.parent().expect("cache path has a parent")).map_err(|error| {
+            ImportError::Fetch {
+                url: url.to_string(),
+                message: format!("failed to create Parquet cache: {error}"),
+            }
+        })?;
+        fs::write(path, &bytes).map_err(|error| ImportError::Fetch {
+            url: url.to_string(),
+            message: format!("failed to write Parquet cache: {error}"),
+        })?;
+    }
+    Ok(bytes)
+}
+
+fn fetch_bytes(url: &str) -> Result<Vec<u8>, ImportError> {
+    let response = ureq::get(url)
+        .timeout(std::time::Duration::from_secs(600))
+        .call()
+        .map_err(|error| ImportError::Fetch { url: url.to_string(), message: error.to_string() })?;
+    let mut bytes = Vec::new();
+    response.into_reader().take(1024 * 1024 * 1024).read_to_end(&mut bytes)
+        .map_err(|error| ImportError::Fetch { url: url.to_string(), message: error.to_string() })?;
+    Ok(bytes)
 }
 
 fn fetch_dataset_rows(source: &ImportSource) -> Result<Value, ImportError> {
