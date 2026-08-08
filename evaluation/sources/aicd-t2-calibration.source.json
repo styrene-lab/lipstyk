@@ -47,7 +47,9 @@
       { "label": "human", "language": "python", "limit": 25 },
       { "label": "agent", "language": "python", "limit": 25 },
       { "label": "human", "language": "java", "limit": 25 },
-      { "label": "agent", "language": "java", "limit": 25 }
+      { "label": "agent", "language": "java", "limit": 25 },
+      { "label": "human", "language": "go", "limit": 4 },
+      { "label": "agent", "language": "go", "limit": 5 }
     ]
   }
 }

@@ -1,0 +1,476 @@
+{
+  "$schema": "../../schema/corpus-v1.schema.json",
+  "schema_version": 1,
+  "corpus": {
+    "id": "go-human-precision-v1",
+    "revision": "1",
+    "description": "Pre-LLM human-authored Go precision corpus from five established projects.",
+    "license": "Mixed BSD-3-Clause and Apache-2.0; see per-sample provenance and import.lock.json"
+  },
+  "evaluation": {
+    "score": "per_100_lines",
+    "threshold": 1.0
+  },
+  "samples": [
+    {
+      "id": "go-server-ee5c4880",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/go-ee5c48803971f83e.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/golang/go/7677616a263e8ded606cc8297cb67ddc667a876e/src/net/http/server.go",
+        "source_revision": "7677616a263e8ded606cc8297cb67ddc667a876e",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=stdlib-http; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "go-decode-d883155a",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/go-d883155a544c630e.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/golang/go/7677616a263e8ded606cc8297cb67ddc667a876e/src/encoding/json/decode.go",
+        "source_revision": "7677616a263e8ded606cc8297cb67ddc667a876e",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=stdlib-json; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "go-get-980de38d",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/go-980de38dc24d6b35.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/golang/go/7677616a263e8ded606cc8297cb67ddc667a876e/src/cmd/go/internal/get/get.go",
+        "source_revision": "7677616a263e8ded606cc8297cb67ddc667a876e",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=toolchain; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "go-recorder-35c06541",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/go-35c06541179414d6.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/golang/go/7677616a263e8ded606cc8297cb67ddc667a876e/src/net/http/httptest/recorder.go",
+        "source_revision": "7677616a263e8ded606cc8297cb67ddc667a876e",
+        "license": "BSD-3-Clause",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=stdlib-test; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "kubernetes-current_context-009a5a7d",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/kubernetes-009a5a7de41a91ee.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/kubernetes/kubernetes/5e58841cce77d4bc13713ad2b91fa0d961e69192/staging/src/k8s.io/kubectl/pkg/cmd/config/current_context.go",
+        "source_revision": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=cli; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "kubernetes-image_manager-2d96b034",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/kubernetes-2d96b034c973012a.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/kubernetes/kubernetes/5e58841cce77d4bc13713ad2b91fa0d961e69192/pkg/kubelet/images/image_manager.go",
+        "source_revision": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=kubelet; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "kubernetes-selector-352fc9d1",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/kubernetes-352fc9d1fafa603b.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/kubernetes/kubernetes/5e58841cce77d4bc13713ad2b91fa0d961e69192/staging/src/k8s.io/apimachinery/pkg/fields/selector.go",
+        "source_revision": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=api-machinery; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "kubernetes-websocket-edf0610f",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/kubernetes-edf0610ffb8786a5.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/kubernetes/kubernetes/5e58841cce77d4bc13713ad2b91fa0d961e69192/pkg/kubelet/cri/streaming/remotecommand/websocket.go",
+        "source_revision": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=streaming; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "prometheus-manager-31234590",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/prometheus-312345907ca1d4f4.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/prometheus/prometheus/db7f0bcec27bd8aeebad6b08ac849516efa9ae02/scrape/manager.go",
+        "source_revision": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=scraping; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "prometheus-client-0ba10797",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/prometheus-0ba107979074d58c.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/prometheus/prometheus/db7f0bcec27bd8aeebad6b08ac849516efa9ae02/storage/remote/client.go",
+        "source_revision": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=remote-storage; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "prometheus-file-10cc92be",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/prometheus-10cc92be6e9a6939.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/prometheus/prometheus/db7f0bcec27bd8aeebad6b08ac849516efa9ae02/discovery/file/file.go",
+        "source_revision": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=discovery; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "prometheus-printer-2b31ab9e",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/prometheus-2b31ab9ee15be783.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/prometheus/prometheus/db7f0bcec27bd8aeebad6b08ac849516efa9ae02/promql/parser/printer.go",
+        "source_revision": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=query; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "cobra-command-9b0629a7",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/cobra-9b0629a7168e02f1.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spf13/cobra/8380ddd3132bdf8fd77731725b550c181dda0aa8/command.go",
+        "source_revision": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=command; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "cobra-shell_completions-53fe7dc2",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/cobra-53fe7dc2e6a11946.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spf13/cobra/8380ddd3132bdf8fd77731725b550c181dda0aa8/shell_completions.go",
+        "source_revision": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=shell-completion; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "cobra-rest_docs-e5a5b354",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/cobra-e5a5b354de9e6179.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spf13/cobra/8380ddd3132bdf8fd77731725b550c181dda0aa8/doc/rest_docs.go",
+        "source_revision": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=documentation; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "cobra-root-d81cc322",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/cobra-d81cc322ecc18fda.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/spf13/cobra/8380ddd3132bdf8fd77731725b550c181dda0aa8/cobra/cmd/root.go",
+        "source_revision": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=cli-example; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "etcd-index-de478e48",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/etcd-de478e48deac8629.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/etcd-io/etcd/d19fbe541bf9c81e2d69d71d1068bd40c04de200/mvcc/index.go",
+        "source_revision": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=mvcc; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "etcd-config-77aca638",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/etcd-77aca6384b2c6c28.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/etcd-io/etcd/d19fbe541bf9c81e2d69d71d1068bd40c04de200/clientv3/config.go",
+        "source_revision": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=client; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "etcd-cluster-9a6ce4ca",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/etcd-9a6ce4cadeb89ca8.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/etcd-io/etcd/d19fbe541bf9c81e2d69d71d1068bd40c04de200/integration/cluster.go",
+        "source_revision": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=integration; upstream license=LICENSE"
+      }
+    },
+    {
+      "id": "etcd-lease_queue-dcd72b79",
+      "label": "human",
+      "unit": "file",
+      "split": "validation",
+      "language": "go",
+      "artifacts": [
+        {
+          "path": "objects/etcd-dcd72b790fe8f55f.go",
+          "role": "source"
+        }
+      ],
+      "provenance": {
+        "source": "https://raw.githubusercontent.com/etcd-io/etcd/d19fbe541bf9c81e2d69d71d1068bd40c04de200/lease/lease_queue.go",
+        "source_revision": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+        "license": "Apache-2.0",
+        "collected_at": "2026-08-05",
+        "generator": null,
+        "generator_version": null,
+        "prompt_record": null,
+        "notes": "Pre-LLM established Go project; category=lease; upstream license=LICENSE"
+      }
+    }
+  ]
+}

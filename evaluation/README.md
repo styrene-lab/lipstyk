@@ -74,7 +74,9 @@ hides.
 
 `evaluation/sources/aicd-t2-calibration.source.json` deterministically selects
 100 AICD-Bench T2 training samples: 25 human and 25 agent samples for each of
-Python and Java. Rebuild it with:
+Python and Java. The source specification also requests the nine Go rows found
+within its first 1,000 upstream records (4 human and 5 agent); regenerate after
+upstream rate limiting clears. Rebuild it with:
 
 ```bash
 cargo run --bin lipstyk-eval -- import \
@@ -129,6 +131,16 @@ result does not support broader Spring annotation or CRUD-boilerplate rules.
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic
 without redistributing upstream samples.
+
+A focused Go pass added `evaluation/corpus/go-human-precision-v1/`, containing
+20 pre-LLM files from the Go project, Kubernetes, Prometheus, Cobra, and etcd.
+All existing Go findings remain in the quality channel, but only 1/20 files is
+finding-free and the mean quality score is `1.8800/100 lines`. This establishes
+a needed precision-tightening gate. The first correction stops classifying the
+idiomatic `_, err := call()` form as an ignored error, removing three false
+attributions from the corpus. The pinned AICD source now requests its available
+Go strata, but upstream HTTP 429 responses blocked regeneration during this
+pass; no Go slop rule is justified until that agent cohort is materialized.
 
 The current evidence requires a conservative interpretation of these reports:
 

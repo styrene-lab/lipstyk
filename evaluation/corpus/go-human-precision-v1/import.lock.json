@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-05",
+  "selection": "Four manually stratified Go files from each of five established projects, pinned no later than June 2021.",
+  "samples": [
+    {
+      "id": "go-server-ee5c4880",
+      "repository": "https://github.com/golang/go",
+      "commit": "7677616a263e8ded606cc8297cb67ddc667a876e",
+      "path": "src/net/http/server.go",
+      "category": "stdlib-http",
+      "license": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "sha256": "ee5c48803971f83e2c0ab76b0e23dfd743f5fd197933a7381e80597b5d412d77",
+      "object": "go-ee5c48803971f83e.go"
+    },
+    {
+      "id": "go-decode-d883155a",
+      "repository": "https://github.com/golang/go",
+      "commit": "7677616a263e8ded606cc8297cb67ddc667a876e",
+      "path": "src/encoding/json/decode.go",
+      "category": "stdlib-json",
+      "license": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "sha256": "d883155a544c630ec91bf13167bc7564ab7fc69b52206986bafe5e5953d0379a",
+      "object": "go-d883155a544c630e.go"
+    },
+    {
+      "id": "go-get-980de38d",
+      "repository": "https://github.com/golang/go",
+      "commit": "7677616a263e8ded606cc8297cb67ddc667a876e",
+      "path": "src/cmd/go/internal/get/get.go",
+      "category": "toolchain",
+      "license": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "sha256": "980de38dc24d6b3515c40a70dc958f62589f8cb53180494b35e3a7d55189812f",
+      "object": "go-980de38dc24d6b35.go"
+    },
+    {
+      "id": "go-recorder-35c06541",
+      "repository": "https://github.com/golang/go",
+      "commit": "7677616a263e8ded606cc8297cb67ddc667a876e",
+      "path": "src/net/http/httptest/recorder.go",
+      "category": "stdlib-test",
+      "license": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "sha256": "35c06541179414d6ee25d9b532b5560548c29612dea2fe4f2fca5505aea1e2dc",
+      "object": "go-35c06541179414d6.go"
+    },
+    {
+      "id": "kubernetes-current_context-009a5a7d",
+      "repository": "https://github.com/kubernetes/kubernetes",
+      "commit": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+      "path": "staging/src/k8s.io/kubectl/pkg/cmd/config/current_context.go",
+      "category": "cli",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "009a5a7de41a91ee0b5b2d35836b7fcffeaf477bb5c6625086e309928c143346",
+      "object": "kubernetes-009a5a7de41a91ee.go"
+    },
+    {
+      "id": "kubernetes-image_manager-2d96b034",
+      "repository": "https://github.com/kubernetes/kubernetes",
+      "commit": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+      "path": "pkg/kubelet/images/image_manager.go",
+      "category": "kubelet",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "2d96b034c973012a668a4c3d82b0cd3e4dd3b651c5891fe8ed09e3b1f4323f71",
+      "object": "kubernetes-2d96b034c973012a.go"
+    },
+    {
+      "id": "kubernetes-selector-352fc9d1",
+      "repository": "https://github.com/kubernetes/kubernetes",
+      "commit": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+      "path": "staging/src/k8s.io/apimachinery/pkg/fields/selector.go",
+      "category": "api-machinery",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "352fc9d1fafa603b415d34ba8add414dfa616928ecfe6ddd0b6b6af7b8aee66b",
+      "object": "kubernetes-352fc9d1fafa603b.go"
+    },
+    {
+      "id": "kubernetes-websocket-edf0610f",
+      "repository": "https://github.com/kubernetes/kubernetes",
+      "commit": "5e58841cce77d4bc13713ad2b91fa0d961e69192",
+      "path": "pkg/kubelet/cri/streaming/remotecommand/websocket.go",
+      "category": "streaming",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "edf0610ffb8786a594c44dde66f2de1c002e6f96617b4d0156cfd1fcb3b303f7",
+      "object": "kubernetes-edf0610ffb8786a5.go"
+    },
+    {
+      "id": "prometheus-manager-31234590",
+      "repository": "https://github.com/prometheus/prometheus",
+      "commit": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+      "path": "scrape/manager.go",
+      "category": "scraping",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "312345907ca1d4f46d7120416d5a4081ed398b29ecb2171ff3e8513f453edff6",
+      "object": "prometheus-312345907ca1d4f4.go"
+    },
+    {
+      "id": "prometheus-client-0ba10797",
+      "repository": "https://github.com/prometheus/prometheus",
+      "commit": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+      "path": "storage/remote/client.go",
+      "category": "remote-storage",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "0ba107979074d58c1fd460b848fb788a24d433ed300618313c93aa1ca5cb256e",
+      "object": "prometheus-0ba107979074d58c.go"
+    },
+    {
+      "id": "prometheus-file-10cc92be",
+      "repository": "https://github.com/prometheus/prometheus",
+      "commit": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+      "path": "discovery/file/file.go",
+      "category": "discovery",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "10cc92be6e9a6939a9eadd636cf7aec5f39d606f1eea8ccb1a29fa796f7feabc",
+      "object": "prometheus-10cc92be6e9a6939.go"
+    },
+    {
+      "id": "prometheus-printer-2b31ab9e",
+      "repository": "https://github.com/prometheus/prometheus",
+      "commit": "db7f0bcec27bd8aeebad6b08ac849516efa9ae02",
+      "path": "promql/parser/printer.go",
+      "category": "query",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "2b31ab9ee15be783c69d0aa64802fb94e252aae46e793a283720106802c85747",
+      "object": "prometheus-2b31ab9ee15be783.go"
+    },
+    {
+      "id": "cobra-command-9b0629a7",
+      "repository": "https://github.com/spf13/cobra",
+      "commit": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+      "path": "command.go",
+      "category": "command",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "9b0629a7168e02f11a680598e22b767e75681592dbd34a70ced3f1f4815169b0",
+      "object": "cobra-9b0629a7168e02f1.go"
+    },
+    {
+      "id": "cobra-shell_completions-53fe7dc2",
+      "repository": "https://github.com/spf13/cobra",
+      "commit": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+      "path": "shell_completions.go",
+      "category": "shell-completion",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "53fe7dc2e6a119468f0b3f830e052057094d51b150d0878f2dbfb9d38973a776",
+      "object": "cobra-53fe7dc2e6a11946.go"
+    },
+    {
+      "id": "cobra-rest_docs-e5a5b354",
+      "repository": "https://github.com/spf13/cobra",
+      "commit": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+      "path": "doc/rest_docs.go",
+      "category": "documentation",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "e5a5b354de9e6179e5c8ada8b9b61b879a2d6955dbab916ddb547ec989136d5d",
+      "object": "cobra-e5a5b354de9e6179.go"
+    },
+    {
+      "id": "cobra-root-d81cc322",
+      "repository": "https://github.com/spf13/cobra",
+      "commit": "8380ddd3132bdf8fd77731725b550c181dda0aa8",
+      "path": "cobra/cmd/root.go",
+      "category": "cli-example",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "d81cc322ecc18fdafe55cfff5161b7029c9084be183416ecc0fe7c717cda79e9",
+      "object": "cobra-d81cc322ecc18fda.go"
+    },
+    {
+      "id": "etcd-index-de478e48",
+      "repository": "https://github.com/etcd-io/etcd",
+      "commit": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+      "path": "mvcc/index.go",
+      "category": "mvcc",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "de478e48deac8629a4908d6bd144dcdf19834c98d64309303013cfd9dd628f75",
+      "object": "etcd-de478e48deac8629.go"
+    },
+    {
+      "id": "etcd-config-77aca638",
+      "repository": "https://github.com/etcd-io/etcd",
+      "commit": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+      "path": "clientv3/config.go",
+      "category": "client",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "77aca6384b2c6c282cecc90e9d558acd2b838299c9d99905ac4ad0fa329dcf3c",
+      "object": "etcd-77aca6384b2c6c28.go"
+    },
+    {
+      "id": "etcd-cluster-9a6ce4ca",
+      "repository": "https://github.com/etcd-io/etcd",
+      "commit": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+      "path": "integration/cluster.go",
+      "category": "integration",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "9a6ce4cadeb89ca89d7fcf4ad21bdad9c24e069f9f7cf9d7659e60d70cbb46d0",
+      "object": "etcd-9a6ce4cadeb89ca8.go"
+    },
+    {
+      "id": "etcd-lease_queue-dcd72b79",
+      "repository": "https://github.com/etcd-io/etcd",
+      "commit": "d19fbe541bf9c81e2d69d71d1068bd40c04de200",
+      "path": "lease/lease_queue.go",
+      "category": "lease",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "sha256": "dcd72b790fe8f55f48d1afe111fea92f8534c5812335814964cf1f0d4264b8e5",
+      "object": "etcd-dcd72b790fe8f55f.go"
+    }
+  ]
+}

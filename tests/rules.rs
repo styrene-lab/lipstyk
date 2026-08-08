@@ -914,6 +914,12 @@ fn go_bare_return_err_fires() {
 }
 
 #[test]
+fn go_blank_value_with_error_is_clean() {
+    let src = "package p\nfunc f() error {\n  _, err := read()\n  if err != nil { return fmt.Errorf(\"read: %w\", err) }\n  _, err = write()\n  if err != nil { return fmt.Errorf(\"write: %w\", err) }\n  _, err = closeFile()\n  if err != nil { return fmt.Errorf(\"close: %w\", err) }\n  return nil\n}\n";
+    assert!(no_rule(src, "t.go", "go-error-handling"));
+}
+
+#[test]
 fn go_interface_abuse_fires() {
     let src = "package main\nfunc a(x interface{}) interface{} { return x }\nfunc b(y interface{}) interface{} { return y }\nfunc c(z interface{}) interface{} { return z }\n";
     assert!(has_rule(src, "t.go", "go-antipattern"));

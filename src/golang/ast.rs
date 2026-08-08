@@ -65,9 +65,11 @@ fn collect_from_node(node: Node, source: &str, result: &mut GoParsed) {
             collect_function(node, source, result, kind == "method_declaration");
         }
         "short_var_declaration" => {
-            // Check for `_, err :=` or `_ =` (ignored error).
+            // A blank first result such as `_, err := call()` deliberately
+            // discards a non-error value while retaining the error. It is not
+            // evidence of an ignored error.
             let text = &source[node.byte_range()];
-            if text.starts_with("_ =") || text.starts_with("_,") || text.starts_with("_, _") {
+            if text.starts_with("_ =") {
                 result.ignored_errors.push(node.start_position().row + 1);
             }
             // Collect identifier names from the left side.
