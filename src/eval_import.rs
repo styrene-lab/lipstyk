@@ -654,8 +654,21 @@ fn language_conflicts_with_content(language: &str, code: &str) -> bool {
         + usize::from(code.contains("using namespace std"));
     let trimmed = code.trim_start();
     let is_php = trimmed.starts_with("<?php") || trimmed.starts_with("<?=");
+    let is_html_document = trimmed.starts_with("<!DOCTYPE html") || trimmed.starts_with("<html");
+    let java_signals = usize::from(code.lines().any(|line| line.trim_start().starts_with("package ")))
+        + usize::from(code.lines().any(|line| line.trim_start().starts_with("import java.")))
+        + usize::from(code.contains("public interface "))
+        + usize::from(code.contains("public class "));
+    let go_signals = usize::from(trimmed.starts_with("package "))
+        + usize::from(code.lines().any(|line| line.trim_start().starts_with("func (")))
+        + usize::from(code.contains("() error {"));
 
-    cpp_signals >= 2 || is_php || csharp_signals >= 2
+    cpp_signals >= 2
+        || is_php
+        || is_html_document
+        || csharp_signals >= 2
+        || java_signals >= 2
+        || go_signals >= 2
 }
 
 #[cfg(test)]
@@ -671,6 +684,22 @@ mod tests {
         assert!(language_conflicts_with_content(
             "typescript",
             "using System;\nusing System.Threading.Tasks;\nnamespace App { interface Repo { Task<IList<Item>> Get(Guid id); } }"
+        ));
+    }
+
+    #[test]
+    fn rejects_other_languages_labeled_as_typescript() {
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "package store\nfunc (db *Database) Close() error { return nil }"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "package demo;\nimport java.util.List;\npublic interface Service {}"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "<!DOCTYPE html>\n<html><body><script>const x = 1;</script></body></html>"
         ));
     }
 

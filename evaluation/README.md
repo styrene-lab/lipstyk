@@ -130,6 +130,14 @@ regenerating the deterministic slice, 22/25 Java agent samples have zero
 findings; `java-placeholder-scaffolding` accounts for one covered agent sample. This narrow
 result does not support broader Spring annotation or CRUD-boilerplate rules.
 
+The TypeScript calibration source now applies the same contamination discipline:
+it rejects C++, C#, PHP, Java, Go, and full HTML documents mislabeled as
+TypeScript/JavaScript. Regeneration replaces the contaminated 13-agent slice
+with a balanced 25 human / 25 agent cohort. Current slop rules produce 0 true
+positives and 0 false positives on the cleaned cohort; 20/25 agent files and
+22/25 human files have no findings. Earlier TypeScript recall figures from the
+contaminated slice are invalid and must not guide detector work.
+
 The generated `aicd-t2-calibration/` directory is intentionally untracked; the
 pinned source specification and import lock make regeneration deterministic
 without redistributing upstream samples.
