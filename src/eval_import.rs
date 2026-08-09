@@ -659,15 +659,30 @@ fn language_conflicts_with_content(language: &str, code: &str) -> bool {
         + usize::from(code.lines().any(|line| line.trim_start().starts_with("import java.")))
         + usize::from(code.contains("public interface "))
         + usize::from(code.contains("public class "));
+    let looks_like_java = java_signals >= 2
+        || code.lines().any(|line| {
+            let line = line.trim_start();
+            line.starts_with("public class ")
+                || line.starts_with("public interface ")
+                || line.starts_with("public enum ")
+                || line.starts_with("protected class ")
+        });
+    let looks_like_cpp = cpp_signals >= 2
+        || code.lines().any(|line| {
+            let line = line.trim_start();
+            line.starts_with("#include <")
+                || line.starts_with("#include<")
+                || line.starts_with("#include \"")
+        });
     let go_signals = usize::from(trimmed.starts_with("package "))
         + usize::from(code.lines().any(|line| line.trim_start().starts_with("func (")))
         + usize::from(code.contains("() error {"));
 
-    cpp_signals >= 2
+    looks_like_cpp
         || is_php
         || is_html_document
         || csharp_signals >= 2
-        || java_signals >= 2
+        || looks_like_java
         || go_signals >= 2
 }
 
@@ -696,6 +711,18 @@ mod tests {
         assert!(language_conflicts_with_content(
             "typescript",
             "package demo;\nimport java.util.List;\npublic interface Service {}"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "public class Config {\n  private final String value;\n}"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "#include \"TextureUtilities.h\"\nint TextureManager::loadTexture(const std::string &name) { return 0; }"
+        ));
+        assert!(language_conflicts_with_content(
+            "typescript",
+            "#include<bits/stdc++.h>\nusing namespace std;\nint main() { return 0; }"
         ));
         assert!(language_conflicts_with_content(
             "typescript",
