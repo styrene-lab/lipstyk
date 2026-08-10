@@ -56,9 +56,10 @@ jobs:
             echo "::error::could not parse runtime.binary from manifest.toml"
             exit 1
           fi
-          # Strip leading "target/release/" if present — we want the
-          # plain executable name to run from the workspace root.
-          test -x "$BIN" || BIN=$(echo "$BIN" | sed 's|^target/release/||')
+          # The manifest path may be bare ("lipstyk-agent") or prefixed
+          # ("target/release/lipstyk-agent"); reduce to the basename so we
+          # don't double up the directory below.
+          BIN=$(basename "$BIN")
           test -x "target/release/$BIN" || { echo "::error::binary 'target/release/$BIN' not found after build"; ls target/release/ | head; exit 1; }
           NAME=$(grep -E '^name = ' manifest.toml | head -n1 | sed -E 's/^name = "(.*)"/\1/')
           echo "binary=target/release/$BIN" >> "$GITHUB_OUTPUT"

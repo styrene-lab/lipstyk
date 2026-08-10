@@ -537,6 +537,13 @@ impl Extension for LipstykExtension {
 
     async fn handle_rpc(&self, method: &str, params: Value) -> omegon_extension::Result<Value> {
         match method {
+            "initialize" => Ok(serde_json::json!({
+                "protocol_version": 2,
+                "extension_info": {
+                    "name": self.name(),
+                    "version": self.version(),
+                },
+            })),
             "get_tools" => Ok(Self::tool_definitions()),
             "execute_lipstyk_check" | "lipstyk_check" => self.execute_check(&params),
             "execute_lipstyk_diff" | "lipstyk_diff" => self.execute_diff(&params),
