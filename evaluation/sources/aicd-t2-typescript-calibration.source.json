@@ -6,6 +6,11 @@
   "config": "T2",
   "split": "train",
   "rows_url": null,
+  "parquet_urls": [
+    "https://huggingface.co/datasets/AICD-bench/AICD-Bench/resolve/b7dc6d82257de6e0146d1e7b0831abd7088633af/T2/train-00000-of-00002.parquet",
+    "https://huggingface.co/datasets/AICD-bench/AICD-Bench/resolve/b7dc6d82257de6e0146d1e7b0831abd7088633af/T2/train-00001-of-00002.parquet"
+  ],
+  "parquet_cache_dir": ".cache/aicd-t2-parquet",
   "corpus": {
     "id": "aicd-t2-typescript-calibration-v1",
     "description": "Pinned deterministic AICD-Bench T2 training subset for TypeScript/JavaScript calibration research.",
@@ -78,7 +83,7 @@
   "languages": {},
   "selection": {
     "seed": "lipstyk-aicd-typescript-calibration-v1",
-    "scan_rows": 1000,
+    "scan_rows": 502149,
     "strata": [
       {
         "label": "human",
@@ -88,7 +93,7 @@
       {
         "label": "agent",
         "language": "typescript",
-        "limit": 13
+        "limit": 25
       }
     ]
   }

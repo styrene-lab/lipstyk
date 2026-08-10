@@ -8,3 +8,8 @@ ai/
 
 # Generated local scan outputs
 dogfood-reports/latest.*
+
+# Generated evaluation data and local tool state
+.cache/
+.flynt/
+evaluation/sources/*/
