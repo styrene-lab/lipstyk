@@ -15,6 +15,16 @@ fn help_exits_zero() {
 }
 
 #[test]
+fn version_exits_zero() {
+    let out = lipstyk().arg("--version").output().unwrap();
+    assert!(out.status.success());
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout).trim(),
+        format!("lipstyk {}", env!("CARGO_PKG_VERSION"))
+    );
+}
+
+#[test]
 fn no_args_exits_one() {
     let out = lipstyk().output().unwrap();
     assert!(!out.status.success());

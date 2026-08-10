@@ -8,8 +8,14 @@ fn main() -> ExitCode {
     let options = match CliOptions::parse(std::env::args().skip(1)) {
         ParseOutcome::Run(options) => options,
         ParseOutcome::Help(code) => {
-            print_help();
-            return code;
+            if code == ExitCode::SUCCESS {
+                print_help();
+            }
+            return if code == ExitCode::from(2) {
+                ExitCode::SUCCESS
+            } else {
+                code
+            };
         }
         ParseOutcome::Error(message) => {
             eprintln!("error: {message}");
@@ -222,6 +228,10 @@ impl CliOptions {
             saw_arg = true;
             match arg.as_str() {
                 "-h" | "--help" => return ParseOutcome::Help(ExitCode::SUCCESS),
+                "-V" | "--version" => {
+                    println!("lipstyk {}", env!("CARGO_PKG_VERSION"));
+                    return ParseOutcome::Help(ExitCode::from(2));
+                }
                 "--json" => options.json_output = true,
                 "--sarif" => options.sarif_output = true,
                 "--report" => options.report_output = true,
@@ -285,7 +295,8 @@ fn print_help() {
     eprintln!("  --exclude-tests     suppress findings inside #[test] / #[cfg(test)]");
     eprintln!("  --diff [base]       only score changed lines (default: unstaged changes)");
     eprintln!("  --config <path>     path to .lipstyk.toml (default: auto-discover)");
-    eprintln!("  -v, --verbose       enable tracing output on stderr");
+    eprintln!("  -V, --version       print version and exit
+  -v, --verbose       enable tracing output on stderr");
     eprintln!("  -h, --help          show this help");
     eprintln!();
     eprintln!("configuration:");
