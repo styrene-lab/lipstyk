@@ -2,7 +2,7 @@
 ///
 /// Each test provides a positive case (should flag) and a negative case
 /// (should not flag) for the named rule. Tests go through the full
-/// Linter::lint_source path.
+/// `Linter::lint_source` path.
 use lipstyk::Linter;
 
 fn has_rule(source: &str, filename: &str, rule: &str) -> bool {
@@ -245,7 +245,7 @@ fn redundant_clone_suppressed_in_move_closure() {
 fn f(items: Vec<String>) {
     std::thread::spawn(move || {
         let copy = items.clone();
-        println!("{:?}", copy);
+        println!("{copy:?}");
     });
 }
 "#;
@@ -682,6 +682,75 @@ defmodule M do
 end
 "#;
     assert!(no_rule(src, "t.ex", "elixir-bang-overuse"));
+}
+
+#[test]
+fn elixir_bang_overuse_user_defined_fires() {
+    // User-defined / third-party qualified bangs, none in any hardcoded list.
+    let src = r#"
+defmodule M do
+  def run do
+    user = Accounts.create_user!(%{name: "a"})
+    org = Orgs.fetch_org!(user.org_id)
+    _ = Cache.MyApp.put!(:k, org)
+    user
+  end
+end
+"#;
+    assert!(has_rule(src, "t.ex", "elixir-bang-overuse"));
+}
+
+#[test]
+fn elixir_bang_overuse_allowlist_suppresses_idiomatic() {
+    // Allowlisted config bangs are idiomatic-by-design — even 3+ of them
+    // must not trip the rule.
+    let src = r#"
+defmodule M do
+  def cfg do
+    a = Application.fetch_env!(:app, :a)
+    b = Application.fetch_env!(:app, :b)
+    c = Application.compile_env!(:app, :c)
+    d = System.fetch_env!("HOME")
+    {a, b, c, d}
+  end
+end
+"#;
+    assert!(no_rule(src, "t.ex", "elixir-bang-overuse"));
+}
+
+#[test]
+fn elixir_bang_overuse_no_false_positive_on_negation() {
+    // `!=`, `!==`, and `!expr` negation must not be mistaken for bangs.
+    let src = r#"
+defmodule M do
+  def run(a, b, c) do
+    x = a != b
+    y = a !== c
+    z = !valid?(a)
+    {x, y, z}
+  end
+end
+"#;
+    assert!(no_rule(src, "t.ex", "elixir-bang-overuse"));
+}
+
+#[test]
+fn elixir_bang_overuse_unicode_adjacent_does_not_panic() {
+    // Multi-byte UTF-8 char immediately preceding the module path used to
+    // make `p + 1` land mid-codepoint and panic the slice. The scan must
+    // complete and still flag the genuine qualified bangs.
+    let src = r#"
+defmodule M do
+  def run do
+    _ = Café.load!(:x)
+    a = Accounts.create_user!(%{name: "naïve"})
+    b = Repo.get!(1)
+    c = Repo.insert!(2)
+    {a, b, c}
+  end
+end
+"#;
+    assert!(has_rule(src, "t.ex", "elixir-bang-overuse"));
 }
 
 #[test]
